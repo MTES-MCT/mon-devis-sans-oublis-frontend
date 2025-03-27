@@ -1,6 +1,8 @@
 # Use Node.js LTS version
 FROM node:22-alpine
 
+RUN npm i -g npm
+
 # Set working directory
 WORKDIR /app
 
