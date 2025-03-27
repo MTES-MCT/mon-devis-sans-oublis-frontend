@@ -17,7 +17,7 @@
     "@gouvfr/dsfr": "^1.13.0",
     "@sentry/nextjs": "^9.2.0",
     "@socialgouv/matomo-next": "^1.9.2",
-    "next": "^15.1.7",
+    "next": "^15.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
