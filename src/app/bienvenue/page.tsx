@@ -7,7 +7,7 @@ export default function Bienvenue() {
   return (
     <>
       <Notice
-        className='fr-notice--info'
+        className='fr-notice--alert'
         description={wording.layout.notice.description}
         title={wording.layout.notice.title}
       />
