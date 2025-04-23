@@ -26,7 +26,7 @@ const apiHeaders = () => {
 
   return {
     accept: 'application/json',
-    Authorization: `Basic ${apiAuth}`,
+    Authorization: `Bearer ${apiAuth}`,
   };
 }
 
