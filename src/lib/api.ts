@@ -48,6 +48,7 @@ export const quoteService = {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('profile', profile);
+      formData.append('renovation_type', 'geste'); // TODO: Take it from the new UI
       formData.append('metadata', JSON.stringify(metadata));
 
       const response = await fetch(uploadUrl, {
