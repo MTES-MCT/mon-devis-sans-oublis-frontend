@@ -69,14 +69,16 @@ export const quoteService = {
   },
 
   async getQuote(quoteCheckId: string) {
-    const url = ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID.replace(
-      ":quote_check_id",
-      quoteCheckId
-    );
+    if (!quoteCheckId) {
+      throw new Error("Quote check ID is required");
+    }
 
-    const response = await fetch(url, {
-      headers: apiHeaders(),
-    });
+    const response = await fetch(
+      `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}`,
+      {
+        headers: apiHeaders(),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(
@@ -92,19 +94,21 @@ export const quoteService = {
     updatedData: QuoteUpdateData
   ): Promise<QuoteResponse> {
     try {
-      const url = ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID.replace(
-        ":quote_check_id",
-        quoteCheckId
-      );
+      if (!quoteCheckId) {
+        throw new Error("Quote check ID is required");
+      }
 
-      const response = await fetch(url, {
-        method: "PATCH",
-        headers: {
-          ...apiHeaders(),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData),
-      });
+      const response = await fetch(
+        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}`,
+        {
+          method: "PATCH",
+          headers: {
+            ...apiHeaders(),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(
@@ -121,19 +125,21 @@ export const quoteService = {
 
   async updateQuoteComment(quoteCheckId: string, comment: string | null) {
     try {
-      const url = ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID.replace(
-        ":quote_check_id",
-        quoteCheckId
-      );
+      if (!quoteCheckId) {
+        throw new Error("Quote check ID is required");
+      }
 
-      const response = await fetch(url, {
-        method: "PATCH",
-        headers: {
-          ...apiHeaders(),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ comment }),
-      });
+      const response = await fetch(
+        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}`,
+        {
+          method: "PATCH",
+          headers: {
+            ...apiHeaders(),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ comment }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(
