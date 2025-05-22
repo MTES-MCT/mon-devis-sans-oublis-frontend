@@ -403,19 +403,21 @@ export const quoteService = {
     }
   ) {
     try {
-      const url = ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_FEEDBACKS.replace(
-        ":quote_check_id",
-        quoteCheckId
-      );
+      if (!quoteCheckId) {
+        throw new Error("Quote check ID is required");
+      }
 
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          ...apiHeaders(),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...feedback }),
-      });
+      const response = await fetch(
+        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}/feedbacks`,
+        {
+          method: "POST",
+          headers: {
+            ...apiHeaders(),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...feedback }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(
