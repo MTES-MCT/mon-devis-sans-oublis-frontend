@@ -174,9 +174,12 @@ export const quoteService = {
 
   async getQuoteMetadata() {
     try {
-      const response = await fetch(ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_METADATA, {
-        headers: apiHeaders(),
-      });
+      const response = await fetch(
+        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/metadata`,
+        {
+          headers: apiHeaders(),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(
