@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const schema = z.object({
   // API
-  NEXT_PUBLIC_API_AUTH: z.string().url(),
+  NEXT_PUBLIC_API_AUTH: z.string(),
   NEXT_PUBLIC_API_URL: z.string().url(),
 
   // Matomo (optionnel)
