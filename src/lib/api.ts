@@ -363,20 +363,23 @@ export const quoteService = {
     quoteCheckId: string
   ) {
     try {
-      const url =
-        ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID_FEEDBACKS.replace(
-          ":quote_check_id",
-          quoteCheckId
-        ).replace(":error_detail_id", errorDetailsId);
+      if (!comment || !errorDetailsId || !quoteCheckId) {
+        throw new Error(
+          "Comment, error details ID, and quote check ID are required"
+        );
+      }
 
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          ...apiHeaders(),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ comment }),
-      });
+      const response = await fetch(
+        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}/error_details/${quoteCheckId}/feedbacks`,
+        {
+          method: "POST",
+          headers: {
+            ...apiHeaders(),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ comment }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(
