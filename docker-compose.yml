@@ -5,14 +5,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - '3000:3000'
-    environment:
-      - NODE_ENV=development
-      - NEXT_PUBLIC_API_QUOTE_CHECKS=http://host.docker.internal:3001/api/v1/quote_checks
-      - NEXT_PUBLIC_API_QUOTE_CHECKS_ID=http://host.docker.internal:3001/api/v1/quote_checks/:quote_check_id
-      - NEXT_PUBLIC_API_QUOTE_CHECKS_ID_FEEDBACKS=http://host.docker.internal:3001/api/v1/quote_checks/:quote_check_id/feedbacks
-      - NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID_FEEDBACKS=http://host.docker.internal:3001/api/v1/quote_checks/:quote_check_id/error_details/:error_detail_id/feedbacks
-      - NEXT_PUBLIC_API_QUOTE_CHECKS_METADATA=http://host.docker.internal:3001/api/v1/quote_checks/metadata
-      - NEXT_TELEMETRY_DISABLED=1
+    env_file:
+      - .env.development.docker
     command: npm run dev
     volumes:
       - .:/app
