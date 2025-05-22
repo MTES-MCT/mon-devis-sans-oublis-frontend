@@ -3,14 +3,7 @@ import { z } from "zod";
 const schema = z.object({
   // API
   NEXT_PUBLIC_API_AUTH: z.string().url(),
-  NEXT_PUBLIC_API_QUOTE_CHECKS: z.string().url(),
-  NEXT_PUBLIC_API_QUOTE_CHECKS_DELETE_ERROR_DETAIL_REASONS: z.string().url(),
-  NEXT_PUBLIC_API_QUOTE_CHECKS_ID: z.string().url(),
-  NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID: z.string().url(),
-  NEXT_PUBLIC_API_QUOTE_CHECKS_ID_FEEDBACKS: z.string().url(),
-  NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID_FEEDBACKS: z.string().url(),
-  NEXT_PUBLIC_API_QUOTE_CHECKS_METADATA: z.string().url(),
-  NEXT_PUBLIC_API_STATS: z.string().url(),
+  NEXT_PUBLIC_API_URL: z.string().url(),
 
   // Matomo (optionnel)
   NEXT_PUBLIC_MATOMO_SITE_ID: z.string().optional(),

@@ -13,19 +13,8 @@ describe("env schema validation", () => {
   it("ne jette pas d’erreur si toutes les variables obligatoires sont valides", () => {
     process.env = {
       ...process.env,
-      NEXT_PUBLIC_API_AUTH: "https://api.example.com",
-      NEXT_PUBLIC_API_QUOTE_CHECKS: "https://api.example.com/checks",
-      NEXT_PUBLIC_API_QUOTE_CHECKS_DELETE_ERROR_DETAIL_REASONS:
-        "https://api.example.com/delete",
-      NEXT_PUBLIC_API_QUOTE_CHECKS_ID: "https://api.example.com/id",
-      NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID:
-        "https://api.example.com/details",
-      NEXT_PUBLIC_API_QUOTE_CHECKS_ID_FEEDBACKS:
-        "https://api.example.com/feedbacks",
-      NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID_FEEDBACKS:
-        "https://api.example.com/detail-feedbacks",
-      NEXT_PUBLIC_API_QUOTE_CHECKS_METADATA: "https://api.example.com/meta",
-      NEXT_PUBLIC_API_STATS: "https://api.example.com/stats",
+      NEXT_PUBLIC_API_AUTH: "superSecretTokenExample",
+      NEXT_PUBLIC_API_URL: "https://api.example.com",
       NODE_ENV: "development",
 
       // optionnels
@@ -61,19 +50,8 @@ describe("env schema validation", () => {
   it("accepte les variables optionnelles manquantes", () => {
     process.env = {
       ...process.env,
-      NEXT_PUBLIC_API_AUTH: "https://api.example.com",
-      NEXT_PUBLIC_API_QUOTE_CHECKS: "https://api.example.com/checks",
-      NEXT_PUBLIC_API_QUOTE_CHECKS_DELETE_ERROR_DETAIL_REASONS:
-        "https://api.example.com/delete",
-      NEXT_PUBLIC_API_QUOTE_CHECKS_ID: "https://api.example.com/id",
-      NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID:
-        "https://api.example.com/details",
-      NEXT_PUBLIC_API_QUOTE_CHECKS_ID_FEEDBACKS:
-        "https://api.example.com/feedbacks",
-      NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID_FEEDBACKS:
-        "https://api.example.com/detail-feedbacks",
-      NEXT_PUBLIC_API_QUOTE_CHECKS_METADATA: "https://api.example.com/meta",
-      NEXT_PUBLIC_API_STATS: "https://api.example.com/stats",
+      NEXT_PUBLIC_API_AUTH: "superSecretTokenExample",
+      NEXT_PUBLIC_API_URL: "https://api.example.com",
       NODE_ENV: "development",
       // pas de sentry ni matomo
     };
