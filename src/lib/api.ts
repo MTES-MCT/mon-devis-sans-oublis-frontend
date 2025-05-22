@@ -41,11 +41,14 @@ export const quoteService = {
       formData.append("renovation_type", "geste"); // TODO: Take it from the new UI
       formData.append("metadata", JSON.stringify(metadata));
 
-      const response = await fetch(ENV.NEXT_PUBLIC_API_QUOTE_CHECKS, {
-        method: "POST",
-        headers: apiHeaders(),
-        body: formData,
-      });
+      const response = await fetch(
+        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks`,
+        {
+          method: "POST",
+          headers: apiHeaders(),
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error(
