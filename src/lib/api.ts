@@ -200,22 +200,21 @@ export const quoteService = {
     errorDetailsId: string,
     reason: string
   ): Promise<Response> {
-    const url = ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID.replace(
-      ":quote_check_id",
-      quoteCheckId
-    ).replace(":error_detail_id", errorDetailsId);
+    if (!quoteCheckId || !errorDetailsId) {
+      throw new Error("Quote check ID and error details ID are required");
+    }
 
-    const finalUrl = `${url}?reason=${reason}`;
-    // ?reason=${encodeURIComponent(reason)}
-
-    const response = await fetch(finalUrl, {
-      method: "DELETE",
-      headers: {
-        ...apiHeaders(),
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    });
+    const response = await fetch(
+      `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}/error_details/${errorDetailsId}?reason=${reason}`,
+      {
+        method: "DELETE",
+        headers: {
+          ...apiHeaders(),
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`❌ Erreur API: ${response.status}`);
@@ -226,18 +225,20 @@ export const quoteService = {
 
   async undoDeleteErrorDetail(quoteCheckId: string, errorDetailsId: string) {
     try {
-      const url = ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID.replace(
-        ":quote_check_id",
-        quoteCheckId
-      ).replace(":error_detail_id", errorDetailsId);
+      if (!quoteCheckId || !errorDetailsId) {
+        throw new Error("Quote check ID and error details ID are required");
+      }
 
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          ...apiHeaders(),
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}/error_details/${errorDetailsId}`,
+        {
+          method: "POST",
+          headers: {
+            ...apiHeaders(),
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(
@@ -297,19 +298,21 @@ export const quoteService = {
     comment: string | null
   ) {
     try {
-      const url = ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID.replace(
-        ":quote_check_id",
-        quoteCheckId
-      ).replace(":error_detail_id", errorDetailsId);
+      if (!quoteCheckId || !errorDetailsId) {
+        throw new Error("Quote check ID and error details ID are required");
+      }
 
-      const response = await fetch(url, {
-        method: "PATCH",
-        headers: {
-          ...apiHeaders(),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ comment }),
-      });
+      const response = await fetch(
+        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}/error_details/${errorDetailsId}`,
+        {
+          method: "PATCH",
+          headers: {
+            ...apiHeaders(),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ comment }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(
