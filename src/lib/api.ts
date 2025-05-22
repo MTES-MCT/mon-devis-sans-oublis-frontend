@@ -417,7 +417,7 @@ export const quoteService = {
 export const statService = {
   async getStats() {
     try {
-      const response = await fetch(ENV.NEXT_PUBLIC_API_STATS, {
+      const response = await fetch(`${ENV.NEXT_PUBLIC_API_URL}/api/v1/stats`, {
         headers: apiHeaders(),
         cache: "no-store",
       });
