@@ -1,4 +1,5 @@
-import { ErrorDetails, Profile, Rating } from '@/types';
+import { ErrorDetails, Profile, Rating } from "@/types";
+import { ENV } from "@/lib/config/env";
 
 interface QuoteUpdateData {
   status?: string;
@@ -19,16 +20,11 @@ interface QuoteResponse {
 }
 
 const apiHeaders = () => {
-  const apiAuth = process.env.NEXT_PUBLIC_API_AUTH;
-  if (!apiAuth) {
-    throw new Error("❌ NEXT_PUBLIC_API_AUTH is missing!");
-  }
-
   return {
-    accept: 'application/json',
-    Authorization: `Bearer ${apiAuth}`,
+    accept: "application/json",
+    Authorization: `Bearer ${ENV.NEXT_PUBLIC_API_AUTH}`,
   };
-}
+};
 
 // Quote Service
 export const quoteService = {
@@ -38,21 +34,15 @@ export const quoteService = {
     metadata: { aides: string[]; gestes: string[] },
     profile: Profile
   ) {
-    const uploadUrl = process.env.NEXT_PUBLIC_API_QUOTE_CHECKS;
-
-    if (!uploadUrl) {
-      throw new Error('NEXT_PUBLIC_API_QUOTE_CHECKS is not defined.');
-    }
-
     try {
       const formData = new FormData();
-      formData.append('file', file);
-      formData.append('profile', profile);
-      formData.append('renovation_type', 'geste'); // TODO: Take it from the new UI
-      formData.append('metadata', JSON.stringify(metadata));
+      formData.append("file", file);
+      formData.append("profile", profile);
+      formData.append("renovation_type", "geste"); // TODO: Take it from the new UI
+      formData.append("metadata", JSON.stringify(metadata));
 
-      const response = await fetch(uploadUrl, {
-        method: 'POST',
+      const response = await fetch(ENV.NEXT_PUBLIC_API_QUOTE_CHECKS, {
+        method: "POST",
         headers: apiHeaders(),
         body: formData,
       });
@@ -70,19 +60,16 @@ export const quoteService = {
 
       return data;
     } catch (error) {
-      console.error('Error while uploading the quote:', error);
+      console.error("Error while uploading the quote:", error);
       throw error;
     }
   },
 
   async getQuote(quoteCheckId: string) {
-    const quoteUrl = process.env.NEXT_PUBLIC_API_QUOTE_CHECKS_ID;
-
-    if (!quoteUrl) {
-      throw new Error('NEXT_PUBLIC_API_QUOTE_CHECKS_ID is not defined.');
-    }
-
-    const url = quoteUrl.replace(':quote_check_id', quoteCheckId);
+    const url = ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID.replace(
+      ":quote_check_id",
+      quoteCheckId
+    );
 
     const response = await fetch(url, {
       headers: apiHeaders(),
@@ -101,20 +88,17 @@ export const quoteService = {
     quoteCheckId: string,
     updatedData: QuoteUpdateData
   ): Promise<QuoteResponse> {
-    const quoteUrl = process.env.NEXT_PUBLIC_API_QUOTE_CHECKS_ID;
-
-    if (!quoteUrl) {
-      throw new Error('NEXT_PUBLIC_API_QUOTE_CHECKS_ID is not defined.');
-    }
-
     try {
-      const url = quoteUrl.replace(':quote_check_id', quoteCheckId);
+      const url = ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID.replace(
+        ":quote_check_id",
+        quoteCheckId
+      );
 
       const response = await fetch(url, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
           ...apiHeaders(),
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(updatedData),
       });
@@ -127,26 +111,23 @@ export const quoteService = {
 
       return await response.json();
     } catch (error) {
-      console.error('Error updating quote:', error);
+      console.error("Error updating quote:", error);
       throw error;
     }
   },
 
   async updateQuoteComment(quoteCheckId: string, comment: string | null) {
-    const quoteUrl = process.env.NEXT_PUBLIC_API_QUOTE_CHECKS_ID;
-
-    if (!quoteUrl) {
-      throw new Error('NEXT_PUBLIC_API_QUOTE_CHECKS_ID is not defined.');
-    }
-
     try {
-      const url = quoteUrl.replace(':quote_check_id', quoteCheckId);
+      const url = ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID.replace(
+        ":quote_check_id",
+        quoteCheckId
+      );
 
       const response = await fetch(url, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
           ...apiHeaders(),
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ comment }),
       });
@@ -164,14 +145,14 @@ export const quoteService = {
       const responseText = await response.text();
       return responseText ? JSON.parse(responseText) : null;
     } catch (error) {
-      console.error('Error updating quote comment:', error);
+      console.error("Error updating quote comment:", error);
       throw error;
     }
   },
 
   async addQuoteComment(quoteCheckId: string, comment: string) {
     if (!comment.trim()) {
-      throw new Error('Comment cannot be empty');
+      throw new Error("Comment cannot be empty");
     }
 
     await this.updateQuoteComment(quoteCheckId, comment);
@@ -183,14 +164,8 @@ export const quoteService = {
   },
 
   async getQuoteMetadata() {
-    const metadataUrl = process.env.NEXT_PUBLIC_API_QUOTE_CHECKS_METADATA;
-
-    if (!metadataUrl) {
-      throw new Error('NEXT_PUBLIC_API_QUOTE_CHECKS_METADATA is not defined.');
-    }
-
     try {
-      const response = await fetch(metadataUrl, {
+      const response = await fetch(ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_METADATA, {
         headers: apiHeaders(),
       });
 
@@ -202,7 +177,7 @@ export const quoteService = {
 
       return response.json();
     } catch (error) {
-      console.error('Error fetching metadata:', error);
+      console.error("Error fetching metadata:", error);
       throw error;
     }
   },
@@ -213,29 +188,21 @@ export const quoteService = {
     errorDetailsId: string,
     reason: string
   ): Promise<Response> {
-    const deleteUrl =
-      process.env.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID;
-
-    if (!deleteUrl) {
-      throw new Error(
-        'NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID is not defined.'
-      );
-    }
-
-    const url = deleteUrl
-      .replace(':quote_check_id', quoteCheckId)
-      .replace(':error_detail_id', errorDetailsId);
+    const url = ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID.replace(
+      ":quote_check_id",
+      quoteCheckId
+    ).replace(":error_detail_id", errorDetailsId);
 
     const finalUrl = `${url}?reason=${reason}`;
     // ?reason=${encodeURIComponent(reason)}
 
     const response = await fetch(finalUrl, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
         ...apiHeaders(),
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      cache: 'no-store',
+      cache: "no-store",
     });
 
     if (!response.ok) {
@@ -246,25 +213,17 @@ export const quoteService = {
   },
 
   async undoDeleteErrorDetail(quoteCheckId: string, errorDetailsId: string) {
-    const undoDeleteUrl =
-      process.env.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID;
-
-    if (!undoDeleteUrl) {
-      throw new Error(
-        'NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID is not defined.'
-      );
-    }
-
     try {
-      const url = undoDeleteUrl
-        .replace(':quote_check_id', quoteCheckId)
-        .replace(':error_detail_id', errorDetailsId);
+      const url = ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID.replace(
+        ":quote_check_id",
+        quoteCheckId
+      ).replace(":error_detail_id", errorDetailsId);
 
       const response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
           ...apiHeaders(),
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
       });
 
@@ -289,19 +248,13 @@ export const quoteService = {
   async getDeleteErrorDetailReasons(): Promise<
     { id: string; label: string }[]
   > {
-    const deleteErrorDetailReasonsUrl =
-      process.env.NEXT_PUBLIC_API_QUOTE_CHECKS_DELETE_ERROR_DETAIL_REASONS;
-
-    if (!deleteErrorDetailReasonsUrl) {
-      throw new Error(
-        'NEXT_PUBLIC_API_QUOTE_CHECKS_DELETE_ERROR_DETAIL_REASONS is not defined.'
-      );
-    }
-
     try {
-      const response = await fetch(deleteErrorDetailReasonsUrl, {
-        headers: apiHeaders(),
-      });
+      const response = await fetch(
+        ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_DELETE_ERROR_DETAIL_REASONS,
+        {
+          headers: apiHeaders(),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(
@@ -320,7 +273,7 @@ export const quoteService = {
         label: value as string,
       }));
     } catch (error) {
-      console.error('Error fetching delete error detail reasons:', error);
+      console.error("Error fetching delete error detail reasons:", error);
       throw error;
     }
   },
@@ -331,25 +284,17 @@ export const quoteService = {
     errorDetailsId: string,
     comment: string | null
   ) {
-    const feedbackUrl =
-      process.env.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID;
-
-    if (!feedbackUrl) {
-      throw new Error(
-        'NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID is not defined.'
-      );
-    }
-
     try {
-      const url = feedbackUrl
-        .replace(':quote_check_id', quoteCheckId)
-        .replace(':error_detail_id', errorDetailsId);
+      const url = ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID.replace(
+        ":quote_check_id",
+        quoteCheckId
+      ).replace(":error_detail_id", errorDetailsId);
 
       const response = await fetch(url, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
           ...apiHeaders(),
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ comment }),
       });
@@ -362,7 +307,7 @@ export const quoteService = {
 
       if (
         response.status === 204 ||
-        response.headers.get('content-length') === '0'
+        response.headers.get("content-length") === "0"
       ) {
         return null;
       }
@@ -375,7 +320,7 @@ export const quoteService = {
 
       return JSON.parse(responseText);
     } catch (error) {
-      console.error('Error updating comment:', error);
+      console.error("Error updating comment:", error);
       throw error;
     }
   },
@@ -386,7 +331,7 @@ export const quoteService = {
     comment: string
   ) {
     if (!comment.trim()) {
-      throw new Error('Comment cannot be empty');
+      throw new Error("Comment cannot be empty");
     }
 
     return this.updateErrorDetail(quoteCheckId, errorDetailsId, comment);
@@ -402,25 +347,18 @@ export const quoteService = {
     errorDetailsId: string,
     quoteCheckId: string
   ) {
-    const feedbackUrl =
-      process.env.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID_FEEDBACKS;
-
-    if (!feedbackUrl) {
-      throw new Error(
-        'NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID_FEEDBACKS is not defined.'
-      );
-    }
-
     try {
-      const url = feedbackUrl
-        .replace(':quote_check_id', quoteCheckId)
-        .replace(':error_detail_id', errorDetailsId);
+      const url =
+        ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_ERROR_DETAILS_ID_FEEDBACKS.replace(
+          ":quote_check_id",
+          quoteCheckId
+        ).replace(":error_detail_id", errorDetailsId);
 
       const response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
           ...apiHeaders(),
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ comment }),
       });
@@ -433,7 +371,7 @@ export const quoteService = {
 
       return await response.json();
     } catch (error) {
-      console.error('Error sending feedback:', error);
+      console.error("Error sending feedback:", error);
       throw error;
     }
   },
@@ -446,23 +384,17 @@ export const quoteService = {
       rating: Rating;
     }
   ) {
-    const globalFeedbackUrl =
-      process.env.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_FEEDBACKS;
-
-    if (!globalFeedbackUrl) {
-      throw new Error(
-        'NEXT_PUBLIC_API_QUOTE_CHECKS_ID_FEEDBACKS is not defined.'
-      );
-    }
-
     try {
-      const url = globalFeedbackUrl.replace(':quote_check_id', quoteCheckId);
+      const url = ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_ID_FEEDBACKS.replace(
+        ":quote_check_id",
+        quoteCheckId
+      );
 
       const response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
           ...apiHeaders(),
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ ...feedback }),
       });
@@ -475,7 +407,7 @@ export const quoteService = {
 
       return await response.json();
     } catch (error) {
-      console.error('Error sending feedbacks:', error);
+      console.error("Error sending feedbacks:", error);
       throw error;
     }
   },
@@ -484,16 +416,10 @@ export const quoteService = {
 // Statistics Service
 export const statService = {
   async getStats() {
-    const statsUrl = process.env.NEXT_PUBLIC_API_STATS;
-
-    if (!statsUrl) {
-      throw new Error('NEXT_PUBLIC_API_STATS is not defined.');
-    }
-
     try {
-      const response = await fetch(statsUrl, {
+      const response = await fetch(ENV.NEXT_PUBLIC_API_STATS, {
         headers: apiHeaders(),
-        cache: "no-store"
+        cache: "no-store",
       });
 
       if (!response.ok) {
@@ -504,7 +430,7 @@ export const statService = {
 
       return response.json();
     } catch (error) {
-      console.error('Error fetching stats:', error);
+      console.error("Error fetching stats:", error);
       throw error;
     }
   },
