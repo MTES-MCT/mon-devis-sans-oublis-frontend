@@ -263,7 +263,7 @@ export const quoteService = {
   > {
     try {
       const response = await fetch(
-        ENV.NEXT_PUBLIC_API_QUOTE_CHECKS_DELETE_ERROR_DETAIL_REASONS,
+        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/error_detail_deletion_reasons`,
         {
           headers: apiHeaders(),
         }
