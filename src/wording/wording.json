@@ -69,18 +69,17 @@
       },
       "share": {
         "button_copied_url": "Lien copié",
-        "button_copy_url": "Copier le lien de la page",
-        "description": "Retrouvez cette page et les corrections à apporter sur le devis.",
-        "description_conseiller": "Retrouvez cette page avec les corrections à apporter sur le devis ainsi que celles que vous avez suggérées",
-        "image_alt": "Image partagez les corrections",
+        "button_copy_url": "Copier le lien",
+        "image_alt": "Image partagez les corrections du devis",
         "image_src": "/images/quotation_results/quotation_link_share.webp",
-        "title": "Partagez les corrections"
+        "title": "Partagez les corrections du devis",
+        "button_share_for_email": "Exporter pour email"
       },
       "upload": {
         "image_alt": "Image vérifier un devis",
         "image_src": "/images/quotation_results/quotation_link_upload.webp",
-        "title": "Vous souhaitez analyser un nouveau devis ?",
-        "link_label": "Vérifier un devis"
+        "title": "Lancez une nouvelle analyse",
+        "button_run_analysis": "Nouvelle analyse"
       }
     },
     "round_checkbox_group": {
