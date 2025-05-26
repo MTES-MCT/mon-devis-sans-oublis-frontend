@@ -33,8 +33,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # Environment Variables
-.env.production
-.env.sentry-build-plugin
+.env.local
+.env.*.local
+.env.docker
 
 # Misc
 .DS_Store
