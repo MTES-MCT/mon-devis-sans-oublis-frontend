@@ -14,7 +14,7 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@gouvfr/dsfr": "^1.13.0",
+    "@gouvfr/dsfr": "^1.13.2",
     "@sentry/nextjs": "^9.2.0",
     "@socialgouv/matomo-next": "^1.9.2",
     "next": "^15.2.3",
