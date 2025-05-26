@@ -18,14 +18,14 @@ const QuoteLaunchAnalysisCard: React.FC<QuoteLaunchAnalysisCardProps> = ({
 
   return (
     <div
-      className={`bg-[var(--background-alt-grey)] border-shadow flex items-center gap-6 px-4 py-6 rounded-lg w-fit ${className}`}
+      className={`bg-[var(--background-alt-grey)] border-shadow flex items-start gap-6 px-4 py-6 rounded-lg w-fit ${className}`}
     >
       <Image
         alt={wording.components.quote_status_link.upload.image_alt}
         className="shrink-0"
-        height={80}
+        height={32}
         src={wording.components.quote_status_link.upload.image_src}
-        width={80}
+        width={32}
       />
       <div className="flex flex-col">
         <h6 className="fr-mb-2w">
