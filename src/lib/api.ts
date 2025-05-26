@@ -1,5 +1,7 @@
+// src/lib/api.ts
 import { ErrorDetails, Profile, Rating } from "@/types";
-import { ENV } from "@/lib/config/env";
+import { isClient, isServer } from "./utils/env.utils";
+import { getServerEnv, getSharedEnv } from "./config/env.config";
 
 interface QuoteUpdateData {
   status?: string;
@@ -19,12 +21,50 @@ interface QuoteResponse {
   error_details?: ErrorDetails[];
 }
 
-const apiHeaders = () => {
-  return {
-    accept: "application/json",
-    Authorization: `Bearer ${ENV.NEXT_PUBLIC_API_AUTH}`,
-  };
-};
+function getHeaders(): HeadersInit {
+  const baseHeaders: HeadersInit = { accept: "application/json" };
+
+  if (isServer()) {
+    try {
+      const serverEnv = getServerEnv();
+      return {
+        ...baseHeaders,
+        Authorization: `Bearer ${serverEnv.NEXT_PRIVATE_API_AUTH_TOKEN}`,
+      };
+    } catch (error) {
+      console.error("Cannot get server env for API headers:", error);
+      return baseHeaders;
+    }
+  }
+
+  return baseHeaders;
+}
+
+function getApiUrl(): string {
+  // Solution directe : utiliser directement process.env côté client si getSharedEnv() échoue
+  if (isClient()) {
+    // Côté client : utiliser directement la variable d'environnement
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (apiUrl) {
+      return apiUrl;
+    }
+  }
+
+  try {
+    const env = getSharedEnv();
+    return env.NEXT_PUBLIC_API_URL;
+  } catch (error) {
+    console.error("getApiUrl error:", error);
+    // Fallback vers la variable directe
+    const fallbackUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (fallbackUrl) {
+      console.log("Using fallback URL:", fallbackUrl);
+      return fallbackUrl;
+    }
+    console.error("No API URL available");
+    return "";
+  }
+}
 
 // Quote Service
 export const quoteService = {
@@ -41,14 +81,11 @@ export const quoteService = {
       formData.append("renovation_type", "geste"); // TODO: Take it from the new UI
       formData.append("metadata", JSON.stringify(metadata));
 
-      const response = await fetch(
-        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks`,
-        {
-          method: "POST",
-          headers: apiHeaders(),
-          body: formData,
-        }
-      );
+      const response = await fetch(`${getApiUrl()}/api/v1/quote_checks`, {
+        method: "POST",
+        headers: getHeaders(),
+        body: formData,
+      });
 
       if (!response.ok) {
         throw new Error(
@@ -74,9 +111,9 @@ export const quoteService = {
     }
 
     const response = await fetch(
-      `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}`,
+      `${getApiUrl()}/api/v1/quote_checks/${quoteCheckId}`,
       {
-        headers: apiHeaders(),
+        headers: getHeaders(),
       }
     );
 
@@ -99,11 +136,11 @@ export const quoteService = {
       }
 
       const response = await fetch(
-        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}`,
+        `${getApiUrl()}/api/v1/quote_checks/${quoteCheckId}`,
         {
           method: "PATCH",
           headers: {
-            ...apiHeaders(),
+            ...getHeaders(),
             "Content-Type": "application/json",
           },
           body: JSON.stringify(updatedData),
@@ -130,11 +167,11 @@ export const quoteService = {
       }
 
       const response = await fetch(
-        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}`,
+        `${getApiUrl()}/api/v1/quote_checks/${quoteCheckId}`,
         {
           method: "PATCH",
           headers: {
-            ...apiHeaders(),
+            ...getHeaders(),
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ comment }),
@@ -175,9 +212,9 @@ export const quoteService = {
   async getQuoteMetadata() {
     try {
       const response = await fetch(
-        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/metadata`,
+        `${getApiUrl()}/api/v1/quote_checks/metadata`,
         {
-          headers: apiHeaders(),
+          headers: getHeaders(),
         }
       );
 
@@ -205,11 +242,11 @@ export const quoteService = {
     }
 
     const response = await fetch(
-      `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}/error_details/${errorDetailsId}?reason=${reason}`,
+      `${getApiUrl()}/api/v1/quote_checks/${quoteCheckId}/error_details/${errorDetailsId}?reason=${reason}`,
       {
         method: "DELETE",
         headers: {
-          ...apiHeaders(),
+          ...getHeaders(),
           "Content-Type": "application/json",
         },
         cache: "no-store",
@@ -217,7 +254,7 @@ export const quoteService = {
     );
 
     if (!response.ok) {
-      throw new Error(`❌ Erreur API: ${response.status}`);
+      throw new Error(`Erreur API: ${response.status}`);
     }
 
     return response;
@@ -230,11 +267,11 @@ export const quoteService = {
       }
 
       const response = await fetch(
-        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}/error_details/${errorDetailsId}`,
+        `${getApiUrl()}/api/v1/quote_checks/${quoteCheckId}/error_details/${errorDetailsId}`,
         {
           method: "POST",
           headers: {
-            ...apiHeaders(),
+            ...getHeaders(),
             "Content-Type": "application/json",
           },
         }
@@ -263,9 +300,9 @@ export const quoteService = {
   > {
     try {
       const response = await fetch(
-        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/error_detail_deletion_reasons`,
+        `${getApiUrl()}/api/v1/quote_checks/error_detail_deletion_reasons`,
         {
-          headers: apiHeaders(),
+          headers: getHeaders(),
         }
       );
 
@@ -303,11 +340,11 @@ export const quoteService = {
       }
 
       const response = await fetch(
-        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}/error_details/${errorDetailsId}`,
+        `${getApiUrl()}/api/v1/quote_checks/${quoteCheckId}/error_details/${errorDetailsId}`,
         {
           method: "PATCH",
           headers: {
-            ...apiHeaders(),
+            ...getHeaders(),
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ comment }),
@@ -370,11 +407,11 @@ export const quoteService = {
       }
 
       const response = await fetch(
-        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}/error_details/${quoteCheckId}/feedbacks`,
+        `${getApiUrl()}/api/v1/quote_checks/${quoteCheckId}/error_details/${errorDetailsId}/feedbacks`,
         {
           method: "POST",
           headers: {
-            ...apiHeaders(),
+            ...getHeaders(),
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ comment }),
@@ -408,11 +445,11 @@ export const quoteService = {
       }
 
       const response = await fetch(
-        `${ENV.NEXT_PUBLIC_API_URL}/api/v1/quote_checks/${quoteCheckId}/feedbacks`,
+        `${getApiUrl()}/api/v1/quote_checks/${quoteCheckId}/feedbacks`,
         {
           method: "POST",
           headers: {
-            ...apiHeaders(),
+            ...getHeaders(),
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ ...feedback }),
@@ -437,8 +474,8 @@ export const quoteService = {
 export const statService = {
   async getStats() {
     try {
-      const response = await fetch(`${ENV.NEXT_PUBLIC_API_URL}/api/v1/stats`, {
-        headers: apiHeaders(),
+      const response = await fetch(`${getApiUrl()}/api/v1/stats`, {
+        headers: getHeaders(),
         cache: "no-store",
       });
 
