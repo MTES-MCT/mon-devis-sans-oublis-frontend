@@ -46,18 +46,51 @@ cp .env.example .env.docker
 
 ### Variables d'environnement principales
 
-| Variable | Description | Exemple | Requis |
-|----------|-------------|---------|---------|
-| `NODE_ENV` | Environnement d'exécution | `development` ou `production` | ✅ |
-| `NEXT_TELEMETRY_DISABLED` | Désactive la télémétrie Next.js | `1` | ❌ |
-| `NEXT_PRIVATE_API_AUTH_TOKEN` | Token d'authentification API | `superAPIAuthTokenExample` | ✅ |
-| `NEXT_PUBLIC_API_URL` | URL de l'API backend | `https://api.staging.mon-devis-sans-oublis.beta.gouv.fr` | ✅ |
-| `NEXT_PUBLIC_MATOMO_SITE_ID` | ID du site Matomo | `1` | ❌ |
-| `NEXT_PUBLIC_MATOMO_URL` | URL de l'instance Matomo | `https://stats.beta.gouv.fr` | ❌ |
-| `NEXT_PUBLIC_SENTRY_DSN` | DSN Sentry pour le tracking d'erreurs | `https://xxx@sentry.io/xxx` | ❌ |
-| `NEXT_PUBLIC_SENTRY_ORG` | Organisation Sentry | `mon-organisation` | ❌ |
-| `NEXT_PUBLIC_SENTRY_PROJECT` | Projet Sentry | `mon-devis-frontend` | ❌ |
-| `NEXT_PUBLIC_SENTRY_URL` | URL de l'instance Sentry | `https://sentry.io/` | ❌ |
+| Variable | Description | Exemple | Requis | Type |
+|----------|-------------|---------|---------|------|
+| `NODE_ENV` | Environnement d'exécution | `development` ou `production` | Requis | Server |
+| `NEXT_TELEMETRY_DISABLED` | Désactive la télémétrie Next.js | `1` | Optionnel | Server |
+| `NEXT_PRIVATE_API_AUTH_TOKEN` | Token d'authentification API | `superAPIAuthTokenExample` | Requis | Server |
+| `NEXT_PUBLIC_API_URL` | URL de l'API backend | `https://api.staging.mon-devis-sans-oublis.beta.gouv.fr` | Requis | Shared |
+| `NEXT_PUBLIC_MATOMO_SITE_ID` | ID du site Matomo | `1` | Optionnel | Client |
+| `NEXT_PUBLIC_MATOMO_URL` | URL de l'instance Matomo | `https://stats.beta.gouv.fr` | Optionnel | Client |
+| `NEXT_PUBLIC_SENTRY_DSN` | DSN Sentry pour le tracking d'erreurs | `https://xxx@sentry.io/xxx` | Optionnel | Client |
+| `NEXT_PUBLIC_SENTRY_ORG` | Organisation Sentry | `mon-organisation` | Optionnel | Client |
+| `NEXT_PUBLIC_SENTRY_PROJECT` | Projet Sentry | `mon-devis-frontend` | Optionnel | Client |
+| `NEXT_PUBLIC_SENTRY_URL` | URL de l'instance Sentry | `https://sentry.io/` | Optionnel | Client |
+
+### Types de variables d'environnement
+
+L'application utilise une gestion centralisée des variables d'environnement avec validation :
+
+- **Server** : Variables sensibles accessibles uniquement côté serveur (tokens, clés privées)
+- **Client** : Variables publiques accessibles dans le navigateur (configuration UI, analytics)
+- **Shared** : Variables publiques utilisées côté serveur ET client (URL d'API)
+
+### Configuration Scalingo (Production)
+
+Pour le déploiement en production sur Scalingo, configurez ces variables dans l'interface Scalingo :
+
+**Variables obligatoires :**
+```bash
+NODE_ENV=production
+NEXT_PRIVATE_API_AUTH_TOKEN=your-production-token
+NEXT_PUBLIC_API_URL=https://api.mon-devis-sans-oublis.beta.gouv.fr
+```
+
+**Variables optionnelles :**
+```bash
+NEXT_PUBLIC_MATOMO_SITE_ID=your-matomo-id
+NEXT_PUBLIC_MATOMO_URL=https://stats.beta.gouv.fr
+NEXT_PUBLIC_SENTRY_DSN=your-sentry-dsn
+NEXT_PUBLIC_SENTRY_ORG=your-org
+NEXT_PUBLIC_SENTRY_PROJECT=mon-devis-frontend
+NEXT_PUBLIC_SENTRY_URL=https://sentry.io/
+```
+
+Note : Les variables `NEXT_PUBLIC_*` sont exposées publiquement dans le bundle client.
+
+
 
 ## Démarrage du projet
 
