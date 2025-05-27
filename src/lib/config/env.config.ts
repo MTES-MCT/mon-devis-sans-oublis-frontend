@@ -4,9 +4,6 @@ import { isClient, isServer } from "@/lib/utils/env.utils";
 
 // Schémas de validation
 const serverSchema = z.object({
-  NODE_ENV: z
-    .enum(["development", "production", "test"])
-    .default("development"),
   NEXT_PRIVATE_API_AUTH_TOKEN: z.string().min(1, "API auth token is required"),
   NEXT_TELEMETRY_DISABLED: z.string().optional(),
 });
