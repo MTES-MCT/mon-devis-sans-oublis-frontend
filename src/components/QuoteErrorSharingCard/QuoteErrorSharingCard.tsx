@@ -75,9 +75,7 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
               className={`fr-btn ${
                 isUrlCopied && "fr-btn--secondary"
               } fr-btn--sm shrink-0 self-start fr-btn--icon-right ${
-                isUrlCopied
-                  ? "fr-icon-check-line"
-                  : "fr-icon-external-link-line"
+                isUrlCopied ? "fr-icon-check-line" : "fr-icon-link"
               }`}
               onClick={copyUrlToClipboard}
             >
