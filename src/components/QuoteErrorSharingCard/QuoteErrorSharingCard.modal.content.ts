@@ -1,82 +1,109 @@
-import { ErrorDetails, Gestes } from "@/types";
+import { Category, ErrorDetails, Gestes } from "@/types";
+import { QUOTE_ERROR_SHARING_MODAL_WORDING } from "./QuoteErrorSharingCard.modal.wordings";
 
+// Filtre erreurs actives
+const getActiveErrors = (adminErrorList: ErrorDetails[]): ErrorDetails[] => {
+  return adminErrorList.filter((error) => !error.deleted);
+};
+
+// Catégorisation des erreurs
+const categorizeErrors = (errors: ErrorDetails[]) => {
+  const adminErrors = errors.filter(
+    (error) => error.category === Category.ADMIN
+  );
+  const technicalErrors = errors.filter(
+    (error) => error.category === Category.GESTES
+  );
+
+  return { adminErrors, technicalErrors };
+};
+
+// Génération de l'en-tête de l'email
+const generateEmailHeader = (fileName?: string): string => {
+  const dateAnalyse = new Date().toLocaleDateString("fr-FR");
+  const nomFichier = fileName || QUOTE_ERROR_SHARING_MODAL_WORDING.file_unknown;
+  return QUOTE_ERROR_SHARING_MODAL_WORDING.getEmailHeader(
+    dateAnalyse,
+    nomFichier
+  );
+};
+
+// Génération de la section administrative
+const generateAdminSection = (adminErrors: ErrorDetails[]): string => {
+  if (adminErrors.length === 0) {
+    return "";
+  }
+
+  return `• ${QUOTE_ERROR_SHARING_MODAL_WORDING.administrativeSection}
+${adminErrors.map((error) => `    • ${error.title}`).join("\n")}
+
+`;
+};
+
+// Groupe les erreurs techniques par geste
+const groupErrorsByGeste = (
+  technicalErrors: ErrorDetails[]
+): Record<string, ErrorDetails[]> => {
+  return technicalErrors.reduce((acc, error) => {
+    const gesteId =
+      error.geste_id || QUOTE_ERROR_SHARING_MODAL_WORDING.notSpecified;
+    if (!acc[gesteId]) {
+      acc[gesteId] = [];
+    }
+    acc[gesteId].push(error);
+    return acc;
+  }, {} as Record<string, ErrorDetails[]>);
+};
+
+// Génération de la section technique
+const generateTechnicalSection = (
+  technicalErrors: ErrorDetails[],
+  gestes: Gestes[]
+): string => {
+  if (technicalErrors.length === 0) {
+    return "";
+  }
+
+  let technicalSection = `• ${QUOTE_ERROR_SHARING_MODAL_WORDING.technicalSection}
+`;
+
+  const errorsByGeste = groupErrorsByGeste(technicalErrors);
+
+  Object.entries(errorsByGeste).forEach(([gesteId, errors]) => {
+    const geste = gestes.find((g) => g.id === gesteId);
+    const gesteIntitule = geste?.intitule ? geste.intitule : `Geste ${gesteId}`;
+
+    technicalSection += `   • ${gesteIntitule}
+`;
+
+    errors.forEach((error) => {
+      technicalSection += `   => ${error.title}
+`;
+    });
+
+    technicalSection += "\n";
+  });
+
+  return technicalSection;
+};
+
+// Génération du contenu de l'email
 export const generateEmailContent = (
   adminErrorList: ErrorDetails[],
   gestes: Gestes[] = [],
   fileName?: string
 ): string => {
-  const dateAnalyse = new Date().toLocaleDateString("fr-FR");
-  const nomFichier = `${fileName || "Fichier inconnu"}`;
-
-  const activeErrors = adminErrorList.filter((error) => !error.deleted);
+  const activeErrors = getActiveErrors(adminErrorList);
 
   if (activeErrors.length === 0) {
-    return "Aucune erreur à signaler.";
+    return QUOTE_ERROR_SHARING_MODAL_WORDING.noErrors;
   }
 
-  // Séparer les erreurs par catégorie
-  const adminErrors = activeErrors.filter(
-    (error) => error.category === "admin"
-  );
+  const { adminErrors, technicalErrors } = categorizeErrors(activeErrors);
 
-  const technicalErrors = activeErrors.filter(
-    (error) => error.category !== "admin"
-  );
-
-  // Header
-  const header = `Bonjour,
-
-Pour être conforme aux attendus des aides, voici les erreurs (détectées lors de l'analyse du ${dateAnalyse} du Devis ${nomFichier}) à corriger. En corrigeant ces erreurs maintenant, vous optimisez vos chances d'une instruction sans demandes complémentaires et vous gagnerez donc beaucoup de temps.
-
-`;
-
-  // Section Mentions administratives
-  let adminSection = "";
-  if (adminErrors.length > 0) {
-    adminSection = `• Mentions administratives
-${adminErrors.map((error) => `    • ${error.title}`).join("\n")}
-
-`;
-  }
-
-  // Section Descriptif technique des gestes
-  let technicalSection = "";
-  if (technicalErrors.length > 0) {
-    technicalSection = `• Descriptif technique des gestes
-`;
-
-    // Grouper les erreurs techniques par geste_id
-    const errorsByGeste = technicalErrors.reduce((acc, error) => {
-      const gesteId = error.geste_id || "non_specifie";
-      if (!acc[gesteId]) {
-        acc[gesteId] = [];
-      }
-      acc[gesteId].push(error);
-      return acc;
-    }, {} as Record<string, ErrorDetails[]>);
-
-    // Générer le contenu pour chaque geste
-    Object.entries(errorsByGeste).forEach(([gesteId, errors]) => {
-      // Trouver l'intitulé du geste
-      const geste = gestes.find((g) => g.id === gesteId);
-      const gesteIntitule = geste?.intitule
-        ? `${geste.intitule}`
-        : `Geste ${gesteId}`;
-      technicalSection += `   • ${gesteIntitule.toUpperCase()}
-`;
-
-      // Lister les erreurs pour ce geste
-      errors.forEach((error) => {
-        technicalSection += `   => ${error.title}`;
-        if (error.solution) {
-          technicalSection += ` => ${error.solution}`;
-        }
-        technicalSection += "\n";
-      });
-
-      technicalSection += "\n";
-    });
-  }
+  const header = generateEmailHeader(fileName);
+  const adminSection = generateAdminSection(adminErrors);
+  const technicalSection = generateTechnicalSection(technicalErrors, gestes);
 
   return header + adminSection + technicalSection;
 };
