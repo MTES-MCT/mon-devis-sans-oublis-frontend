@@ -77,7 +77,7 @@ const generateTechnicalSection = (
 `;
 
     errors.forEach((error) => {
-      technicalSection += `   => ${error.title}
+      technicalSection += `     • ${error.title}
 `;
     });
 
