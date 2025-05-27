@@ -40,8 +40,8 @@ const MatomoContent = () => {
     push(["trackPageView"]);
   }, [pathname, searchParamsString]);
 
-  // Matomo activé sur staging et production uniquement
-  const allowedEnvs = ["staging", "production"];
+  // Matomo activé sur production uniquement
+  const allowedEnvs = ["production"];
   if (!allowedEnvs.includes(process.env.NODE_ENV || "")) {
     return null;
   }

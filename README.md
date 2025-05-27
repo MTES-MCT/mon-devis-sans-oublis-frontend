@@ -48,7 +48,7 @@ cp .env.example .env.docker
 
 | Variable | Description | Exemple | Requis | Type |
 |----------|-------------|---------|---------|------|
-| `NODE_ENV` | Environnement d'exécution | `development` ou `staging` ou `production` | Requis | Server |
+| `NODE_ENV` | Environnement d'exécution | `development` ou `production` | Requis | Server |
 | `NEXT_TELEMETRY_DISABLED` | Désactive la télémétrie Next.js | `1` | Optionnel | Server |
 | `NEXT_PRIVATE_API_AUTH_TOKEN` | Token d'authentification API | `superAPIAuthTokenExample` | Requis | Server |
 | `NEXT_PUBLIC_API_URL` | URL de l'API backend | `https://api.staging.mon-devis-sans-oublis.beta.gouv.fr` | Requis | Shared |
