@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Suspense, useEffect, useState } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { init, push } from '@socialgouv/matomo-next';
+import { Suspense, useEffect, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { init, push } from "@socialgouv/matomo-next";
 
 const MatomoContent = () => {
   const [initialised, setInitialised] = useState<boolean>(false);
@@ -30,14 +30,16 @@ const MatomoContent = () => {
     if (!pathname) return;
 
     const url = decodeURIComponent(
-      pathname + (searchParamsString ? '?' + searchParamsString : '')
+      pathname + (searchParamsString ? "?" + searchParamsString : "")
     );
 
-    push(['setCustomUrl', url]);
-    push(['trackPageView']);
+    push(["setCustomUrl", url]);
+    push(["trackPageView"]);
   }, [pathname, searchParamsString]);
 
-  if (process.env.NODE_ENV !== 'production') {
+  // Matomo activé sur staging et production uniquement
+  const allowedEnvs = ["staging", "production"];
+  if (!allowedEnvs.includes(process.env.NODE_ENV || "")) {
     return null;
   }
 
