@@ -1,12 +1,12 @@
 import { Category, ErrorDetails, Gestes } from "@/types";
-import { QUOTE_ERROR_SHARING_MODAL_WORDING } from "./QuoteErrorSharingCard.modal.wordings";
+import { QUOTE_ERROR_SHARING_MODAL_WORDING } from "./QuoteErrorSharingCard.modal.content.wordings";
 
-// Filtre erreurs actives
+// Fonction pour filtrer les erreurs actives
 const getActiveErrors = (adminErrorList: ErrorDetails[]): ErrorDetails[] => {
   return adminErrorList.filter((error) => !error.deleted);
 };
 
-// Catégorisation des erreurs
+// Fonction pour séparer les erreurs par catégorie
 const categorizeErrors = (errors: ErrorDetails[]) => {
   const adminErrors = errors.filter(
     (error) => error.category === Category.ADMIN
@@ -18,29 +18,37 @@ const categorizeErrors = (errors: ErrorDetails[]) => {
   return { adminErrors, technicalErrors };
 };
 
-// Génération de l'en-tête de l'email
+// Fonction pour générer l'en-tête de l'email en HTML
 const generateEmailHeader = (fileName?: string): string => {
   const dateAnalyse = new Date().toLocaleDateString("fr-FR");
   const nomFichier = fileName || QUOTE_ERROR_SHARING_MODAL_WORDING.file_unknown;
-  return QUOTE_ERROR_SHARING_MODAL_WORDING.getEmailHeader(
-    dateAnalyse,
-    nomFichier
+
+  return (
+    QUOTE_ERROR_SHARING_MODAL_WORDING.getEmailHeader(dateAnalyse, nomFichier) +
+    "\n\n"
   );
 };
 
-// Génération de la section administrative
+// Fonction pour générer la section des mentions administratives en HTML
 const generateAdminSection = (adminErrors: ErrorDetails[]): string => {
   if (adminErrors.length === 0) {
     return "";
   }
 
-  return `• ${QUOTE_ERROR_SHARING_MODAL_WORDING.administrativeSection}
-${adminErrors.map((error) => `    • ${error.title}`).join("\n")}
+  const errorItems = adminErrors
+    .map((error) => `      <li>${error.title}</li>`)
+    .join("\n");
 
+  return `  <li><strong>${QUOTE_ERROR_SHARING_MODAL_WORDING.administrativeSection}</strong>
+    <ul>
+${errorItems}
+    </ul>
+  </li>
+  <br>
 `;
 };
 
-// Groupe les erreurs techniques par geste
+// Fonction pour grouper les erreurs techniques par geste
 const groupErrorsByGeste = (
   technicalErrors: ErrorDetails[]
 ): Record<string, ErrorDetails[]> => {
@@ -55,7 +63,7 @@ const groupErrorsByGeste = (
   }, {} as Record<string, ErrorDetails[]>);
 };
 
-// Génération de la section technique
+// Fonction pour générer la section technique en HTML
 const generateTechnicalSection = (
   technicalErrors: ErrorDetails[],
   gestes: Gestes[]
@@ -64,30 +72,37 @@ const generateTechnicalSection = (
     return "";
   }
 
-  let technicalSection = `• ${QUOTE_ERROR_SHARING_MODAL_WORDING.technicalSection}
-`;
-
   const errorsByGeste = groupErrorsByGeste(technicalErrors);
 
-  Object.entries(errorsByGeste).forEach(([gesteId, errors]) => {
-    const geste = gestes.find((g) => g.id === gesteId);
-    const gesteIntitule = geste?.intitule ? geste.intitule : `Geste ${gesteId}`;
+  const gestesSections = Object.entries(errorsByGeste)
+    .map(([gesteId, errors]) => {
+      const geste = gestes.find((g) => g.id === gesteId);
+      const gesteIntitule = geste?.intitule
+        ? geste.intitule
+        : `${QUOTE_ERROR_SHARING_MODAL_WORDING.notSpecified} ${gesteId}`;
 
-    technicalSection += `   • ${gesteIntitule}
+      const errorItems = errors
+        .map((error) => `        <li>${error.title}</li>`)
+        .join("\n");
+
+      return `      <li><strong>${gesteIntitule}</strong>
+        <ul>
+${errorItems}
+        </ul>
+      </li>`;
+    })
+    .join("\n      <br>\n");
+
+  return `  <li><strong>${QUOTE_ERROR_SHARING_MODAL_WORDING.technicalSection}</strong>
+    <ul>
+${gestesSections}
+    </ul>
+  </li>
+  <br>
 `;
-
-    errors.forEach((error) => {
-      technicalSection += `     • ${error.title}
-`;
-    });
-
-    technicalSection += "\n";
-  });
-
-  return technicalSection;
 };
 
-// Génération du contenu de l'email
+// Génère le contenu de l'email à partir de la liste d'erreurs administratives, des gestes et du nom du fichier
 export const generateEmailContent = (
   adminErrorList: ErrorDetails[],
   gestes: Gestes[] = [],
@@ -96,7 +111,7 @@ export const generateEmailContent = (
   const activeErrors = getActiveErrors(adminErrorList);
 
   if (activeErrors.length === 0) {
-    return QUOTE_ERROR_SHARING_MODAL_WORDING.noErrors;
+    return `<p>${QUOTE_ERROR_SHARING_MODAL_WORDING.noErrors}</p>`;
   }
 
   const { adminErrors, technicalErrors } = categorizeErrors(activeErrors);
@@ -105,5 +120,14 @@ export const generateEmailContent = (
   const adminSection = generateAdminSection(adminErrors);
   const technicalSection = generateTechnicalSection(technicalErrors, gestes);
 
-  return header + adminSection + technicalSection;
+  // Construction de la liste principale
+  const sections = [adminSection, technicalSection].filter(
+    (section) => section.length > 0
+  );
+
+  if (sections.length === 0) {
+    return header + `<p>${QUOTE_ERROR_SHARING_MODAL_WORDING.noErrors}</p>`;
+  }
+
+  return header + `<ul>\n${sections.join("")}\n</ul>`;
 };

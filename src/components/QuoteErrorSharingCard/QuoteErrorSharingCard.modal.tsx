@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ErrorDetails, Gestes } from "@/types";
 import { generateEmailContent } from "./QuoteErrorSharingCard.modal.content";
+import { handleCopyToClipboard } from "./QuoteErrorSharingCard.modal.utils";
 import Modal, { ModalPosition } from "../Modal/Modal";
 import { QUOTE_ERROR_SHARING_WORDING } from "./QuoteErrorSharingCard.wording";
 
@@ -25,16 +26,9 @@ const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
     generateEmailContent(adminErrorList, gestes, fileName)
   );
   const [isCopied, setIsCopied] = useState(false);
+  const [showHTML, setShowHTML] = useState(false);
 
-  const handleCopyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(emailContent);
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000);
-    } catch (error) {
-      console.error("Erreur lors de la copie:", error);
-    }
-  };
+  const handleCopy = () => handleCopyToClipboard(emailContent, setIsCopied);
 
   return (
     <Modal
@@ -59,22 +53,38 @@ const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
         </div>
 
         <div className="flex-1 mb-4">
-          <textarea
-            id="email-content"
-            className="fr-input w-full h-128 resize-none font-mono text-sm"
-            value={emailContent}
-            onChange={(e) => setEmailContent(e.target.value)}
-          />
+          {showHTML ? (
+            <textarea
+              id="email-content"
+              className="fr-input w-full h-128 resize-none font-mono text-sm"
+              value={emailContent}
+              onChange={(e) => setEmailContent(e.target.value)}
+            />
+          ) : (
+            <div
+              className="w-full h-128 overflow-y-auto p-4 bg-white border rounded text-base leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: emailContent }}
+            />
+          )}
         </div>
 
         <div className="flex gap-3 justify-end pt-4">
+          <button
+            className="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-code-block"
+            onClick={() => setShowHTML(!showHTML)}
+          >
+            {showHTML
+              ? QUOTE_ERROR_SHARING_WORDING.modal.show_preview
+              : QUOTE_ERROR_SHARING_WORDING.modal.html_preview}
+          </button>
+
           <button
             className={`fr-btn fr-btn--icon-left ${
               isCopied
                 ? "fr-btn--secondary fr-icon-check-line"
                 : "fr-icon-clipboard-line"
             }`}
-            onClick={handleCopyToClipboard}
+            onClick={handleCopy}
           >
             {isCopied
               ? QUOTE_ERROR_SHARING_WORDING.modal.copied
