@@ -62,7 +62,10 @@ const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
                   checked={!showHTML}
                   onChange={() => setShowHTML(false)}
                 />
-                <label className="fr-label" htmlFor="display-mode-preview">
+                <label
+                  className="fr-icon-settings-5-line fr-label"
+                  htmlFor="display-mode-preview"
+                >
                   {QUOTE_ERROR_SHARING_WORDING_MODAL.show_preview}
                 </label>
               </div>
@@ -75,7 +78,10 @@ const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
                   checked={showHTML}
                   onChange={() => setShowHTML(true)}
                 />
-                <label className="fr-label" htmlFor="display-mode-html">
+                <label
+                  className="fr-icon-code-view fr-label"
+                  htmlFor="display-mode-html"
+                >
                   {QUOTE_ERROR_SHARING_WORDING_MODAL.html_preview}
                 </label>
               </div>
