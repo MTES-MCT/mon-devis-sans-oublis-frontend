@@ -1,27 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import { ErrorDetails } from "@/types";
-import {
-  generateEmailContent,
-  getModalTitle,
-} from "./QuoteErrorSharingCard.modal.content";
+import { ErrorDetails, Gestes } from "@/types";
+import { generateEmailContent } from "./QuoteErrorSharingCard.modal.content";
 import Modal, { ModalPosition } from "../Modal/Modal";
 import { QUOTE_ERROR_SHARING_WORDING } from "./QuoteErrorSharingCard.wording";
 
 export interface QuoteErrorSharingModalProps {
   isOpen: boolean;
   onClose: () => void;
-  errorsList: ErrorDetails[];
+  adminErrorList: ErrorDetails[];
+  gestes: Gestes[];
+  fileName?: string;
 }
 
 const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
   isOpen,
   onClose,
-  errorsList,
+  adminErrorList,
+  gestes = [],
+  fileName = "",
 }) => {
   const [emailContent, setEmailContent] = useState(() =>
-    generateEmailContent(errorsList)
+    generateEmailContent(adminErrorList, gestes, fileName)
   );
   const [isCopied, setIsCopied] = useState(false);
 

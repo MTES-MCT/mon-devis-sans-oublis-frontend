@@ -5,20 +5,24 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 import { useConseillerRoutes } from "@/hooks";
-import { ErrorDetails } from "@/types";
+import { ErrorDetails, Gestes } from "@/types";
 import QuoteErrorSharingModal from "./QuoteErrorSharingCard.modal";
 import { QUOTE_ERROR_SHARING_WORDING } from "./QuoteErrorSharingCard.wording";
 
 export interface QuoteErrorSharingCardProps {
   baseUrl?: string;
   className?: string;
-  errorsList?: ErrorDetails[];
+  adminErrorList?: ErrorDetails[];
+  gestes: Gestes[];
+  fileName?: string;
 }
 
 const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
   baseUrl = typeof window !== "undefined" ? window.location.origin : "",
   className,
-  errorsList = [],
+  adminErrorList = [],
+  gestes = [],
+  fileName,
 }) => {
   const pathname = usePathname();
   const [isUrlCopied, setIsUrlCopied] = useState<boolean>(false);
@@ -86,7 +90,9 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
       <QuoteErrorSharingModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        errorsList={errorsList}
+        adminErrorList={adminErrorList}
+        gestes={gestes}
+        fileName={fileName}
       />
     </>
   );
