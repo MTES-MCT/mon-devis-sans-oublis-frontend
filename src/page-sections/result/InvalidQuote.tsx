@@ -270,7 +270,12 @@ export default function InvalidQuote({
       </section>
       <section className="fr-container fr-my-6w">
         <div className="flex md:flex-row flex-col gap-6">
-          <QuoteErrorSharingCard className="md:flex-1" errorsList={list} />
+          <QuoteErrorSharingCard
+            className="md:flex-1"
+            fileName={uploadedFileName}
+            adminErrorList={list}
+            gestes={gestes}
+          />
           <QuoteLaunchAnalysisCard className="md:flex-1" />
         </div>
       </section>
