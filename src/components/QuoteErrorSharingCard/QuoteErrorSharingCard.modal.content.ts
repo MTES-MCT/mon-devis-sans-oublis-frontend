@@ -52,14 +52,14 @@ ${errorItems}
 const groupErrorsByGeste = (
   technicalErrors: ErrorDetails[]
 ): Record<string, ErrorDetails[]> => {
-  return technicalErrors.reduce((acc, error) => {
+  return technicalErrors.reduce((errorGroups, error) => {
     const gesteId =
       error.geste_id || QUOTE_ERROR_SHARING_MODAL_WORDING.notSpecified;
-    if (!acc[gesteId]) {
-      acc[gesteId] = [];
+    if (!errorGroups[gesteId]) {
+      errorGroups[gesteId] = [];
     }
-    acc[gesteId].push(error);
-    return acc;
+    errorGroups[gesteId].push(error);
+    return errorGroups;
   }, {} as Record<string, ErrorDetails[]>);
 };
 
