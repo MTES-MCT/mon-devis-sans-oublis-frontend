@@ -64,7 +64,7 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
         />
         <div className="flex flex-col">
           <h5 className="fr-mb-2w">{QUOTE_ERROR_SHARING_WORDING.title}</h5>
-          <span className="flex flex-row gap-4">
+          <span className="flex flex-col sm:flex-row gap-2 sm:gap-4">
             <button
               className="fr-btn fr-btn--sm fr-btn--icon-right fr-icon-align-left"
               onClick={handleOpenModal}
@@ -75,7 +75,7 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
               className={`fr-btn ${
                 isUrlCopied && "fr-btn--secondary"
               } fr-btn--sm shrink-0 self-start fr-btn--icon-right ${
-                isUrlCopied ? "fr-icon-check-line" : "fr-icon-share-box-line"
+                isUrlCopied ? "fr-icon-check-line" : "fr-icon-link"
               }`}
               onClick={copyUrlToClipboard}
             >
