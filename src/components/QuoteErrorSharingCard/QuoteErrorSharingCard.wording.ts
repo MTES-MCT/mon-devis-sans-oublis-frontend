@@ -5,13 +5,4 @@ export const QUOTE_ERROR_SHARING_WORDING = {
   image_src: "/images/documents/document-download.svg",
   title: "Partagez les corrections du devis",
   button_share_for_email: "Exporter pour email",
-  modal: {
-    close: "Fermer",
-    title: "Exporter les corrections du dossier",
-    subTitle: "Vous pouvez modifier le texte ci-dessous avant de le copier",
-    copy: "Copier le texte",
-    copied: "Copié !",
-    html_preview: "Voir le HTML",
-    show_preview: "Voir l'aperçu",
-  },
 } as const;

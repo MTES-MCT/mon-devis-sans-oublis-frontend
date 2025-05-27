@@ -5,7 +5,7 @@ import { ErrorDetails, Gestes } from "@/types";
 import { generateEmailContent } from "./QuoteErrorSharingCard.modal.content";
 import { handleCopyToClipboard } from "./QuoteErrorSharingCard.modal.utils";
 import Modal, { ModalPosition } from "../Modal/Modal";
-import { QUOTE_ERROR_SHARING_WORDING } from "./QuoteErrorSharingCard.wording";
+import { QUOTE_ERROR_SHARING_WORDING_MODAL } from "./QuoteErrorSharingCard.modal.wording";
 
 export interface QuoteErrorSharingModalProps {
   isOpen: boolean;
@@ -35,7 +35,7 @@ const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       position={ModalPosition.CENTER}
-      backButtonLabel={QUOTE_ERROR_SHARING_WORDING.modal.close}
+      backButtonLabel={QUOTE_ERROR_SHARING_WORDING_MODAL.close}
       className="z-50"
     >
       <div className="flex flex-col h-full max-h-[80vh]">
@@ -44,12 +44,45 @@ const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
             id="share-errors-title"
             className="text-[var(--text-title-grey)]! fr-mb-1w flex items-center gap-2"
           >
-            {QUOTE_ERROR_SHARING_WORDING.modal.title}
+            {QUOTE_ERROR_SHARING_WORDING_MODAL.title}
           </h4>
 
-          <p className="text-xs text-[var(--text-mention-grey)]">
-            {QUOTE_ERROR_SHARING_WORDING.modal.subTitle}
-          </p>
+          <div className="flex justify-between items-center">
+            <p className="text-xs text-[var(--text-mention-grey)]">
+              {QUOTE_ERROR_SHARING_WORDING_MODAL.subTitle}
+            </p>
+
+            <fieldset className="fr-segmented fr-segmented--sm">
+              <div className="fr-segmented__elements">
+                <div className="fr-segmented__element">
+                  <input
+                    value="preview"
+                    type="radio"
+                    id="display-mode-preview"
+                    name="display-mode"
+                    checked={!showHTML}
+                    onChange={() => setShowHTML(false)}
+                  />
+                  <label className="fr-label" htmlFor="display-mode-preview">
+                    Aperçu
+                  </label>
+                </div>
+                <div className="fr-segmented__element">
+                  <input
+                    value="html"
+                    type="radio"
+                    id="display-mode-html"
+                    name="display-mode"
+                    checked={showHTML}
+                    onChange={() => setShowHTML(true)}
+                  />
+                  <label className="fr-label" htmlFor="display-mode-html">
+                    HTML
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
         </div>
 
         <div className="flex-1 mb-4">
@@ -70,15 +103,6 @@ const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
 
         <div className="flex gap-3 justify-end pt-4">
           <button
-            className="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-code-block"
-            onClick={() => setShowHTML(!showHTML)}
-          >
-            {showHTML
-              ? QUOTE_ERROR_SHARING_WORDING.modal.show_preview
-              : QUOTE_ERROR_SHARING_WORDING.modal.html_preview}
-          </button>
-
-          <button
             className={`fr-btn fr-btn--icon-left ${
               isCopied
                 ? "fr-btn--secondary fr-icon-check-line"
@@ -87,8 +111,8 @@ const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
             onClick={handleCopy}
           >
             {isCopied
-              ? QUOTE_ERROR_SHARING_WORDING.modal.copied
-              : QUOTE_ERROR_SHARING_WORDING.modal.copy}
+              ? QUOTE_ERROR_SHARING_WORDING_MODAL.copied
+              : QUOTE_ERROR_SHARING_WORDING_MODAL.copy}
           </button>
         </div>
       </div>
