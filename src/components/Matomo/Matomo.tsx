@@ -3,19 +3,22 @@
 import { Suspense, useEffect, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { init, push } from "@socialgouv/matomo-next";
+import { getClientEnv } from "@/lib/config/env.config";
 
 const MatomoContent = () => {
   const [initialised, setInitialised] = useState<boolean>(false);
 
   useEffect(() => {
+    const clientEnv = getClientEnv();
+
     if (
-      process.env.NEXT_PUBLIC_MATOMO_URL &&
-      process.env.NEXT_PUBLIC_MATOMO_SITE_ID &&
+      clientEnv.NEXT_PUBLIC_MATOMO_URL &&
+      clientEnv.NEXT_PUBLIC_MATOMO_SITE_ID &&
       !initialised
     ) {
       init({
-        siteId: process.env.NEXT_PUBLIC_MATOMO_SITE_ID,
-        url: process.env.NEXT_PUBLIC_MATOMO_URL,
+        siteId: clientEnv.NEXT_PUBLIC_MATOMO_SITE_ID,
+        url: clientEnv.NEXT_PUBLIC_MATOMO_URL,
       });
 
       setInitialised(true);
