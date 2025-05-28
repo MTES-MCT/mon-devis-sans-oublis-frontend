@@ -34,7 +34,9 @@ Configurez les variables d'environnement selon votre méthode d'exécution :
 cp .env.example .env.local
 ```
 
-2. Éditez le fichier `.env.local` avec les valeurs réelles pour votre environnement de développement.
+2. Éditez le fichier `.env.local` avec les valeurs réelles pour votre environnement de développement. 
+
+⚠️ **Important** : Ne laissez jamais de variables d'environnement vides (ex: `VARIABLE=`). Si vous n'avez pas besoin d'une variable, commentez-la avec `#` ou supprimez la ligne complètement.
 
 #### Pour l'exécution avec Docker
 
@@ -45,6 +47,8 @@ cp .env.example .env.docker
 ```
 
 2. Éditez le fichier `.env.docker` avec les valeurs appropriées pour l'environnement Docker.
+
+⚠️ **Important** : Ne laissez jamais de variables d'environnement vides (ex: `VARIABLE=`). Si vous n'avez pas besoin d'une variable, commentez-la avec `#` ou supprimez la ligne complètement.
 
 ### Variables d'environnement principales
 
@@ -60,6 +64,7 @@ cp .env.example .env.docker
 | `NEXT_PUBLIC_SENTRY_ORG`      | Organisation Sentry                   | `mon-organisation`                                       | Optionnel | Client |
 | `NEXT_PUBLIC_SENTRY_PROJECT`  | Projet Sentry                         | `mon-devis-frontend`                                     | Optionnel | Client |
 | `NEXT_PUBLIC_SENTRY_URL`      | URL de l'instance Sentry              | `https://sentry.io/`                                     | Optionnel | Client |
+| `NEXT_PUBLIC_CRISP_WEBSITE_ID`| ID du Site Crisp                      | `b3f91d7a-e29c-4e12-8c76-3fd6a218b9f1`                   | Optionnel | Client |
 
 ### Types de variables d'environnement
 
@@ -90,6 +95,7 @@ NEXT_PUBLIC_SENTRY_DSN=your-sentry-dsn
 NEXT_PUBLIC_SENTRY_ORG=your-org
 NEXT_PUBLIC_SENTRY_PROJECT=mon-devis-frontend
 NEXT_PUBLIC_SENTRY_URL=https://sentry.io/
+NEXT_PUBLIC_CRISP_WEBSITE_ID=your-crisp-id
 ```
 
 Note : Les variables `NEXT_PUBLIC_*` sont exposées publiquement dans le bundle client.
@@ -149,6 +155,8 @@ npm run dev
 | `npm run lint`            | Vérifie la qualité du code avec ESLint     |
 | `npm run format`          | Formate le code avec Prettier              |
 | `npm run format:check`    | Vérifie le formatage sans modifier         |
+| `npm run clean`           | Supprime le cache Next.js et relance le dev |
+| `npm run fresh`           | Reset complet (cache + node_modules)       |
 
 ### Vérification qualité
 
@@ -170,6 +178,9 @@ npm run format
 
 # Développer les composants isolément
 npm run storybook
+
+# Nettoyer le cache en cas de problème
+npm run clean
 ```
 
 ## Storybook
@@ -267,6 +278,7 @@ docker run -p 3000:3000 mon-devis-frontend
 | **[Zod](https://zod.dev/)**                                    | 3.x     | Validation de schémas TypeScript                      |
 | **[Sentry](https://sentry.io/)**                               | 9.x     | Monitoring d'erreurs en production                    |
 | **[Matomo](https://matomo.org/)**                              | -       | Analytics respectueux de la vie privée                |
+| **[Crisp](https://crisp.chat/)**                               | -       | Support client et chat en direct                      |
 
 ## Architecture
 
@@ -295,6 +307,18 @@ src/
 
 ## Troubleshooting
 
+### Problèmes de cache
+
+Si vous rencontrez des problèmes étranges (variables d'environnement qui disparaissent, composants qui ne se mettent pas à jour, etc.) :
+
+```bash
+# Nettoyer le cache Next.js et redémarrer
+npm run clean
+
+# Si le problème persiste, reset complet
+npm run fresh
+```
+
 ### Erreurs courantes
 
 **Erreur de types TypeScript :**
@@ -316,6 +340,7 @@ npm run test:watch
 **Variables d'environnement manquantes :**
 - Vérifiez que `.env.local` existe
 - Copiez `.env.example` si nécessaire
+- Ne laissez jamais de variables vides (`VARIABLE=`)
 
 ### Support
 
@@ -323,3 +348,4 @@ Pour les problèmes techniques, vérifiez :
 1. Node.js version 22.x installée
 2. Variables d'environnement configurées
 3. `npm install` exécuté
+4. Cache Next.js nettoyé (`npm run clean`)
