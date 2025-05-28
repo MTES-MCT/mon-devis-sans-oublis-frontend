@@ -1,5 +1,5 @@
 import { Notice } from "@/components";
-import { quoteService } from "@/lib/api";
+import { quoteService } from "@/lib/client/apiWrapper";
 import { ResultClient } from "@/page-sections";
 import wording from "@/wording";
 

@@ -1,5 +1,5 @@
 import { Notice } from "@/components";
-import { quoteService } from "@/lib/api";
+import { quoteService } from "@/lib/client/apiWrapper";
 import { UploadClient } from "@/page-sections";
 import { Metadata } from "@/types";
 import wording from "@/wording";

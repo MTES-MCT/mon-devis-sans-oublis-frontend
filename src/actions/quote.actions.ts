@@ -12,18 +12,10 @@ interface QuoteUpdateData {
   };
 }
 
-interface QuoteResponse {
-  id: string;
-  status: string;
-  metadata: {
-    aides: string[];
-    gestes: string[];
-  };
-  error_details?: ErrorDetails[];
-}
+// Suppression du type restrictif QuoteResponse
 
-// Récupération d'un devis
-export async function getQuote(quoteCheckId: string): Promise<QuoteResponse> {
+// Récupération d'un devis - SANS typage restrictif
+export async function getQuote(quoteCheckId: string) {
   try {
     if (!quoteCheckId) {
       throw new Error("Quote check ID is required");
@@ -36,12 +28,12 @@ export async function getQuote(quoteCheckId: string): Promise<QuoteResponse> {
   }
 }
 
-// Envoi d'un devis
+// Envoi d'un devis - SANS typage restrictif
 export async function uploadQuote(
   file: File,
   metadata: { aides: string[]; gestes: string[] },
   profile: Profile
-): Promise<QuoteResponse> {
+) {
   try {
     const formData = new FormData();
     formData.append("file", file);
@@ -62,11 +54,11 @@ export async function uploadQuote(
   }
 }
 
-// Mise à jour d'un devis
+// Mise à jour d'un devis - SANS typage restrictif
 export async function updateQuote(
   quoteCheckId: string,
   updatedData: QuoteUpdateData
-): Promise<QuoteResponse> {
+) {
   try {
     if (!quoteCheckId) {
       throw new Error("Quote check ID is required");
@@ -88,7 +80,7 @@ export async function updateQuote(
 export async function updateQuoteComment(
   quoteCheckId: string,
   comment: string | null
-): Promise<any | null> {
+) {
   try {
     if (!quoteCheckId) {
       throw new Error("Quote check ID is required");
@@ -109,10 +101,7 @@ export async function updateQuoteComment(
 }
 
 // Ajout d'un commentaire
-export async function addQuoteComment(
-  quoteCheckId: string,
-  comment: string
-): Promise<QuoteResponse> {
+export async function addQuoteComment(quoteCheckId: string, comment: string) {
   if (!comment.trim()) {
     throw new Error("Comment cannot be empty");
   }
@@ -122,14 +111,12 @@ export async function addQuoteComment(
 }
 
 // Suppression d'un commentaire
-export async function removeQuoteComment(
-  quoteCheckId: string
-): Promise<any | null> {
+export async function removeQuoteComment(quoteCheckId: string) {
   return updateQuoteComment(quoteCheckId, null);
 }
 
 // Récupération des métadonnées des devis
-export async function getQuoteMetadata(): Promise<any> {
+export async function getQuoteMetadata() {
   try {
     return await apiClient.get("/api/v1/quote_checks/metadata");
   } catch (error) {

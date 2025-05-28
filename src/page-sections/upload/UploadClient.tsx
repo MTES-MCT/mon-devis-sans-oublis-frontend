@@ -12,9 +12,9 @@ import {
   Notice,
   Upload,
 } from "@/components";
-import { quoteService } from "@/lib/api";
 import { Metadata, Profile } from "@/types";
 import wording from "@/wording";
+import { quoteService } from "@/lib/client/apiWrapper";
 
 export const FILE_ERROR = "file_error";
 

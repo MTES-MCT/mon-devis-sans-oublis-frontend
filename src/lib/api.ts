@@ -67,7 +67,8 @@ function getApiUrl(): string {
 }
 
 // Quote Service
-export const quoteService = {
+// TODO : Remove this service when the API Server Action migration is complete
+export const quoteServiceToRemove = {
   // Quote Management
   async uploadQuote(
     file: File,
