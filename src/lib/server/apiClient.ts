@@ -44,7 +44,15 @@ export const apiClient = {
     }
 
     if (response.status === 204) return null;
-    return response.json();
+
+    // Vérifier si il y a du contenu avant de parser
+    const contentLength = response.headers.get("content-length");
+    if (contentLength === "0") return null;
+
+    const text = await response.text();
+    if (!text.trim()) return null;
+
+    return JSON.parse(text);
   },
 
   async patch(endpoint: string, data: unknown) {
@@ -62,7 +70,15 @@ export const apiClient = {
     }
 
     if (response.status === 204) return null;
-    return response.json();
+
+    // Même logique que POST - vérifier le contenu
+    const contentLength = response.headers.get("content-length");
+    if (contentLength === "0") return null;
+
+    const text = await response.text();
+    if (!text.trim()) return null;
+
+    return JSON.parse(text);
   },
 
   async delete(endpoint: string) {
