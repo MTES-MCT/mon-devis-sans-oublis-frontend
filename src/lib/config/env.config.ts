@@ -15,6 +15,7 @@ const clientSchema = z.object({
   NEXT_PUBLIC_SENTRY_ORG: z.string().optional(),
   NEXT_PUBLIC_SENTRY_PROJECT: z.string().optional(),
   NEXT_PUBLIC_SENTRY_URL: z.string().url().optional().or(z.literal("")),
+  NEXT_PUBLIC_CRISP_WEBSITE_ID: z.string().optional(),
 });
 
 const sharedSchema = z.object({

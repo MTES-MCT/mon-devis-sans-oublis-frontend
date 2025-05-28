@@ -60,6 +60,7 @@ cp .env.example .env.docker
 | `NEXT_PUBLIC_SENTRY_ORG`      | Organisation Sentry                   | `mon-organisation`                                       | Optionnel | Client |
 | `NEXT_PUBLIC_SENTRY_PROJECT`  | Projet Sentry                         | `mon-devis-frontend`                                     | Optionnel | Client |
 | `NEXT_PUBLIC_SENTRY_URL`      | URL de l'instance Sentry              | `https://sentry.io/`                                     | Optionnel | Client |
+| `NEXT_PUBLIC_CRISP_WEBSITE_ID`| ID du Site Crisp                      | `b3f91d7a-e29c-4e12-8c76-3fd6a218b9f1`                   | Optionnel | Client |
 
 ### Types de variables d'environnement
 
