@@ -5,6 +5,7 @@ import { initDsfr } from "@/utils";
 import wording from "@/wording";
 import { marianne, spectral } from "../styles/fonts";
 import "../styles/globals.css";
+import CrispWrapper from "@/components/Crisp/Crisp";
 
 // DSFR initialization
 initDsfr();
@@ -60,6 +61,8 @@ export default function RootLayout({
       </head>
       <body className="flex flex-col min-h-screen">
         <Matomo />
+        <CrispWrapper />
+
         <Header {...headerData} />
         <main className="flex-1">{children}</main>
         <Footer {...footerData} />

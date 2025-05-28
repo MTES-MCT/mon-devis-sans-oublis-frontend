@@ -15,7 +15,9 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "clean": "rm -rf .next && npm run dev",
+    "fresh": "rm -rf .next node_modules && npm install && npm run dev"
   },
   "dependencies": {
     "@gouvfr/dsfr": "^1.13.2",

@@ -1,4 +1,3 @@
-// src/lib/config/env.ts
 import { z } from "zod";
 import { isClient, isServer } from "@/lib/utils/env.utils";
 
@@ -9,13 +8,13 @@ const serverSchema = z.object({
 });
 
 const clientSchema = z.object({
-  NEXT_PUBLIC_MATOMO_SITE_ID: z.string().optional(),
-  NEXT_PUBLIC_MATOMO_URL: z.string().url().optional().or(z.literal("")),
-  NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional().or(z.literal("")),
-  NEXT_PUBLIC_SENTRY_ORG: z.string().optional(),
-  NEXT_PUBLIC_SENTRY_PROJECT: z.string().optional(),
-  NEXT_PUBLIC_SENTRY_URL: z.string().url().optional().or(z.literal("")),
-  NEXT_PUBLIC_CRISP_WEBSITE_ID: z.string().optional(),
+  NEXT_PUBLIC_MATOMO_SITE_ID: z.string().min(1).optional(),
+  NEXT_PUBLIC_MATOMO_URL: z.string().url().optional(),
+  NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
+  NEXT_PUBLIC_SENTRY_ORG: z.string().min(1).optional(),
+  NEXT_PUBLIC_SENTRY_PROJECT: z.string().min(1).optional(),
+  NEXT_PUBLIC_SENTRY_URL: z.string().url().optional(),
+  NEXT_PUBLIC_CRISP_WEBSITE_ID: z.string().min(1).optional(),
 });
 
 const sharedSchema = z.object({
@@ -53,7 +52,19 @@ let _clientEnv: z.infer<typeof clientSchema> | null = null;
 
 export function getClientEnv() {
   if (!_clientEnv) {
-    const result = clientSchema.safeParse(process.env);
+    // Construction manuelle de l'objet env car Next.js
+    // l'énumération des variables NEXT_PUBLIC_* côté client
+    const envObject = {
+      NEXT_PUBLIC_MATOMO_SITE_ID: process.env.NEXT_PUBLIC_MATOMO_SITE_ID,
+      NEXT_PUBLIC_MATOMO_URL: process.env.NEXT_PUBLIC_MATOMO_URL,
+      NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+      NEXT_PUBLIC_SENTRY_ORG: process.env.NEXT_PUBLIC_SENTRY_ORG,
+      NEXT_PUBLIC_SENTRY_PROJECT: process.env.NEXT_PUBLIC_SENTRY_PROJECT,
+      NEXT_PUBLIC_SENTRY_URL: process.env.NEXT_PUBLIC_SENTRY_URL,
+      NEXT_PUBLIC_CRISP_WEBSITE_ID: process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID,
+    };
+
+    const result = clientSchema.safeParse(envObject);
     if (!result.success) {
       console.error(
         "Invalid client environment variables:",
@@ -65,6 +76,12 @@ export function getClientEnv() {
   }
 
   return _clientEnv;
+}
+
+// Fonction pour reset le cache (utile pour le debug)
+export function resetClientEnvCache() {
+  _clientEnv = null;
+  console.log("🔄 Client env cache reset");
 }
 
 // Variables partagées (lazy loading)
