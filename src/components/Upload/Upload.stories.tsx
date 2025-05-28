@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
 
-import Upload from './Upload';
+import Upload from "./Upload";
 
 const meta = {
-  title: 'Components/Upload',
+  title: "Components/Upload",
   component: Upload,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } satisfies Meta<typeof Upload>;
 
 export default meta;

@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
 
-import QuoteErrorTable from './QuoteErrorTable';
-import { Category } from '@/types';
+import QuoteErrorTable from "./QuoteErrorTable";
+import { Category } from "@/types";
 
 const meta: Meta<typeof QuoteErrorTable> = {
-  title: 'Components/QuoteErrorTable',
+  title: "Components/QuoteErrorTable",
   component: QuoteErrorTable,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 };
 
 export default meta;
@@ -14,23 +14,23 @@ type Story = StoryObj<typeof QuoteErrorTable>;
 
 const errorDetails = [
   {
-    id: 'error-1',
-    code: 'date_chantier_manquant',
-    type: 'warning',
+    id: "error-1",
+    code: "date_chantier_manquant",
+    type: "warning",
     title: "La date prévue de début de chantier n'est pas présente",
-    category: 'admin',
+    category: "admin",
     deleted: false,
-    comment: 'Commentaire existant sur cette erreur',
+    comment: "Commentaire existant sur cette erreur",
   },
   {
-    id: 'error-2',
-    code: 'menuiserie_type_vitrage_manquant',
-    type: 'missing',
-    title: 'Le type de vitrage est manquant',
-    category: 'gestes',
-    geste_id: 'geste-1',
-    solution: 'Le vitrage est-il un simple ou un double vitrage ?',
-    provided_value: 'Châssis composé',
+    id: "error-2",
+    code: "menuiserie_type_vitrage_manquant",
+    type: "missing",
+    title: "Le type de vitrage est manquant",
+    category: "gestes",
+    geste_id: "geste-1",
+    solution: "Le vitrage est-il un simple ou un double vitrage ?",
+    provided_value: "Châssis composé",
     deleted: false,
     comment: null,
   },
@@ -38,24 +38,24 @@ const errorDetails = [
 
 const gestes = [
   {
-    intitule: 'Fenêtre 1 vantail',
-    id: 'geste-1',
+    intitule: "Fenêtre 1 vantail",
+    id: "geste-1",
     valid: false,
   },
   {
-    intitule: 'Porte-fenêtre',
-    id: 'geste-2',
+    intitule: "Porte-fenêtre",
+    id: "geste-2",
     valid: true,
   },
 ];
 
 const deleteErrorReasons = [
-  { id: 'already_present', label: 'Information déjà présente' },
-  { id: 'not_used', label: 'Information non utilisée dans notre cas' },
+  { id: "already_present", label: "Information déjà présente" },
+  { id: "not_used", label: "Information non utilisée dans notre cas" },
 ];
 
 const mockOnHelpClick = (comment: string, errorDetailsId: string) => {
-  console.log('Help clicked:', { comment, errorDetailsId });
+  console.log("Help clicked:", { comment, errorDetailsId });
 };
 
 const mockOnDeleteError = (
@@ -63,7 +63,7 @@ const mockOnDeleteError = (
   errorDetailsId: string,
   reason: string
 ) => {
-  console.log('Delete error:', { quoteCheckId, errorDetailsId, reason });
+  console.log("Delete error:", { quoteCheckId, errorDetailsId, reason });
 };
 
 const mockOnAddErrorComment = (
@@ -71,24 +71,24 @@ const mockOnAddErrorComment = (
   errorDetailsId: string,
   comment: string
 ) => {
-  console.log('Add comment:', { quoteCheckId, errorDetailsId, comment });
+  console.log("Add comment:", { quoteCheckId, errorDetailsId, comment });
 };
 
 const mockOnDeleteErrorComment = (
   quoteCheckId: string,
   errorDetailsId: string
 ) => {
-  console.log('Delete comment:', { quoteCheckId, errorDetailsId });
+  console.log("Delete comment:", { quoteCheckId, errorDetailsId });
 };
 
 const mockOnUndoDeleteError = (
   quoteCheckId: string,
   errorDetailsId: string
 ) => {
-  console.log('Undo delete:', { quoteCheckId, errorDetailsId });
+  console.log("Undo delete:", { quoteCheckId, errorDetailsId });
 };
 
-const mockQuoteCheckId = 'mock-quote-check-id';
+const mockQuoteCheckId = "mock-quote-check-id";
 
 export const Admin: Story = {
   render: () => (

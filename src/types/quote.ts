@@ -1,24 +1,24 @@
 export enum Category {
-  ADMIN = 'admin',
-  FILE = 'file',
-  GESTES = 'gestes',
+  ADMIN = "admin",
+  FILE = "file",
+  GESTES = "gestes",
 }
 
 export enum Profile {
-  ARTISAN = 'artisan',
-  CONSEILLER = 'conseiller',
-  PARTICULIER = 'particulier',
+  ARTISAN = "artisan",
+  CONSEILLER = "conseiller",
+  PARTICULIER = "particulier",
 }
 
 export enum Status {
-  INVALID = 'invalid',
-  VALID = 'valid',
-  PENDING = 'pending',
+  INVALID = "invalid",
+  VALID = "valid",
+  PENDING = "pending",
 }
 
 export enum Type {
-  MISSING = 'missing',
-  WRONG = 'wrong',
+  MISSING = "missing",
+  WRONG = "wrong",
 }
 
 export interface ErrorDetails {

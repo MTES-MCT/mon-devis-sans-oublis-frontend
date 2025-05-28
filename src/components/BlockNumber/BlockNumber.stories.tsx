@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
 
-import BlockNumber, { BlockNumberSize } from './BlockNumber'; // {{ edit_1 }}
+import BlockNumber, { BlockNumberSize } from "./BlockNumber"; // {{ edit_1 }}
 
 const meta: Meta<typeof BlockNumber> = {
-  title: 'Components/BlockNumber',
+  title: "Components/BlockNumber",
   component: BlockNumber,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 };
 
 export default meta;
@@ -15,7 +15,7 @@ export const Default: Story = {
   args: {
     number: 1,
     title:
-      'Déposez votre devis afin qu’il soit analysé par notre outil qui vérifie que tous les attendus réglementaires soient bien présents.',
+      "Déposez votre devis afin qu’il soit analysé par notre outil qui vérifie que tous les attendus réglementaires soient bien présents.",
   },
 };
 
@@ -23,7 +23,7 @@ export const Medium: Story = {
   args: {
     number: 1,
     size: BlockNumberSize.MEDIUM,
-    title: 'Découvrez les corrections',
+    title: "Découvrez les corrections",
   },
 };
 

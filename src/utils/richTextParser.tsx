@@ -16,7 +16,7 @@ const richTextParser: RichTextParserFunction = (keyTranslation) => {
       // <strong></strong>
       if (boldText) {
         parts.push(
-          <span key={offset} className='font-bold'>
+          <span key={offset} className="font-bold">
             {boldText}
           </span>
         );
@@ -27,16 +27,16 @@ const richTextParser: RichTextParserFunction = (keyTranslation) => {
         const targetMatch = /target=['"](.*?)['"]/.exec(aAttributes);
         const relMatch = /rel=['"](.*?)['"]/.exec(aAttributes);
 
-        const target = targetMatch ? targetMatch[1] : '_self';
+        const target = targetMatch ? targetMatch[1] : "_self";
         const rel = relMatch
           ? relMatch[1]
-          : target === '_blank'
-          ? 'noopener noreferrer'
-          : undefined;
+          : target === "_blank"
+            ? "noopener noreferrer"
+            : undefined;
 
         parts.push(
           <a
-            className='[&::after]:hidden!'
+            className="[&::after]:hidden!"
             href={aHref}
             key={offset}
             rel={rel}
@@ -48,7 +48,7 @@ const richTextParser: RichTextParserFunction = (keyTranslation) => {
       }
 
       // <br>
-      if (match === '<br>') {
+      if (match === "<br>") {
         parts.push(<br key={offset} />);
       }
 

@@ -1,32 +1,32 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen } from "@testing-library/react";
 
-import richTextParser from '../richTextParser';
+import richTextParser from "../richTextParser";
 
-describe('richTextParser', () => {
-  it('renders plain text without any formatting', () => {
-    const { container } = render(<>{richTextParser('Simple text')}</>);
-    expect(container).toHaveTextContent('Simple text');
+describe("richTextParser", () => {
+  it("renders plain text without any formatting", () => {
+    const { container } = render(<>{richTextParser("Simple text")}</>);
+    expect(container).toHaveTextContent("Simple text");
   });
 
-  it('renders bold text correctly', () => {
-    render(<>{richTextParser('This is <strong>bold</strong> text')}</>);
+  it("renders bold text correctly", () => {
+    render(<>{richTextParser("This is <strong>bold</strong> text")}</>);
 
-    const boldElement = screen.getByText('bold');
-    expect(boldElement).toHaveClass('font-bold');
+    const boldElement = screen.getByText("bold");
+    expect(boldElement).toHaveClass("font-bold");
     expect(screen.getByText(/This is/)).toBeInTheDocument();
     expect(screen.getByText(/text/)).toBeInTheDocument();
   });
 
-  it('renders links correctly', () => {
+  it("renders links correctly", () => {
     render(
       <>{richTextParser("<a href='https://example.com'>Link text</a>")}</>
     );
 
-    const link = screen.getByRole('link', { name: 'Link text' });
-    expect(link).toHaveAttribute('href', 'https://example.com');
+    const link = screen.getByRole("link", { name: "Link text" });
+    expect(link).toHaveAttribute("href", "https://example.com");
   });
 
-  it('renders links with target and rel attributes', () => {
+  it("renders links with target and rel attributes", () => {
     render(
       <>
         {richTextParser(
@@ -35,20 +35,20 @@ describe('richTextParser', () => {
       </>
     );
 
-    const link = screen.getByRole('link', { name: 'External link' });
-    expect(link).toHaveAttribute('target', '_blank');
-    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    const link = screen.getByRole("link", { name: "External link" });
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
   });
 
-  it('renders line breaks correctly', () => {
-    const { container } = render(<>{richTextParser('Line 1<br>Line 2')}</>);
+  it("renders line breaks correctly", () => {
+    const { container } = render(<>{richTextParser("Line 1<br>Line 2")}</>);
 
-    expect(container.querySelector('br')).toBeInTheDocument();
-    expect(container).toHaveTextContent('Line 1');
-    expect(container).toHaveTextContent('Line 2');
+    expect(container.querySelector("br")).toBeInTheDocument();
+    expect(container).toHaveTextContent("Line 1");
+    expect(container).toHaveTextContent("Line 2");
   });
 
-  it('handles multiple formatting elements together', () => {
+  it("handles multiple formatting elements together", () => {
     const { container } = render(
       <>
         {richTextParser(
@@ -57,13 +57,13 @@ describe('richTextParser', () => {
       </>
     );
 
-    expect(screen.getByText('bold')).toHaveClass('font-bold');
-    const link = screen.getByText('link');
-    expect(link.closest('a')).toHaveAttribute('href', 'https://example.com');
-    expect(container).toHaveTextContent('new line');
+    expect(screen.getByText("bold")).toHaveClass("font-bold");
+    const link = screen.getByText("link");
+    expect(link.closest("a")).toHaveAttribute("href", "https://example.com");
+    expect(container).toHaveTextContent("new line");
   });
 
-  it('preserves custom link attributes', () => {
+  it("preserves custom link attributes", () => {
     render(
       <>
         {richTextParser(
@@ -72,8 +72,8 @@ describe('richTextParser', () => {
       </>
     );
 
-    const link = screen.getByRole('link', { name: 'Custom link' });
-    expect(link).toHaveAttribute('target', '_self');
-    expect(link).toHaveAttribute('rel', 'nofollow');
+    const link = screen.getByRole("link", { name: "Custom link" });
+    expect(link).toHaveAttribute("target", "_self");
+    expect(link).toHaveAttribute("rel", "nofollow");
   });
 });

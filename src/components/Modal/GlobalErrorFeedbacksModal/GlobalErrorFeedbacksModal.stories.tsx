@@ -1,20 +1,20 @@
-import { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react";
 
-import GlobalErrorFeedbacksModal from './GlobalErrorFeedbacksModal';
-import { Rating } from '@/types';
+import GlobalErrorFeedbacksModal from "./GlobalErrorFeedbacksModal";
+import { Rating } from "@/types";
 
 const meta: Meta<typeof GlobalErrorFeedbacksModal> = {
-  title: 'Components/Modal/GlobalErrorFeedbacks',
+  title: "Components/Modal/GlobalErrorFeedbacks",
   component: GlobalErrorFeedbacksModal,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
   argTypes: {
     isOpen: {
-      control: 'boolean',
-      description: 'Affiche ou cache le modal',
+      control: "boolean",
+      description: "Affiche ou cache le modal",
     },
   },
 };
@@ -37,14 +37,14 @@ export const Default: Story = {
       email: string | null,
       rating: Rating
     ) => {
-      console.log('Feedback soumis :', { comment, email, rating });
+      console.log("Feedback soumis :", { comment, email, rating });
       setIsOpen(false);
     };
 
     return (
       <>
         <button
-          className='fr-btn fr-btn--primary'
+          className="fr-btn fr-btn--primary"
           onClick={() => setIsOpen(true)}
         >
           Ouvrir le modal

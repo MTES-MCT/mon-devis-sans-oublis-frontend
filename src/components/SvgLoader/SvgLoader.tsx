@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export interface SVGLoaderProps {
   color?: string;
@@ -10,7 +10,7 @@ export interface SVGLoaderProps {
 }
 
 const SVGLoader = ({
-  color = 'currentColor',
+  color = "currentColor",
   height = 56,
   src,
   width = 56,
@@ -22,7 +22,7 @@ const SVGLoader = ({
       fetch(src)
         .then((res) => res.text())
         .then((data) => setSvgContent(data))
-        .catch((err) => console.error('Erreur de chargement du SVG :', err));
+        .catch((err) => console.error("Erreur de chargement du SVG :", err));
     }
   }, [src]);
 
@@ -30,8 +30,8 @@ const SVGLoader = ({
 
   return (
     <div
-      className='inline-block'
-      data-testid='svg-container'
+      className="inline-block"
+      data-testid="svg-container"
       dangerouslySetInnerHTML={{
         __html: svgContent.replace(/fill="[^"]*"/g, 'fill="currentColor"'),
       }}

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 
-import { Profile } from '@/types';
+import { Profile } from "@/types";
 
 export const useConseillerRoutes = () => {
   const pathname = usePathname();
@@ -18,8 +18,8 @@ export const useConseillerRoutes = () => {
 
   return {
     isConseillerAndEdit:
-      pathname.includes(Profile.CONSEILLER) && pathname.includes('/modifier'),
+      pathname.includes(Profile.CONSEILLER) && pathname.includes("/modifier"),
     isConseillerAndNotEdit:
-      pathname.includes(Profile.CONSEILLER) && !pathname.includes('/modifier'),
+      pathname.includes(Profile.CONSEILLER) && !pathname.includes("/modifier"),
   };
 };

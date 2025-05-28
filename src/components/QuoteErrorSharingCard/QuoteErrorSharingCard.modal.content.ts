@@ -52,15 +52,18 @@ ${errorItems}
 const groupErrorsByGeste = (
   technicalErrors: ErrorDetails[]
 ): Record<string, ErrorDetails[]> => {
-  return technicalErrors.reduce((errorGroups, error) => {
-    const gesteId =
-      error.geste_id || QUOTE_ERROR_SHARING_MODAL_WORDING.notSpecified;
-    if (!errorGroups[gesteId]) {
-      errorGroups[gesteId] = [];
-    }
-    errorGroups[gesteId].push(error);
-    return errorGroups;
-  }, {} as Record<string, ErrorDetails[]>);
+  return technicalErrors.reduce(
+    (errorGroups, error) => {
+      const gesteId =
+        error.geste_id || QUOTE_ERROR_SHARING_MODAL_WORDING.notSpecified;
+      if (!errorGroups[gesteId]) {
+        errorGroups[gesteId] = [];
+      }
+      errorGroups[gesteId].push(error);
+      return errorGroups;
+    },
+    {} as Record<string, ErrorDetails[]>
+  );
 };
 
 // Fonction pour générer la section technique en HTML

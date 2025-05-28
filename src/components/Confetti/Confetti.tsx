@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 const Confetti = () => {
   const [confetti, setConfetti] = useState<
@@ -15,19 +15,19 @@ const Confetti = () => {
 
   useEffect(() => {
     const colors = [
-      'bg-red-500',
-      'bg-blue-500',
-      'bg-yellow-400',
-      'bg-green-400',
-      'bg-pink-500',
-      'bg-purple-500',
+      "bg-red-500",
+      "bg-blue-500",
+      "bg-yellow-400",
+      "bg-green-400",
+      "bg-pink-500",
+      "bg-purple-500",
     ];
 
     const shapes = [
-      'w-2 h-4',
-      'w-3 h-3 rounded-full',
-      'w-4 h-2 rotate-45',
-      'w-2 h-2 rounded-sm',
+      "w-2 h-4",
+      "w-3 h-3 rounded-full",
+      "w-4 h-2 rotate-45",
+      "w-2 h-2 rounded-sm",
     ];
 
     setConfetti(
@@ -42,12 +42,12 @@ const Confetti = () => {
   }, []);
 
   return (
-    <div className='fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-50'>
+    <div className="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-50">
       {confetti.map((item, index) => (
         <div
           className={`absolute animate-confetti-fall ${item.color} ${item.shape}`}
           key={index}
-          role='presentation'
+          role="presentation"
           style={{
             animationDelay: `${item.delay}s`,
             animationDuration: `${item.duration}s`,

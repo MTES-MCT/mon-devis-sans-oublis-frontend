@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import Confetti from './Confetti';
+import type { Meta, StoryObj } from "@storybook/react";
+import Confetti from "./Confetti";
 
 const meta: Meta<typeof Confetti> = {
-  title: 'Components/Confetti',
+  title: "Components/Confetti",
   component: Confetti,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
 };
 
@@ -16,7 +16,7 @@ type Story = StoryObj<typeof Confetti>;
 
 export const Default: Story = {
   render: () => (
-    <div className='relative w-screen h-screen overflow-hidden'>
+    <div className="relative w-screen h-screen overflow-hidden">
       <Confetti />
     </div>
   ),

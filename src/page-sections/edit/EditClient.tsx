@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import { LoadingDots } from '@/components';
-import { quoteService } from '@/lib/api';
-import { ResultClient } from '@/page-sections';
-import { QuoteChecksId } from '@/types';
-import wording from '@/wording';
+import { LoadingDots } from "@/components";
+import { quoteService } from "@/lib/api";
+import { ResultClient } from "@/page-sections";
+import { QuoteChecksId } from "@/types";
+import wording from "@/wording";
 
 export default function EditClient({
   deleteErrorReasons,
@@ -24,7 +24,7 @@ export default function EditClient({
         const data = await quoteService.getQuote(params.quoteCheckId);
         setCurrentDevis(data);
       } catch (error) {
-        console.error('Error fetching devis:', error);
+        console.error("Error fetching devis:", error);
       } finally {
         setIsLoading(false);
       }
@@ -62,7 +62,7 @@ export default function EditClient({
 
   if (isLoading) {
     return (
-      <section className='fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center'>
+      <section className="fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center">
         <LoadingDots title={wording.page_upload_id.analysis_redirect_title} />
         <p>{wording.page_upload_id.analysis_redirect}</p>
       </section>

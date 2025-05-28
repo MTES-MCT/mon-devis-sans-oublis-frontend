@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react";
 
-import GlobalCommentModal from './GlobalCommentModal';
+import GlobalCommentModal from "./GlobalCommentModal";
 
 const meta = {
-  title: 'Components/Modal/GlobalCommentModal',
+  title: "Components/Modal/GlobalCommentModal",
   component: GlobalCommentModal,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     isOpen: {
-      control: 'boolean',
-      description: 'Affiche ou cache la modale',
+      control: "boolean",
+      description: "Affiche ou cache la modale",
     },
   },
 } satisfies Meta<typeof GlobalCommentModal>;
@@ -30,14 +30,14 @@ export const Default: Story = {
 
     const handleClose = () => setIsOpen(false);
     const handleSubmitComment = (comment: string) => {
-      console.log('Submit comment:', comment);
+      console.log("Submit comment:", comment);
       setIsOpen(false);
     };
 
     return (
       <>
         <button
-          className='fr-btn fr-btn--primary'
+          className="fr-btn fr-btn--primary"
           onClick={() => setIsOpen(true)}
         >
           Ouvrir la modale de commentaire

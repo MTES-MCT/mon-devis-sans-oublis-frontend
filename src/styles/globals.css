@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @keyframes confettiFall {
   0% {
@@ -48,7 +48,7 @@ h2 {
   z-index: 99;
 }
 
-.fr-btn--sm[target='_blank']::after {
+.fr-btn--sm[target="_blank"]::after {
   display: none;
 }
 
@@ -115,68 +115,68 @@ h2 {
 /* Arrows */
 .fr-icon-arrow-right-circle-fill::after,
 .fr-icon-arrow-right-circle-fill::before {
-  mask-image: url('../../public/svg/arrows/arrow-right-circle-fill.svg');
-  -webkit-mask-image: url('../../public/svg/arrows/arrow-right-circle-fill.svg');
+  mask-image: url("../../public/svg/arrows/arrow-right-circle-fill.svg");
+  -webkit-mask-image: url("../../public/svg/arrows/arrow-right-circle-fill.svg");
 }
 
 /* Buildings */
 .fr-icon-home-4-fill::after,
 .fr-icon-home-4-fill::before {
-  mask-image: url('../../public/svg/buildings/home-4-fill.svg');
-  -webkit-mask-image: url('../../public/svg/buildings/home-4-fill.svg');
+  mask-image: url("../../public/svg/buildings/home-4-fill.svg");
+  -webkit-mask-image: url("../../public/svg/buildings/home-4-fill.svg");
 }
 
 /* Business */
 .fr-icon-customer-service-fill::after,
 .fr-icon-customer-service-fill::before {
-  mask-image: url('../../public/svg/business/customer-service-fill.svg');
-  -webkit-mask-image: url('../../public/svg/business/customer-service-fill.svg');
+  mask-image: url("../../public/svg/business/customer-service-fill.svg");
+  -webkit-mask-image: url("../../public/svg/business/customer-service-fill.svg");
 }
 
 .fr-icon-shake-hands-fill::after,
 .fr-icon-shake-hands-fill::before {
-  mask-image: url('../../public/svg/business/shake-hands-fill.svg');
-  -webkit-mask-image: url('../../public/svg/business/shake-hands-fill.svg');
+  mask-image: url("../../public/svg/business/shake-hands-fill.svg");
+  -webkit-mask-image: url("../../public/svg/business/shake-hands-fill.svg");
 }
 
 /* Communication */
 .fr-icon-chat-new-line::after,
 .fr-icon-chat-new-line::before {
-  mask-image: url('../../public/svg/communication/chat-new-line.svg');
-  -webkit-mask-image: url('../../public/svg/communication/chat-new-line.svg');
+  mask-image: url("../../public/svg/communication/chat-new-line.svg");
+  -webkit-mask-image: url("../../public/svg/communication/chat-new-line.svg");
 }
 
 /* Device */
 .fr-icon-restart-line::after,
 .fr-icon-restart-line::before {
-  mask-image: url('../../public/svg/device/restart-line.svg');
-  -webkit-mask-image: url('../../public/svg/device/restart-line.svg');
+  mask-image: url("../../public/svg/device/restart-line.svg");
+  -webkit-mask-image: url("../../public/svg/device/restart-line.svg");
 }
 
 /* Design */
 .fr-icon-compasses-2-fill::after,
 .fr-icon-compasses-2-fill::before {
-  mask-image: url('../../public/svg/design/compasses-2-fill.svg');
-  -webkit-mask-image: url('../../public/svg/design/compasses-2-fill.svg');
+  mask-image: url("../../public/svg/design/compasses-2-fill.svg");
+  -webkit-mask-image: url("../../public/svg/design/compasses-2-fill.svg");
 }
 
 .fr-icon-edit-circle-line::after,
 .fr-icon-edit-circle-line::before {
-  mask-image: url('../../public/svg/design/edit-circle-line.svg');
-  -webkit-mask-image: url('../../public/svg/design/edit-circle-line.svg');
+  mask-image: url("../../public/svg/design/edit-circle-line.svg");
+  -webkit-mask-image: url("../../public/svg/design/edit-circle-line.svg");
 }
 
 .fr-icon-tools-fill::after,
 .fr-icon-tools-fill::before {
-  mask-image: url('../../public/svg/design/tools-fill.svg');
-  -webkit-mask-image: url('../../public/svg/design/tools-fill.svg');
+  mask-image: url("../../public/svg/design/tools-fill.svg");
+  -webkit-mask-image: url("../../public/svg/design/tools-fill.svg");
 }
 
 /* System */
 .fr-icon-share-box-line::after,
 .fr-icon-share-box-line::before {
-  mask-image: url('../../public/svg/system/share-box-line.svg');
-  -webkit-mask-image: url('../../public/svg/system/share-box-line.svg');
+  mask-image: url("../../public/svg/system/share-box-line.svg");
+  -webkit-mask-image: url("../../public/svg/system/share-box-line.svg");
 }
 
 @media (max-width: 767px) {

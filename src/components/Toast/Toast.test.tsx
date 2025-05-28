@@ -1,8 +1,8 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act } from "@testing-library/react";
 
-import Toast from './Toast';
+import Toast from "./Toast";
 
-describe('Toast', () => {
+describe("Toast", () => {
   beforeEach(() => {
     jest.useFakeTimers();
   });
@@ -11,14 +11,14 @@ describe('Toast', () => {
     jest.useRealTimers();
   });
 
-  it('renders with message', () => {
-    render(<Toast message='Test message' onClose={jest.fn()} />);
-    expect(screen.getByText('Test message')).toBeInTheDocument();
+  it("renders with message", () => {
+    render(<Toast message="Test message" onClose={jest.fn()} />);
+    expect(screen.getByText("Test message")).toBeInTheDocument();
   });
 
-  it('calls onClose after duration + animation time', () => {
+  it("calls onClose after duration + animation time", () => {
     const onClose = jest.fn();
-    render(<Toast message='Test message' duration={1000} onClose={onClose} />);
+    render(<Toast message="Test message" duration={1000} onClose={onClose} />);
 
     act(() => {
       jest.advanceTimersByTime(1000);
@@ -33,9 +33,9 @@ describe('Toast', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('uses default duration of 3000ms', () => {
+  it("uses default duration of 3000ms", () => {
     const onClose = jest.fn();
-    render(<Toast message='Test message' onClose={onClose} />);
+    render(<Toast message="Test message" onClose={onClose} />);
 
     act(() => {
       jest.advanceTimersByTime(3000);
@@ -50,10 +50,10 @@ describe('Toast', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('cleans up timeouts on unmount', () => {
+  it("cleans up timeouts on unmount", () => {
     const onClose = jest.fn();
     const { unmount } = render(
-      <Toast message='Test message' onClose={onClose} />
+      <Toast message="Test message" onClose={onClose} />
     );
 
     unmount();

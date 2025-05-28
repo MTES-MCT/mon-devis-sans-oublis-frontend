@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import Badge, { BadgeSize, BadgeVariant } from '../Badge/Badge';
-import QuoteErrorLine from '../QuoteErrorLine/QuoteErrorLine';
-import Tooltip from '../Tooltip/Tooltip';
-import { Category, ErrorDetails, Gestes } from '@/types';
-import wording from '@/wording';
+import Badge, { BadgeSize, BadgeVariant } from "../Badge/Badge";
+import QuoteErrorLine from "../QuoteErrorLine/QuoteErrorLine";
+import Tooltip from "../Tooltip/Tooltip";
+import { Category, ErrorDetails, Gestes } from "@/types";
+import wording from "@/wording";
 
 export interface QuoteErrorTablePropsAdmin {
   category: Category.ADMIN;
@@ -64,13 +64,13 @@ const QuoteErrorTable: React.FC<QuoteErrorTableProps> = (props) => {
     : [];
 
   const gestes =
-    isCategoryGestes && 'gestes' in props ? props.gestes ?? [] : [];
+    isCategoryGestes && "gestes" in props ? (props.gestes ?? []) : [];
 
   const getErrorBadgeLabel = () => {
     const count = getErrorCount();
 
     if (count === 0) {
-      return 'Tout est bon';
+      return "Tout est bon";
     }
 
     const template =
@@ -78,7 +78,7 @@ const QuoteErrorTable: React.FC<QuoteErrorTableProps> = (props) => {
         ? wording.page_upload_id.badge_correction_plural
         : wording.page_upload_id.badge_correction;
 
-    return template.replace('{number}', count.toString());
+    return template.replace("{number}", count.toString());
   };
 
   const getErrorCount = () => {
@@ -92,23 +92,23 @@ const QuoteErrorTable: React.FC<QuoteErrorTableProps> = (props) => {
   };
 
   return (
-    <div className='overflow-hidden rounded-lg border-shadow'>
-      <table className='w-full'>
-        <caption className='bg-[var(--background-action-low-blue-france)] font-bold text-left p-4 flex items-center justify-between'>
-          <span className='flex gap-2 items-center'>
-            <p className='fr-mb-0 text-[var(--text-default-grey)]!'>
+    <div className="overflow-hidden rounded-lg border-shadow">
+      <table className="w-full">
+        <caption className="bg-[var(--background-action-low-blue-france)] font-bold text-left p-4 flex items-center justify-between">
+          <span className="flex gap-2 items-center">
+            <p className="fr-mb-0 text-[var(--text-default-grey)]!">
               {isCategoryGestes &&
                 wording.components.quote_error_card.title_gestes}
               {isCategoryAdmin &&
                 wording.components.quote_error_card.title_admin}
             </p>
             {isCategoryGestes && gestes.length > 0 && (
-              <p className='fr-mb-0 font-normal! text-sm!'>
+              <p className="fr-mb-0 font-normal! text-sm!">
                 {`${(gestes.length > 1
                   ? wording.components.quote_error_card
                       .title_gestes_number_plural
                   : wording.components.quote_error_card.title_gestes_number
-                ).replace('{number}', gestes.length.toString())}`}
+                ).replace("{number}", gestes.length.toString())}`}
               </p>
             )}
             <Tooltip
@@ -117,14 +117,14 @@ const QuoteErrorTable: React.FC<QuoteErrorTableProps> = (props) => {
                 isCategoryGestes
                   ? wording.components.quote_error_card.tooltip.gestes
                   : isCategoryAdmin
-                  ? wording.components.quote_error_card.tooltip.admin
-                  : ''
+                    ? wording.components.quote_error_card.tooltip.admin
+                    : ""
               }
             />
           </span>
           <Badge
-            className='self-center inline-block'
-            icon={getErrorCount() === 0 ? 'fr-icon-success-fill' : undefined}
+            className="self-center inline-block"
+            icon={getErrorCount() === 0 ? "fr-icon-success-fill" : undefined}
             label={getErrorBadgeLabel()}
             size={BadgeSize.X_SMALL}
             variant={
@@ -146,29 +146,29 @@ const QuoteErrorTable: React.FC<QuoteErrorTableProps> = (props) => {
                   <tr
                     className={`bg-[var(--background-default-grey-hover)] ${
                       isLastGeste && errorsForGeste.length === 0
-                        ? 'border-b-0'
+                        ? "border-b-0"
                         : `border-bottom-grey ${
-                            gIndex === 0 ? '' : 'border-top-grey'
+                            gIndex === 0 ? "" : "border-top-grey"
                           }`
                     }`}
                   >
                     <th
-                      className='flex gap-4 justify-between items-center p-4 text-[var(--text-action-high-blue-france)] text-left'
-                      scope='row'
+                      className="flex gap-4 justify-between items-center p-4 text-[var(--text-action-high-blue-france)] text-left"
+                      scope="row"
                       style={{ fontWeight: 500 }}
                     >
                       {geste.intitule}
                       {geste.valid ||
                       errorsForGeste.every((error) => error.deleted) ? (
                         <Badge
-                          icon='fr-icon-success-fill'
-                          label={'OK'}
+                          icon="fr-icon-success-fill"
+                          label={"OK"}
                           size={BadgeSize.X_SMALL}
                           variant={BadgeVariant.GREEN}
                         />
                       ) : (
                         <Badge
-                          icon='fr-icon-alert-fill'
+                          icon="fr-icon-alert-fill"
                           label={`${
                             errorsForGeste.filter((error) => !error.deleted)
                               .length
