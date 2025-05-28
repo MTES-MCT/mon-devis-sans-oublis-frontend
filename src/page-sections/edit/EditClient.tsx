@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 
 import { LoadingDots } from "@/components";
-import { quoteService } from "@/lib/api";
 import { ResultClient } from "@/page-sections";
 import { QuoteChecksId } from "@/types";
 import wording from "@/wording";
+import { quoteService } from "@/lib/client/apiWrapper";
 
 export default function EditClient({
   deleteErrorReasons,

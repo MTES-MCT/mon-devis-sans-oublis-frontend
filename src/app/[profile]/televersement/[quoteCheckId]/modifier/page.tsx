@@ -1,4 +1,4 @@
-import { quoteService } from "@/lib/api";
+import { quoteService } from "@/lib/client/apiWrapper";
 import { EditClient } from "@/page-sections";
 
 type DeleteErrorReason = {

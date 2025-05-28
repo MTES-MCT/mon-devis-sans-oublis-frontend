@@ -1,6 +1,8 @@
 # Mon Devis Sans Oublis - Frontend
 
-Une application Next.js pour créer des devis sans oublier les éléments essentiels.
+Plateforme d'analyse de conformité de devis pour accélérer la rénovation énergétique des logements en simplifiant l'instruction des dossiers d'aide.
+
+🔗 **[Accéder à la plateforme](https://mon-devis-sans-oublis.beta.gouv.fr/)** 
 
 ## Prérequis
 
@@ -122,6 +124,14 @@ docker-compose down
 
 ## Développement
 
+### Démarrage express
+
+```bash
+# Installation et démarrage
+npm install
+npm run dev
+```
+
 ### Scripts disponibles
 
 | Script                    | Description                                |
@@ -129,12 +139,38 @@ docker-compose down
 | `npm run dev`             | Démarre le serveur de développement        |
 | `npm run build`           | Construit l'application pour la production |
 | `npm run start`           | Démarre le serveur de production           |
+| `npm run typecheck`       | Vérifie les types TypeScript               |
+| `npm run ci`              | Lance typecheck + lint + tests             |
 | `npm run test`            | Lance les tests avec Jest                  |
 | `npm run test:watch`      | Lance les tests en mode watch              |
 | `npm run test:coverage`   | Lance les tests avec rapport de couverture |
 | `npm run storybook`       | Démarre Storybook                          |
 | `npm run build-storybook` | Construit Storybook pour la production     |
 | `npm run lint`            | Vérifie la qualité du code avec ESLint     |
+| `npm run format`          | Formate le code avec Prettier              |
+| `npm run format:check`    | Vérifie le formatage sans modifier         |
+
+### Vérification qualité
+
+```bash
+# Tout vérifier d'un coup
+npm run ci
+
+# Ou étape par étape
+npm run typecheck
+npm run lint
+npm run test
+```
+
+### Commandes utiles
+
+```bash
+# Formatter automatiquement le code
+npm run format
+
+# Développer les composants isolément
+npm run storybook
+```
 
 ## Storybook
 
@@ -176,18 +212,25 @@ npm run test:coverage
 
 ## Qualité du code
 
-### Linting
+### Vérifications automatiques
 
 ```bash
-# Vérifier la qualité du code
-npm run lint
+# Vérification complète (CI)
+npm run ci
+
+# Vérifications individuelles
+npm run typecheck  # Types TypeScript
+npm run lint       # Qualité du code
+npm run test       # Tests unitaires
+npm run format     # Formatage du code
 ```
 
 ### Configuration
 
+- **TypeScript** : Configuration dans `tsconfig.json`
 - **ESLint** : Configuration dans `.eslintrc.json`
 - **Prettier** : Configuration dans `.prettierrc`
-- **TypeScript** : Configuration dans `tsconfig.json`
+- **Jest** : Tests unitaires et coverage
 
 ## Déploiement
 
@@ -224,3 +267,59 @@ docker run -p 3000:3000 mon-devis-frontend
 | **[Zod](https://zod.dev/)**                                    | 3.x     | Validation de schémas TypeScript                      |
 | **[Sentry](https://sentry.io/)**                               | 9.x     | Monitoring d'erreurs en production                    |
 | **[Matomo](https://matomo.org/)**                              | -       | Analytics respectueux de la vie privée                |
+
+## Architecture
+
+### Structure des dossiers
+
+```
+src/
+├── actions/           # Server Actions (Next.js 15)
+│   ├── quote.actions.ts
+│   ├── feedback.actions.ts
+│   └── stats.actions.ts
+├── components/        # Composants React réutilisables
+├── lib/              # Utilitaires et configuration
+│   ├── server/       # Code côté serveur
+│   └── client/       # Code côté client
+├── page-sections/    # Sections spécifiques aux pages
+├── types/           # Types TypeScript
+└── wording/         # Textes et traductions
+```
+
+### API et données
+
+- **Server Actions** : Appels API sécurisés côté serveur
+- **API Backend** : Ruby on Rails avec PostgreSQL
+- **Validation** : Zod pour les schémas TypeScript
+
+## Troubleshooting
+
+### Erreurs courantes
+
+**Erreur de types TypeScript :**
+```bash
+npm run typecheck
+```
+
+**Erreurs de lint :**
+```bash
+npm run lint
+npm run format
+```
+
+**Tests qui échouent :**
+```bash
+npm run test:watch
+```
+
+**Variables d'environnement manquantes :**
+- Vérifiez que `.env.local` existe
+- Copiez `.env.example` si nécessaire
+
+### Support
+
+Pour les problèmes techniques, vérifiez :
+1. Node.js version 22.x installée
+2. Variables d'environnement configurées
+3. `npm install` exécuté

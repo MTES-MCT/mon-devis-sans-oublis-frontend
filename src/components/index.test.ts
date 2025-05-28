@@ -106,6 +106,5 @@ describe("Components exports", () => {
     expect(Components.LinkSize).toBeDefined();
     expect(Components.LinkVariant).toBeDefined();
     expect(Components.ModalPosition).toBeDefined();
-    expect(Components.QuoteStatusType).toBeDefined();
   });
 });

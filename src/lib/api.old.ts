@@ -1,4 +1,5 @@
 // src/lib/api.ts
+// TODO : Remove this file when the API Server Action migration is complete
 import { ErrorDetails, Profile, Rating } from "@/types";
 import { isClient, isServer } from "./utils/env.utils";
 import { getServerEnv, getSharedEnv } from "./config/env.config";
@@ -67,7 +68,8 @@ function getApiUrl(): string {
 }
 
 // Quote Service
-export const quoteService = {
+// TODO : Remove this service when the API Server Action migration is complete
+export const quoteServiceToRemove = {
   // Quote Management
   async uploadQuote(
     file: File,
@@ -471,7 +473,8 @@ export const quoteService = {
 };
 
 // Statistics Service
-export const statService = {
+// TODO : Remove this service when the API Server Action migration is complete
+export const statServiceToRemove = {
   async getStats() {
     try {
       const response = await fetch(`${getApiUrl()}/api/v1/stats`, {

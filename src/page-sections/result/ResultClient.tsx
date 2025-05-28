@@ -14,10 +14,10 @@ import {
   Toast,
 } from "@/components";
 import { useConseillerRoutes, useScrollPosition } from "@/hooks";
-import { quoteService } from "@/lib/api";
 import { Category, ErrorDetails, QuoteChecksId, Rating, Status } from "@/types";
 import { formatDateToFrench } from "@/utils";
 import wording from "@/wording";
+import { quoteService } from "@/lib/client/apiWrapper";
 
 interface ResultClientProps {
   currentDevis: QuoteChecksId | null;
