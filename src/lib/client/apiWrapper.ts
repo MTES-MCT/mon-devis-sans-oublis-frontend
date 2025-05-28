@@ -4,13 +4,17 @@ import {
   updateQuote,
   updateQuoteComment,
   getQuoteMetadata,
+  addQuoteComment,
+  removeQuoteComment,
 } from "@/actions/quote.actions";
 
 import {
   sendErrorFeedback,
   sendGlobalFeedback,
 } from "@/actions/feedback.actions";
+
 import { getStats } from "@/actions/stats.actions";
+
 import {
   deleteErrorDetail,
   getDeleteErrorDetailReasons,
@@ -25,6 +29,8 @@ export const quoteService = {
   updateQuote,
   updateQuoteComment,
   getQuoteMetadata,
+  addQuoteComment,
+  removeQuoteComment,
   deleteErrorDetail,
   undoDeleteErrorDetail,
   getDeleteErrorDetailReasons,
