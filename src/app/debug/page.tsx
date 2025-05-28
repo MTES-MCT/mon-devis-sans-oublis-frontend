@@ -1,6 +1,7 @@
 "use client";
 
 import { getClientEnv, getSharedEnv } from "@/lib/config/env.config";
+import { WindowWithCrisp } from "@/types/crisp";
 import { useEffect, useState } from "react";
 
 export default function DebugCrisp() {
@@ -12,10 +13,13 @@ export default function DebugCrisp() {
     
     // Vérifier Crisp
     const checkCrisp = () => {
-      if (typeof window !== "undefined" && (window as any).$crisp) {
-        setCrispStatus('ready');
-      } else {
-        setTimeout(checkCrisp, 500);
+      if (typeof window !== "undefined") {
+        const windowWithCrisp = window as WindowWithCrisp;
+        if (windowWithCrisp.$crisp) {
+          setCrispStatus('ready');
+        } else {
+          setTimeout(checkCrisp, 500);
+        }
       }
     };
     
