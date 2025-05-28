@@ -27,7 +27,7 @@ export const apiClient = {
     return response.json();
   },
 
-  async post(endpoint: string, data?: any) {
+  async post(endpoint: string, data?: unknown) {
     const response = await fetch(`${getApiUrl()}${endpoint}`, {
       method: "POST",
       headers: {
@@ -47,7 +47,7 @@ export const apiClient = {
     return response.json();
   },
 
-  async patch(endpoint: string, data: any) {
+  async patch(endpoint: string, data: unknown) {
     const response = await fetch(`${getApiUrl()}${endpoint}`, {
       method: "PATCH",
       headers: {

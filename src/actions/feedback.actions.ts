@@ -7,7 +7,7 @@ interface FeedbackResponse {
   id?: string;
   comment: string;
   created_at?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface GlobalFeedbackData {

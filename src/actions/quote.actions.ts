@@ -1,7 +1,7 @@
 "use server";
 
 import { apiClient } from "@/lib/server/apiClient";
-import { ErrorDetails, Profile } from "@/types";
+import { Profile } from "@/types";
 import { revalidatePath } from "next/cache";
 
 interface QuoteUpdateData {
