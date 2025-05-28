@@ -2,13 +2,15 @@
 
 import { useEffect } from "react";
 import { getClientEnv } from "@/lib/config/env.config";
+import { WindowWithCrisp } from "@/types/crisp";
+
+
 
 export default function CrispWrapper() {
   useEffect(() => {
     try {
       const clientEnv = getClientEnv();
       const websiteId = clientEnv.NEXT_PUBLIC_CRISP_WEBSITE_ID;
-      
       
       if (typeof window === "undefined") {
         console.log("Window undefined");
@@ -20,15 +22,17 @@ export default function CrispWrapper() {
         return;
       }
 
+      const windowWithCrisp = window as WindowWithCrisp;
+
       // Éviter la double initialisation
-      if ((window as any).$crisp) {
+      if (windowWithCrisp.$crisp) {
         console.log("Crisp déjà initialisé");
         return;
       }
 
       // Initialisation de Crisp
-      (window as any).$crisp = [];
-      (window as any).CRISP_WEBSITE_ID = websiteId;
+      windowWithCrisp.$crisp = [] as unknown as WindowWithCrisp["$crisp"];
+      windowWithCrisp.CRISP_WEBSITE_ID = websiteId;
 
       const script = document.createElement("script");
       script.src = "https://client.crisp.chat/l.js";

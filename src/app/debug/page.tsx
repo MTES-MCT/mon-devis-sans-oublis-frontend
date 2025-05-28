@@ -1,33 +1,67 @@
 "use client";
 
 import { getClientEnv, getSharedEnv } from "@/lib/config/env.config";
+import { useCrisp } from "@/hooks/useCrisp";
 import { useEffect, useState } from "react";
 
-export default function DebugCrisp() {
+interface WindowWithServices extends Window {
+  _paq?: unknown[];
+}
+
+export default function DebugPage() {
   const [isMounted, setIsMounted] = useState(false);
-  const [crispStatus, setCrispStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [matomoStatus, setMatomoStatus] = useState<
+    "disabled" | "loading" | "ready" | "error"
+  >("loading");
+
+  // Utilisation du hook useCrisp
+  const { isLoaded: crispIsLoaded } = useCrisp();
 
   useEffect(() => {
     setIsMounted(true);
-    
-    // Vérifier Crisp
-    const checkCrisp = () => {
-      if (typeof window !== "undefined" && (window as any).$crisp) {
-        setCrispStatus('ready');
-      } else {
-        setTimeout(checkCrisp, 500);
+
+    // Vérifier Matomo
+    const checkMatomo = () => {
+      if (typeof window !== "undefined") {
+        const windowWithServices = window as WindowWithServices;
+        if (windowWithServices._paq && Array.isArray(windowWithServices._paq)) {
+          setMatomoStatus("ready");
+          return true;
+        }
       }
+      return false;
     };
-    
-    checkCrisp();
-    
-    // Timeout après 10 secondes
-    setTimeout(() => {
-      if (crispStatus === 'loading') {
-        setCrispStatus('error');
+
+    const isProduction = process.env.NODE_ENV === "production";
+
+    if (!isProduction) {
+      setMatomoStatus("disabled");
+    } else {
+      let matomoChecked = false;
+
+      const interval = setInterval(() => {
+        if (!matomoChecked && isProduction && checkMatomo()) {
+          matomoChecked = true;
+        }
+
+        // Arrêter si tout est vérifié
+        if (matomoChecked || !isProduction) {
+          clearInterval(interval);
+        }
+      }, 500);
+
+      setTimeout(() => {
+        clearInterval(interval);
+        if (matomoStatus === "loading" && isProduction) {
+          setMatomoStatus("error");
+        }
+      }, 10000);
+
+      if (isProduction) {
+        checkMatomo();
       }
-    }, 10000);
-  }, [crispStatus]);
+    }
+  }, [matomoStatus]);
 
   // Protection production
   if (process.env.NODE_ENV === "production") {
@@ -52,7 +86,7 @@ export default function DebugCrisp() {
           <div className="fr-col-12 fr-col-md-8">
             <div className="fr-alert fr-alert--info">
               <h3 className="fr-alert__title">Chargement</h3>
-              <p>Vérification des variables d'environnement...</p>
+              <p>Vérification des services en cours...</p>
             </div>
           </div>
         </div>
@@ -60,7 +94,7 @@ export default function DebugCrisp() {
     );
   }
 
-  // Récupération des variables
+  // Récupération des variables d'environnement
   let clientEnv, sharedEnv;
   let clientError, sharedError;
 
@@ -76,48 +110,86 @@ export default function DebugCrisp() {
     sharedError = String(error);
   }
 
-  const crispId = process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID;
+  const crispStatus = crispIsLoaded ? "ready" : "loading";
 
   return (
     <div className="fr-container fr-mt-8v fr-mb-8v">
       <div className="fr-grid-row fr-grid-row--center">
         <div className="fr-col-12 fr-col-lg-10">
-          
-          <h1 className="fr-h2 fr-mb-6v">Debug Variables d'Environnement</h1>
+          <h1 className="fr-h2 fr-mb-6v">Debug - Variables et Services</h1>
 
-          {/* État de Crisp */}
-          <div className="fr-mb-6v">
-            <h2 className="fr-h4">État de Crisp</h2>
+          {/* Section 1: État des Services */}
+          <div className="fr-mb-8v">
+            <h2 className="fr-h4">État des Services</h2>
             <hr />
-            <div className={`fr-alert ${
-              crispStatus === 'ready' ? 'fr-alert--success' : 
-              crispStatus === 'loading' ? 'fr-alert--info' : 
-              'fr-alert--error'
-            }`}>
-              <h3 className="fr-alert__title">
-                {crispStatus === 'ready' ? 'Opérationnel' : 
-                 crispStatus === 'loading' ? 'Chargement' : 
-                 'Non disponible'}
-              </h3>
-              <p>
-                {crispStatus === 'ready' ? 'Crisp est chargé et fonctionnel' : 
-                 crispStatus === 'loading' ? 'Crisp en cours de chargement...' : 
-                 'Crisp n\'a pas pu être initialisé'}
-              </p>
-              {crispId && (
-                <p><strong>ID:</strong> {crispId}</p>
-              )}
+
+            <div className="fr-grid-row fr-grid-row--gutters">
+              {/* Crisp */}
+              <div className="fr-col-12 fr-col-md-6 fr-mb-4v">
+                <div
+                  className={`fr-alert ${
+                    crispStatus === "ready"
+                      ? "fr-alert--success"
+                      : "fr-alert--info"
+                  }`}
+                >
+                  <h3 className="fr-alert__title">Crisp Chat</h3>
+                  <p>
+                    <strong>État:</strong>{" "}
+                    {crispStatus === "ready" ? "Opérationnel" : "Chargement..."}
+                  </p>
+                  {clientEnv?.NEXT_PUBLIC_CRISP_WEBSITE_ID && (
+                    <p>
+                      <strong>ID:</strong>{" "}
+                      {clientEnv.NEXT_PUBLIC_CRISP_WEBSITE_ID}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Matomo */}
+              <div className="fr-col-12 fr-col-md-6 fr-mb-4v">
+                <div
+                  className={`fr-alert ${
+                    matomoStatus === "ready"
+                      ? "fr-alert--success"
+                      : matomoStatus === "disabled"
+                        ? "fr-alert--info"
+                        : matomoStatus === "loading"
+                          ? "fr-alert--info"
+                          : "fr-alert--warning"
+                  }`}
+                >
+                  <h3 className="fr-alert__title">Matomo Analytics</h3>
+                  <p>
+                    <strong>État:</strong>{" "}
+                    {matomoStatus === "ready"
+                      ? "Opérationnel"
+                      : matomoStatus === "disabled"
+                        ? "Désactivé (dev)"
+                        : matomoStatus === "loading"
+                          ? "Chargement..."
+                          : "Non configuré"}
+                  </p>
+                  {clientEnv?.NEXT_PUBLIC_MATOMO_SITE_ID && (
+                    <p>
+                      <strong>Site ID:</strong>{" "}
+                      {clientEnv.NEXT_PUBLIC_MATOMO_SITE_ID}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Variables Client */}
-          <div className="fr-mb-6v">
+          {/* Section 2: Variables Client */}
+          <div className="fr-mb-8v">
             <h2 className="fr-h4">Variables Client</h2>
             <hr />
-            
+
             {clientError ? (
               <div className="fr-alert fr-alert--error">
-                <h3 className="fr-alert__title">Erreur</h3>
+                <h3 className="fr-alert__title">Erreur de configuration</h3>
                 <p>{clientError}</p>
               </div>
             ) : (
@@ -125,45 +197,121 @@ export default function DebugCrisp() {
                 <table>
                   <thead>
                     <tr>
+                      <th scope="col">Service</th>
                       <th scope="col">Variable</th>
                       <th scope="col">Valeur</th>
                       <th scope="col">État</th>
                     </tr>
                   </thead>
                   <tbody>
+                    {/* Crisp */}
                     <tr>
-                      <td><code>NEXT_PUBLIC_CRISP_WEBSITE_ID</code></td>
-                      <td><code>{clientEnv?.NEXT_PUBLIC_CRISP_WEBSITE_ID || 'Non définie'}</code></td>
                       <td>
-                        <span className={`fr-badge ${clientEnv?.NEXT_PUBLIC_CRISP_WEBSITE_ID ? 'fr-badge--success' : 'fr-badge--warning'}`}>
-                          {clientEnv?.NEXT_PUBLIC_CRISP_WEBSITE_ID ? 'OK' : 'Manquante'}
+                        <strong>Crisp</strong>
+                      </td>
+                      <td>
+                        <code>NEXT_PUBLIC_CRISP_WEBSITE_ID</code>
+                      </td>
+                      <td>
+                        <code>
+                          {clientEnv?.NEXT_PUBLIC_CRISP_WEBSITE_ID
+                            ? `${clientEnv.NEXT_PUBLIC_CRISP_WEBSITE_ID.substring(0, 8)}...`
+                            : "Non définie"}
+                        </code>
+                      </td>
+                      <td>
+                        <span
+                          className={`fr-badge ${
+                            clientEnv?.NEXT_PUBLIC_CRISP_WEBSITE_ID
+                              ? "fr-badge--success"
+                              : "fr-badge--warning"
+                          }`}
+                        >
+                          {clientEnv?.NEXT_PUBLIC_CRISP_WEBSITE_ID
+                            ? "OK"
+                            : "Manquante"}
+                        </span>
+                      </td>
+                    </tr>
+
+                    {/* Matomo */}
+                    <tr>
+                      <td rowSpan={2}>
+                        <strong>Matomo</strong>
+                      </td>
+                      <td>
+                        <code>NEXT_PUBLIC_MATOMO_SITE_ID</code>
+                      </td>
+                      <td>
+                        <code>
+                          {clientEnv?.NEXT_PUBLIC_MATOMO_SITE_ID ||
+                            "Non définie"}
+                        </code>
+                      </td>
+                      <td>
+                        <span
+                          className={`fr-badge ${
+                            clientEnv?.NEXT_PUBLIC_MATOMO_SITE_ID
+                              ? "fr-badge--success"
+                              : "fr-badge--info"
+                          }`}
+                        >
+                          {clientEnv?.NEXT_PUBLIC_MATOMO_SITE_ID
+                            ? "OK"
+                            : "Optionnelle"}
                         </span>
                       </td>
                     </tr>
                     <tr>
-                      <td><code>NEXT_PUBLIC_MATOMO_SITE_ID</code></td>
-                      <td><code>{clientEnv?.NEXT_PUBLIC_MATOMO_SITE_ID || 'Non définie'}</code></td>
                       <td>
-                        <span className={`fr-badge ${clientEnv?.NEXT_PUBLIC_MATOMO_SITE_ID ? 'fr-badge--success' : 'fr-badge--info'}`}>
-                          {clientEnv?.NEXT_PUBLIC_MATOMO_SITE_ID ? 'OK' : 'Optionnelle'}
+                        <code>NEXT_PUBLIC_MATOMO_URL</code>
+                      </td>
+                      <td>
+                        <code>
+                          {clientEnv?.NEXT_PUBLIC_MATOMO_URL || "Non définie"}
+                        </code>
+                      </td>
+                      <td>
+                        <span
+                          className={`fr-badge ${
+                            clientEnv?.NEXT_PUBLIC_MATOMO_URL
+                              ? "fr-badge--success"
+                              : "fr-badge--info"
+                          }`}
+                        >
+                          {clientEnv?.NEXT_PUBLIC_MATOMO_URL
+                            ? "OK"
+                            : "Optionnelle"}
                         </span>
                       </td>
                     </tr>
+
+                    {/* Sentry */}
                     <tr>
-                      <td><code>NEXT_PUBLIC_MATOMO_URL</code></td>
-                      <td><code>{clientEnv?.NEXT_PUBLIC_MATOMO_URL || 'Non définie'}</code></td>
                       <td>
-                        <span className={`fr-badge ${clientEnv?.NEXT_PUBLIC_MATOMO_URL ? 'fr-badge--success' : 'fr-badge--info'}`}>
-                          {clientEnv?.NEXT_PUBLIC_MATOMO_URL ? 'OK' : 'Optionnelle'}
-                        </span>
+                        <strong>Sentry</strong>
                       </td>
-                    </tr>
-                    <tr>
-                      <td><code>NEXT_PUBLIC_SENTRY_DSN</code></td>
-                      <td><code>{clientEnv?.NEXT_PUBLIC_SENTRY_DSN || 'Non définie'}</code></td>
                       <td>
-                        <span className={`fr-badge ${clientEnv?.NEXT_PUBLIC_SENTRY_DSN ? 'fr-badge--success' : 'fr-badge--info'}`}>
-                          {clientEnv?.NEXT_PUBLIC_SENTRY_DSN ? 'OK' : 'Optionnelle'}
+                        <code>NEXT_PUBLIC_SENTRY_DSN</code>
+                      </td>
+                      <td>
+                        <code>
+                          {clientEnv?.NEXT_PUBLIC_SENTRY_DSN
+                            ? `${clientEnv.NEXT_PUBLIC_SENTRY_DSN.substring(0, 20)}...`
+                            : "Non définie"}
+                        </code>
+                      </td>
+                      <td>
+                        <span
+                          className={`fr-badge ${
+                            clientEnv?.NEXT_PUBLIC_SENTRY_DSN
+                              ? "fr-badge--success"
+                              : "fr-badge--info"
+                          }`}
+                        >
+                          {clientEnv?.NEXT_PUBLIC_SENTRY_DSN
+                            ? "OK"
+                            : "Optionnelle"}
                         </span>
                       </td>
                     </tr>
@@ -173,14 +321,14 @@ export default function DebugCrisp() {
             )}
           </div>
 
-          {/* Variables Partagées */}
-          <div className="fr-mb-6v">
+          {/* Section 3: Variables Partagées */}
+          <div className="fr-mb-8v">
             <h2 className="fr-h4">Variables Partagées</h2>
             <hr />
-            
+
             {sharedError ? (
               <div className="fr-alert fr-alert--error">
-                <h3 className="fr-alert__title">Erreur</h3>
+                <h3 className="fr-alert__title">Erreur de configuration</h3>
                 <p>{sharedError}</p>
               </div>
             ) : (
@@ -195,11 +343,23 @@ export default function DebugCrisp() {
                   </thead>
                   <tbody>
                     <tr>
-                      <td><code>NEXT_PUBLIC_API_URL</code></td>
-                      <td><code>{sharedEnv?.NEXT_PUBLIC_API_URL || 'Non définie'}</code></td>
                       <td>
-                        <span className={`fr-badge ${sharedEnv?.NEXT_PUBLIC_API_URL ? 'fr-badge--success' : 'fr-badge--error'}`}>
-                          {sharedEnv?.NEXT_PUBLIC_API_URL ? 'OK' : 'Requise'}
+                        <code>NEXT_PUBLIC_API_URL</code>
+                      </td>
+                      <td>
+                        <code>
+                          {sharedEnv?.NEXT_PUBLIC_API_URL || "Non définie"}
+                        </code>
+                      </td>
+                      <td>
+                        <span
+                          className={`fr-badge ${
+                            sharedEnv?.NEXT_PUBLIC_API_URL
+                              ? "fr-badge--success"
+                              : "fr-badge--error"
+                          }`}
+                        >
+                          {sharedEnv?.NEXT_PUBLIC_API_URL ? "OK" : "Requise"}
                         </span>
                       </td>
                     </tr>
@@ -209,11 +369,11 @@ export default function DebugCrisp() {
             )}
           </div>
 
-          {/* Informations Système */}
-          <div className="fr-mb-6v">
-            <h2 className="fr-h4">Informations Système</h2>
+          {/* Section 4: Résumé */}
+          <div className="fr-mb-8v">
+            <h2 className="fr-h4">Résumé</h2>
             <hr />
-            
+
             <div className="fr-grid-row fr-grid-row--gutters">
               <div className="fr-col-12 fr-col-md-6">
                 <div className="fr-card fr-card--grey">
@@ -221,22 +381,40 @@ export default function DebugCrisp() {
                     <div className="fr-card__content">
                       <h3 className="fr-card__title">Environnement</h3>
                       <p className="fr-card__desc">
-                        <strong>NODE_ENV:</strong> {process.env.NODE_ENV}<br />
-                        <strong>Variables NEXT_PUBLIC détectées:</strong> {Object.keys(process.env).filter(k => k.startsWith('NEXT_PUBLIC_')).length}
+                        <strong>NODE_ENV:</strong> {process.env.NODE_ENV}
+                        <br />
+                        <strong>Variables détectées:</strong>{" "}
+                        {
+                          Object.keys(process.env).filter((k) =>
+                            k.startsWith("NEXT_PUBLIC_")
+                          ).length
+                        }
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
-              
+
               <div className="fr-col-12 fr-col-md-6">
                 <div className="fr-card fr-card--grey">
                   <div className="fr-card__body">
                     <div className="fr-card__content">
-                      <h3 className="fr-card__title">État Global</h3>
+                      <h3 className="fr-card__title">Services</h3>
                       <p className="fr-card__desc">
-                        <strong>Configuration:</strong> {clientError || sharedError ? 'Erreurs détectées' : 'Valide'}<br />
-                        <strong>Crisp:</strong> {crispStatus === 'ready' ? 'Fonctionnel' : 'Non disponible'}
+                        <strong>Configuration:</strong>{" "}
+                        {clientError || sharedError
+                          ? "Erreurs détectées"
+                          : "Valide"}
+                        <br />
+                        <strong>Crisp:</strong>{" "}
+                        {crispStatus === "ready" ? "Actif" : "Inactif"}
+                        <br />
+                        <strong>Matomo:</strong>{" "}
+                        {matomoStatus === "ready"
+                          ? "Actif"
+                          : matomoStatus === "disabled"
+                            ? "Désactivé"
+                            : "Inactif"}
                       </p>
                     </div>
                   </div>
@@ -244,7 +422,6 @@ export default function DebugCrisp() {
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>

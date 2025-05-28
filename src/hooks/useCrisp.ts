@@ -1,5 +1,6 @@
 "use client";
 
+import { WindowWithCrisp } from "@/types/crisp";
 import { useEffect, useState } from "react";
 
 export const useCrisp = () => {
@@ -8,7 +9,8 @@ export const useCrisp = () => {
   useEffect(() => {
     const checkCrisp = () => {
       if (typeof window !== "undefined") {
-        const crisp = (window as any).$crisp;
+        const windowWithCrisp = window as WindowWithCrisp;
+        const crisp = windowWithCrisp.$crisp;
         if (crisp && typeof crisp.push === "function") {
           console.log("Crisp détecté et fonctionnel");
           setIsLoaded(true);
@@ -45,7 +47,8 @@ export const useCrisp = () => {
    */
   const openChat = () => {
     if (typeof window !== "undefined") {
-      const crisp = (window as any).$crisp;
+      const windowWithCrisp = window as WindowWithCrisp;
+      const crisp = windowWithCrisp.$crisp;
       if (crisp && typeof crisp.push === "function") {
         crisp.push(["do", "chat:open"]);
       } else {
@@ -59,7 +62,8 @@ export const useCrisp = () => {
    */
   const sendMessage = (message: string) => {
     if (typeof window !== "undefined") {
-      const crisp = (window as any).$crisp;
+      const windowWithCrisp = window as WindowWithCrisp;
+      const crisp = windowWithCrisp.$crisp;
       if (crisp && typeof crisp.push === "function") {
         crisp.push(["do", "message:send", ["text", message]]);
       } else {
@@ -73,11 +77,10 @@ export const useCrisp = () => {
    */
   const promptUser = (message: string) => {
     if (typeof window !== "undefined") {
-      const crisp = (window as any).$crisp;
+      const windowWithCrisp = window as WindowWithCrisp;
+      const crisp = windowWithCrisp.$crisp;
       if (crisp && typeof crisp.push === "function") {
-        // Envoyer le message
         crisp.push(["do", "message:send", ["text", message]]);
-        // Ouvrir le chat pour que l'utilisateur voit
         crisp.push(["do", "chat:open"]);
       } else {
         console.log("Impossible de prompter l'utilisateur - Crisp non disponible");
