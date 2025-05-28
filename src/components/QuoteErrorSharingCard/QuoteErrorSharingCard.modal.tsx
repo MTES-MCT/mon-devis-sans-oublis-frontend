@@ -38,70 +38,76 @@ const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
       backButtonLabel={QUOTE_ERROR_SHARING_WORDING_MODAL.close}
       className="z-50"
     >
-      <div className="flex flex-col h-full max-h-[80vh]">
-        <div className="mb-4">
-          <h4
-            id="share-errors-title"
-            className="text-[var(--text-title-grey)]! fr-mb-1w flex items-center gap-2"
-          >
-            {QUOTE_ERROR_SHARING_WORDING_MODAL.title}
-          </h4>
+      <div className="flex flex-col h-full">
+        <h4
+          id="share-errors-title"
+          className="fr-mb-1w flex items-center gap-2"
+        >
+          {QUOTE_ERROR_SHARING_WORDING_MODAL.title}
+        </h4>
 
-          <div className="flex justify-between items-center">
-            <p className="text-xs text-[var(--text-mention-grey)]">
-              {QUOTE_ERROR_SHARING_WORDING_MODAL.subTitle}
-            </p>
+        <p className="text-xs text-[var(--text-mention-grey)] fr-mb-2w">
+          {QUOTE_ERROR_SHARING_WORDING_MODAL.subTitle}
+        </p>
 
-            <fieldset className="fr-segmented fr-segmented--sm">
-              <div className="fr-segmented__elements">
-                <div className="fr-segmented__element">
-                  <input
-                    value="preview"
-                    type="radio"
-                    id="display-mode-preview"
-                    name="display-mode"
-                    checked={!showHTML}
-                    onChange={() => setShowHTML(false)}
-                  />
-                  <label className="fr-label" htmlFor="display-mode-preview">
-                    Aperçu
-                  </label>
-                </div>
-                <div className="fr-segmented__element">
-                  <input
-                    value="html"
-                    type="radio"
-                    id="display-mode-html"
-                    name="display-mode"
-                    checked={showHTML}
-                    onChange={() => setShowHTML(true)}
-                  />
-                  <label className="fr-label" htmlFor="display-mode-html">
-                    HTML
-                  </label>
-                </div>
+        <div className="flex justify-end fr-mb-2w">
+          <fieldset className="fr-segmented fr-segmented--sm">
+            <div className="fr-segmented__elements">
+              <div className="fr-segmented__element">
+                <input
+                  value="preview"
+                  type="radio"
+                  id="display-mode-preview"
+                  name="display-mode"
+                  checked={!showHTML}
+                  onChange={() => setShowHTML(false)}
+                />
+                <label
+                  className="fr-icon-list-unordered fr-label"
+                  htmlFor="display-mode-preview"
+                >
+                  {QUOTE_ERROR_SHARING_WORDING_MODAL.show_preview}
+                </label>
               </div>
-            </fieldset>
-          </div>
+              <div className="fr-segmented__element">
+                <input
+                  value="html"
+                  type="radio"
+                  id="display-mode-html"
+                  name="display-mode"
+                  checked={showHTML}
+                  onChange={() => setShowHTML(true)}
+                />
+                <label
+                  className="fr-icon-code-s-slash-line fr-label"
+                  htmlFor="display-mode-html"
+                >
+                  {QUOTE_ERROR_SHARING_WORDING_MODAL.html_preview}
+                </label>
+              </div>
+            </div>
+          </fieldset>
         </div>
 
-        <div className="flex-1 mb-4">
+        <div className="fr-input-group flex-1 min-h-0">
           {showHTML ? (
             <textarea
               id="email-content"
-              className="fr-input w-full h-128 resize-none font-mono text-sm"
+              className="fr-input resize-none font-mono text-sm"
+              style={{ height: "400px", maxHeight: "60vh" }}
               value={emailContent}
               onChange={(e) => setEmailContent(e.target.value)}
             />
           ) : (
             <div
-              className="w-full h-128 overflow-y-auto p-4 bg-white border rounded text-base leading-relaxed"
+              className="p-4 bg-white border rounded text-base leading-relaxed overflow-y-auto"
+              style={{ height: "400px", maxHeight: "60vh" }}
               dangerouslySetInnerHTML={{ __html: emailContent }}
             />
           )}
         </div>
 
-        <div className="flex gap-3 justify-end pt-4">
+        <div className="mt-8 flex justify-end gap-4">
           <button
             className={`fr-btn fr-btn--icon-left ${
               isCopied
@@ -109,6 +115,7 @@ const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
                 : "fr-icon-clipboard-line"
             }`}
             onClick={handleCopy}
+            type="button"
           >
             {isCopied
               ? QUOTE_ERROR_SHARING_WORDING_MODAL.copied
