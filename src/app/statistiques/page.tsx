@@ -1,5 +1,5 @@
 import { Notice } from "@/components";
-import { statService } from "@/lib/api";
+import { statService } from "@/lib/client/apiWrapper";
 import wording from "@/wording";
 
 export default async function Statistics() {

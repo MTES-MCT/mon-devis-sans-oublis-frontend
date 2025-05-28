@@ -471,7 +471,8 @@ export const quoteService = {
 };
 
 // Statistics Service
-export const statService = {
+// TODO : Remove this service when the API Server Action migration is complete
+export const statServiceToRemove = {
   async getStats() {
     try {
       const response = await fetch(`${getApiUrl()}/api/v1/stats`, {
