@@ -52,8 +52,7 @@ let _clientEnv: z.infer<typeof clientSchema> | null = null;
 
 export function getClientEnv() {
   if (!_clientEnv) {
-    // Construction manuelle de l'objet env car Next.js
-    // l'énumération des variables NEXT_PUBLIC_* côté client
+    // Construction manuelle de l'objet env car Next.js ne permet pas d'accéder à process.env côté client
     const envObject = {
       NEXT_PUBLIC_MATOMO_SITE_ID: process.env.NEXT_PUBLIC_MATOMO_SITE_ID,
       NEXT_PUBLIC_MATOMO_URL: process.env.NEXT_PUBLIC_MATOMO_URL,
@@ -76,12 +75,6 @@ export function getClientEnv() {
   }
 
   return _clientEnv;
-}
-
-// Fonction pour reset le cache (utile pour le debug)
-export function resetClientEnvCache() {
-  _clientEnv = null;
-  console.log("🔄 Client env cache reset");
 }
 
 // Variables partagées (lazy loading)

@@ -1,4 +1,3 @@
-// src/hooks/useCrisp.ts
 "use client";
 
 import { useEffect, useState } from "react";
@@ -11,7 +10,7 @@ export const useCrisp = () => {
       if (typeof window !== "undefined") {
         const crisp = (window as any).$crisp;
         if (crisp && typeof crisp.push === "function") {
-          console.log("✅ Crisp détecté et fonctionnel");
+          console.log("Crisp détecté et fonctionnel");
           setIsLoaded(true);
           return true;
         }
@@ -28,12 +27,12 @@ export const useCrisp = () => {
     
     const interval = setInterval(() => {
       attempts++;
-      console.log(`🔄 Tentative ${attempts}/${maxAttempts} - Vérification Crisp...`);
+      console.log(`Tentative ${attempts}/${maxAttempts} - Vérification Crisp...`);
       
       if (checkCrisp() || attempts >= maxAttempts) {
         clearInterval(interval);
         if (attempts >= maxAttempts) {
-          console.log("❌ Timeout - Crisp non détecté après 10 secondes");
+          console.log("Timeout - Crisp non détecté après 10 secondes");
         }
       }
     }, 500);
@@ -41,26 +40,47 @@ export const useCrisp = () => {
     return () => clearInterval(interval);
   }, []);
 
+  /**
+   * Ouvre le chat Crisp
+   */
   const openChat = () => {
     if (typeof window !== "undefined") {
       const crisp = (window as any).$crisp;
       if (crisp && typeof crisp.push === "function") {
-        console.log("🗨️ Ouverture du chat Crisp");
         crisp.push(["do", "chat:open"]);
       } else {
-        console.log("❌ Impossible d'ouvrir le chat - Crisp non disponible");
+        console.log("Impossible d'ouvrir le chat - Crisp non disponible");
       }
     }
   };
 
+  /**
+   * Envoie un message silencieux dans Crisp (sans ouvrir le chat)
+   */
   const sendMessage = (message: string) => {
     if (typeof window !== "undefined") {
       const crisp = (window as any).$crisp;
       if (crisp && typeof crisp.push === "function") {
-        console.log("📨 Envoi message:", message);
         crisp.push(["do", "message:send", ["text", message]]);
       } else {
-        console.log("❌ Impossible d'envoyer le message - Crisp non disponible");
+        console.log("Impossible d'envoyer le message - Crisp non disponible");
+      }
+    }
+  };
+
+  /**
+   * Envoie un message ET ouvre le chat automatiquement
+   */
+  const promptUser = (message: string) => {
+    if (typeof window !== "undefined") {
+      const crisp = (window as any).$crisp;
+      if (crisp && typeof crisp.push === "function") {
+        // Envoyer le message
+        crisp.push(["do", "message:send", ["text", message]]);
+        // Ouvrir le chat pour que l'utilisateur voit
+        crisp.push(["do", "chat:open"]);
+      } else {
+        console.log("Impossible de prompter l'utilisateur - Crisp non disponible");
       }
     }
   };
@@ -68,6 +88,7 @@ export const useCrisp = () => {
   return {
     isLoaded,
     openChat,
-    sendMessage,
+    sendMessage,      
+    promptUser,      
   };
 };
