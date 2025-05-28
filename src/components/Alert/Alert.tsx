@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import wording from '@/wording';
+import wording from "@/wording";
 
 export enum AlertType {
-  INFO = 'info',
-  SUCCESS = 'success',
+  INFO = "info",
+  SUCCESS = "success",
 }
 
 export interface AlertProps {
@@ -31,7 +31,7 @@ const Alert: React.FC<AlertProps> = ({
   return (
     <div
       className={`fr-alert ${
-        type === AlertType.INFO ? 'fr-alert--info' : 'fr-alert--success'
+        type === AlertType.INFO ? "fr-alert--info" : "fr-alert--success"
       } ${className}`}
     >
       <p>
@@ -40,7 +40,7 @@ const Alert: React.FC<AlertProps> = ({
           <>
             {showMore && <span>{`${moreDescription} `}</span>}
             <span
-              className='text-[var(--text-default-grey)] cursor-pointer underline'
+              className="text-[var(--text-default-grey)] cursor-pointer underline"
               onClick={handleToggle}
             >
               {showMore

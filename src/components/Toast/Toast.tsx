@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export interface ToastProps {
   message: string;
@@ -25,10 +25,10 @@ const Toast: React.FC<ToastProps> = ({ message, duration = 3000, onClose }) => {
   return (
     <div
       className={`fr-alert fr-alert--success transition-transform transform bg-white ${
-        visible ? 'translate-x-0' : 'translate-x-[120%]'
+        visible ? "translate-x-0" : "translate-x-[120%]"
       } `}
     >
-      <p className='font-bold'>{message}</p>
+      <p className="font-bold">{message}</p>
     </div>
   );
 };

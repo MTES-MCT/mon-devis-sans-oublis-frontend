@@ -1,32 +1,32 @@
-import { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react";
 
-import DeleteErrorModal from './DeleteErrorModal';
-import { Category } from '@/types';
+import DeleteErrorModal from "./DeleteErrorModal";
+import { Category } from "@/types";
 
 const meta = {
-  title: 'Components/Modal/DeleteErrorModal',
+  title: "Components/Modal/DeleteErrorModal",
   component: DeleteErrorModal,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     isOpen: {
-      control: 'boolean',
-      description: 'Affiche ou cache la modale',
+      control: "boolean",
+      description: "Affiche ou cache la modale",
     },
     errorCategory: {
-      control: 'radio',
+      control: "radio",
       options: [Category.ADMIN, Category.GESTES],
       description: "Catégorie de l'erreur",
     },
     errorDetailsId: {
-      control: 'text',
+      control: "text",
       description: "ID de l'erreur",
     },
     errorTitle: {
-      control: 'text',
+      control: "text",
       description: "Titre de l'erreur",
     },
   },
@@ -36,16 +36,16 @@ export default meta;
 type Story = StoryObj<typeof DeleteErrorModal>;
 
 const deleteErrorReasons = [
-  { id: 'already_present', label: 'Information déjà présente' },
-  { id: 'not_used', label: 'Information non utilisée dans notre cas' },
+  { id: "already_present", label: "Information déjà présente" },
+  { id: "not_used", label: "Information non utilisée dans notre cas" },
 ];
 
 export const Default: Story = {
   args: {
     errorCategory: Category.ADMIN,
-    errorDetailsId: '123',
-    errorTitle: 'Erreur dans le calcul de la TVA',
-    quoteCheckId: '456',
+    errorDetailsId: "123",
+    errorTitle: "Erreur dans le calcul de la TVA",
+    quoteCheckId: "456",
     deleteErrorReasons: deleteErrorReasons,
     isOpen: false,
   },
@@ -58,14 +58,14 @@ export const Default: Story = {
       errorDetailsId: string,
       reason: string
     ) => {
-      console.log('Delete error:', { quoteCheckId, errorDetailsId, reason });
+      console.log("Delete error:", { quoteCheckId, errorDetailsId, reason });
       setIsOpen(false);
     };
 
     return (
       <>
         <button
-          className='fr-btn fr-btn--primary'
+          className="fr-btn fr-btn--primary"
           onClick={() => setIsOpen(true)}
         >
           Ouvrir la modale de suppression

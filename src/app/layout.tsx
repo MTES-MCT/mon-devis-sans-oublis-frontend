@@ -1,17 +1,17 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
-import { Footer, FooterProps, Header, HeaderProps, Matomo } from '@/components';
-import { initDsfr } from '@/utils';
-import wording from '@/wording';
-import { marianne, spectral } from '../styles/fonts';
-import '../styles/globals.css';
+import { Footer, FooterProps, Header, HeaderProps, Matomo } from "@/components";
+import { initDsfr } from "@/utils";
+import wording from "@/wording";
+import { marianne, spectral } from "../styles/fonts";
+import "../styles/globals.css";
 
 // DSFR initialization
 initDsfr();
 
 export const metadata: Metadata = {
-  title: 'Mon Devis Sans Oublis',
-  description: 'Vérifiez vos devis de rénovation énergétique',
+  title: "Mon Devis Sans Oublis",
+  description: "Vérifiez vos devis de rénovation énergétique",
 };
 
 export default function RootLayout({
@@ -25,43 +25,43 @@ export default function RootLayout({
   return (
     <html
       className={`${marianne.variable} ${spectral.variable}`}
-      data-fr-scheme='system'
-      lang='fr'
+      data-fr-scheme="system"
+      lang="fr"
     >
       <head>
         <meta
-          content='telephone=no,date=no,address=no,email=no,url=no'
-          name='format-detection'
+          content="telephone=no,date=no,address=no,email=no,url=no"
+          name="format-detection"
         />
         <meta
-          content='width=device-width, initial-scale=1, shrink-to-fit=no'
-          name='viewport'
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+          name="viewport"
         />
-        <meta content='#000091' name='theme-color' />
+        <meta content="#000091" name="theme-color" />
         <link
-          href='/dsfr/favicon/apple-touch-icon.png'
-          rel='apple-touch-icon'
-        />
-        <link
-          href='/dsfr/favicon/favicon.svg'
-          rel='icon'
-          type='image/svg+xml'
+          href="/dsfr/favicon/apple-touch-icon.png"
+          rel="apple-touch-icon"
         />
         <link
-          href='/dsfr/favicon/favicon.ico'
-          rel='shortcut icon'
-          type='image/x-icon'
+          href="/dsfr/favicon/favicon.svg"
+          rel="icon"
+          type="image/svg+xml"
         />
         <link
-          crossOrigin='use-credentials'
-          href='/dsfr/favicon/manifest.webmanifest'
-          rel='manifest'
+          href="/dsfr/favicon/favicon.ico"
+          rel="shortcut icon"
+          type="image/x-icon"
+        />
+        <link
+          crossOrigin="use-credentials"
+          href="/dsfr/favicon/manifest.webmanifest"
+          rel="manifest"
         />
       </head>
-      <body className='flex flex-col min-h-screen'>
+      <body className="flex flex-col min-h-screen">
         <Matomo />
         <Header {...headerData} />
-        <main className='flex-1'>{children}</main>
+        <main className="flex-1">{children}</main>
         <Footer {...footerData} />
       </body>
     </html>

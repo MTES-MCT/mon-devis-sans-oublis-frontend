@@ -1,15 +1,15 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
 
-import QuoteErrorLine from './QuoteErrorLine';
-import { Category, ErrorDetails } from '@/types';
-import { useConseillerRoutes } from '@/hooks';
+import QuoteErrorLine from "./QuoteErrorLine";
+import { Category, ErrorDetails } from "@/types";
+import { useConseillerRoutes } from "@/hooks";
 
-jest.mock('@/hooks', () => ({
+jest.mock("@/hooks", () => ({
   useConseillerRoutes: jest.fn(),
 }));
 
-jest.mock('../Modal/CommentErrorModal/CommentErrorModal', () => {
+jest.mock("../Modal/CommentErrorModal/CommentErrorModal", () => {
   return function MockCommentErrorModal({
     isOpen,
     onClose,
@@ -20,15 +20,15 @@ jest.mock('../Modal/CommentErrorModal/CommentErrorModal', () => {
   any) {
     if (!isOpen) return null;
     return (
-      <div data-testid='mock-comment-modal'>
-        <button onClick={onClose} data-testid='close-comment-modal'>
+      <div data-testid="mock-comment-modal">
+        <button onClick={onClose} data-testid="close-comment-modal">
           Close
         </button>
         <button
           onClick={() =>
-            onAddErrorComment(quoteCheckId, errorDetailsId, 'Test comment')
+            onAddErrorComment(quoteCheckId, errorDetailsId, "Test comment")
           }
-          data-testid='submit-comment'
+          data-testid="submit-comment"
         >
           Submit Comment
         </button>
@@ -37,7 +37,7 @@ jest.mock('../Modal/CommentErrorModal/CommentErrorModal', () => {
   };
 });
 
-jest.mock('../Modal/DeleteErrorModal/DeleteErrorModal', () => {
+jest.mock("../Modal/DeleteErrorModal/DeleteErrorModal", () => {
   return function MockDeleteErrorModal({
     isOpen,
     onClose,
@@ -48,15 +48,15 @@ jest.mock('../Modal/DeleteErrorModal/DeleteErrorModal', () => {
   any) {
     if (!isOpen) return null;
     return (
-      <div data-testid='mock-delete-modal'>
-        <button onClick={onClose} data-testid='close-delete-modal'>
+      <div data-testid="mock-delete-modal">
+        <button onClick={onClose} data-testid="close-delete-modal">
           Close
         </button>
         <button
           onClick={() =>
-            onDeleteError(quoteCheckId, errorDetailsId, 'test-reason')
+            onDeleteError(quoteCheckId, errorDetailsId, "test-reason")
           }
-          data-testid='confirm-delete'
+          data-testid="confirm-delete"
         >
           Confirm Delete
         </button>
@@ -65,7 +65,7 @@ jest.mock('../Modal/DeleteErrorModal/DeleteErrorModal', () => {
   };
 });
 
-jest.mock('../Modal/ErrorDetailsModal/ErrorDetailsModal', () => {
+jest.mock("../Modal/ErrorDetailsModal/ErrorDetailsModal", () => {
   return function MockErrorDetailsModal({
     isOpen,
     onClose,
@@ -74,19 +74,19 @@ jest.mock('../Modal/ErrorDetailsModal/ErrorDetailsModal', () => {
   any) {
     if (!isOpen) return null;
     return (
-      <div data-testid='mock-details-modal'>
-        <button onClick={onClose} data-testid='close-details-modal'>
+      <div data-testid="mock-details-modal">
+        <button onClick={onClose} data-testid="close-details-modal">
           Close
         </button>
         <button
-          onClick={() => onSubmitComment('Updated comment')}
-          data-testid='update-comment'
+          onClick={() => onSubmitComment("Updated comment")}
+          data-testid="update-comment"
         >
           Update Comment
         </button>
         <button
-          onClick={() => onSubmitComment('')}
-          data-testid='delete-comment'
+          onClick={() => onSubmitComment("")}
+          data-testid="delete-comment"
         >
           Delete Comment
         </button>
@@ -95,32 +95,32 @@ jest.mock('../Modal/ErrorDetailsModal/ErrorDetailsModal', () => {
   };
 });
 
-describe('QuoteErrorLine', () => {
+describe("QuoteErrorLine", () => {
   const mockOnAddErrorComment = jest.fn();
   const mockOnDeleteError = jest.fn();
   const mockOnDeleteErrorComment = jest.fn();
   const mockOnUndoDeleteError = jest.fn();
 
   const defaultError: ErrorDetails = {
-    id: 'error-123',
-    title: 'Test Error Title',
+    id: "error-123",
+    title: "Test Error Title",
     category: Category.GESTES,
-    problem: 'Test Problem',
-    solution: 'Test Solution',
-    comment: 'Test Comment',
+    problem: "Test Problem",
+    solution: "Test Solution",
+    comment: "Test Comment",
     deleted: false,
-    code: '',
-    type: '',
+    code: "",
+    type: "",
   };
 
   const deleteErrorReasons = [
-    { id: 'test-reason', label: 'Test Reason' },
-    { id: 'other-reason', label: 'Other Reason' },
+    { id: "test-reason", label: "Test Reason" },
+    { id: "other-reason", label: "Other Reason" },
   ];
 
   const defaultProps = {
     error: defaultError,
-    quoteCheckId: 'quote-123',
+    quoteCheckId: "quote-123",
     deleteErrorReasons,
     onAddErrorComment: mockOnAddErrorComment,
     onDeleteError: mockOnDeleteError,
@@ -135,27 +135,27 @@ describe('QuoteErrorLine', () => {
     });
   });
 
-  it('renders error title correctly', () => {
+  it("renders error title correctly", () => {
     render(<QuoteErrorLine {...defaultProps} />);
-    expect(screen.getByText('Test Error Title')).toBeInTheDocument();
+    expect(screen.getByText("Test Error Title")).toBeInTheDocument();
   });
 
-  it('renders with line-through style when error is deleted', () => {
+  it("renders with line-through style when error is deleted", () => {
     render(
       <QuoteErrorLine
         {...defaultProps}
         error={{ ...defaultError, deleted: true }}
       />
     );
-    const titleElement = screen.getByText('Test Error Title');
-    expect(titleElement).toHaveClass('line-through');
-    expect(titleElement).toHaveClass('text-gray-500');
-    expect(titleElement).toHaveClass('opacity-50');
+    const titleElement = screen.getByText("Test Error Title");
+    expect(titleElement).toHaveClass("line-through");
+    expect(titleElement).toHaveClass("text-gray-500");
+    expect(titleElement).toHaveClass("opacity-50");
   });
 
   it('shows "Voir le détail" button for non-conseiller when solution or comment exists', () => {
     render(<QuoteErrorLine {...defaultProps} />);
-    expect(screen.getByText('Voir le détail')).toBeInTheDocument();
+    expect(screen.getByText("Voir le détail")).toBeInTheDocument();
   });
 
   it('does not show "Voir le détail" button for non-conseiller when error is deleted', () => {
@@ -165,7 +165,7 @@ describe('QuoteErrorLine', () => {
         error={{ ...defaultError, deleted: true }}
       />
     );
-    expect(screen.queryByText('Voir le détail')).not.toBeInTheDocument();
+    expect(screen.queryByText("Voir le détail")).not.toBeInTheDocument();
   });
 
   it('shows "Annuler la suppression" button for conseiller when error is deleted', () => {
@@ -178,7 +178,7 @@ describe('QuoteErrorLine', () => {
         error={{ ...defaultError, deleted: true }}
       />
     );
-    expect(screen.getByText('Annuler la suppression')).toBeInTheDocument();
+    expect(screen.getByText("Annuler la suppression")).toBeInTheDocument();
   });
 
   it('calls onUndoDeleteError when "Annuler la suppression" button is clicked', () => {
@@ -191,45 +191,45 @@ describe('QuoteErrorLine', () => {
         error={{ ...defaultError, deleted: true }}
       />
     );
-    fireEvent.click(screen.getByText('Annuler la suppression'));
+    fireEvent.click(screen.getByText("Annuler la suppression"));
     expect(mockOnUndoDeleteError).toHaveBeenCalledWith(
-      'quote-123',
-      'error-123'
+      "quote-123",
+      "error-123"
     );
   });
 
-  describe('For conseiller users', () => {
+  describe("For conseiller users", () => {
     beforeEach(() => {
       (useConseillerRoutes as jest.Mock).mockReturnValue({
         isConseillerAndEdit: true,
       });
     });
 
-    it('shows delete button when error is not deleted', () => {
+    it("shows delete button when error is not deleted", () => {
       render(<QuoteErrorLine {...defaultProps} />);
       expect(
-        document.querySelector('.fr-icon-delete-line')
+        document.querySelector(".fr-icon-delete-line")
       ).toBeInTheDocument();
     });
 
-    it('shows comment button when error has no comment and is not deleted', () => {
+    it("shows comment button when error has no comment and is not deleted", () => {
       render(
         <QuoteErrorLine
           {...defaultProps}
-          error={{ ...defaultError, comment: '' }}
+          error={{ ...defaultError, comment: "" }}
         />
       );
       expect(
-        document.querySelector('.fr-icon-chat-new-line')
+        document.querySelector(".fr-icon-chat-new-line")
       ).toBeInTheDocument();
     });
 
     it('shows "Voir le détail" button with message icon when error has solution and comment', () => {
       render(<QuoteErrorLine {...defaultProps} />);
-      const detailButton = screen.getByText('Voir le détail').parentElement;
+      const detailButton = screen.getByText("Voir le détail").parentElement;
       expect(detailButton).toBeInTheDocument();
       expect(
-        detailButton?.querySelector('.fr-icon-message-2-fill')
+        detailButton?.querySelector(".fr-icon-message-2-fill")
       ).toBeInTheDocument();
     });
 
@@ -237,160 +237,160 @@ describe('QuoteErrorLine', () => {
       render(
         <QuoteErrorLine
           {...defaultProps}
-          error={{ ...defaultError, comment: '' }}
+          error={{ ...defaultError, comment: "" }}
         />
       );
-      const detailButton = screen.getByText('Voir le détail');
+      const detailButton = screen.getByText("Voir le détail");
       expect(detailButton).toBeInTheDocument();
       expect(
-        document.querySelector('.fr-icon-message-2-fill')
+        document.querySelector(".fr-icon-message-2-fill")
       ).not.toBeInTheDocument();
     });
 
-    it('shows message button when error has comment but no solution', () => {
+    it("shows message button when error has comment but no solution", () => {
       render(
         <QuoteErrorLine
           {...defaultProps}
-          error={{ ...defaultError, solution: '' }}
+          error={{ ...defaultError, solution: "" }}
         />
       );
       expect(
-        document.querySelector('.fr-icon-message-2-fill')
+        document.querySelector(".fr-icon-message-2-fill")
       ).toBeInTheDocument();
     });
   });
 
-  describe('Modal interactions', () => {
+  describe("Modal interactions", () => {
     it('opens details modal when "Voir le détail" button is clicked', () => {
       render(<QuoteErrorLine {...defaultProps} />);
-      fireEvent.click(screen.getByText('Voir le détail'));
-      expect(screen.getByTestId('mock-details-modal')).toBeInTheDocument();
+      fireEvent.click(screen.getByText("Voir le détail"));
+      expect(screen.getByTestId("mock-details-modal")).toBeInTheDocument();
     });
 
-    it('closes details modal when close button is clicked', () => {
+    it("closes details modal when close button is clicked", () => {
       render(<QuoteErrorLine {...defaultProps} />);
-      fireEvent.click(screen.getByText('Voir le détail'));
-      fireEvent.click(screen.getByTestId('close-details-modal'));
+      fireEvent.click(screen.getByText("Voir le détail"));
+      fireEvent.click(screen.getByTestId("close-details-modal"));
       expect(
-        screen.queryByTestId('mock-details-modal')
+        screen.queryByTestId("mock-details-modal")
       ).not.toBeInTheDocument();
     });
 
-    it('opens comment modal when comment button is clicked (for conseiller)', () => {
+    it("opens comment modal when comment button is clicked (for conseiller)", () => {
       (useConseillerRoutes as jest.Mock).mockReturnValue({
         isConseillerAndEdit: true,
       });
       render(
         <QuoteErrorLine
           {...defaultProps}
-          error={{ ...defaultError, comment: '' }}
+          error={{ ...defaultError, comment: "" }}
         />
       );
-      const chatButton = document.querySelector('.fr-icon-chat-new-line');
+      const chatButton = document.querySelector(".fr-icon-chat-new-line");
       fireEvent.click(chatButton as Element);
-      expect(screen.getByTestId('mock-comment-modal')).toBeInTheDocument();
+      expect(screen.getByTestId("mock-comment-modal")).toBeInTheDocument();
     });
 
-    it('closes comment modal when close button is clicked', () => {
+    it("closes comment modal when close button is clicked", () => {
       (useConseillerRoutes as jest.Mock).mockReturnValue({
         isConseillerAndEdit: true,
       });
       render(
         <QuoteErrorLine
           {...defaultProps}
-          error={{ ...defaultError, comment: '' }}
+          error={{ ...defaultError, comment: "" }}
         />
       );
-      const chatButton = document.querySelector('.fr-icon-chat-new-line');
+      const chatButton = document.querySelector(".fr-icon-chat-new-line");
       fireEvent.click(chatButton as Element);
-      fireEvent.click(screen.getByTestId('close-comment-modal'));
+      fireEvent.click(screen.getByTestId("close-comment-modal"));
       expect(
-        screen.queryByTestId('mock-comment-modal')
+        screen.queryByTestId("mock-comment-modal")
       ).not.toBeInTheDocument();
     });
 
-    it('opens delete modal when delete button is clicked (for conseiller)', () => {
+    it("opens delete modal when delete button is clicked (for conseiller)", () => {
       (useConseillerRoutes as jest.Mock).mockReturnValue({
         isConseillerAndEdit: true,
       });
       render(<QuoteErrorLine {...defaultProps} />);
-      const deleteButton = document.querySelector('.fr-icon-delete-line');
+      const deleteButton = document.querySelector(".fr-icon-delete-line");
       fireEvent.click(deleteButton as Element);
-      expect(screen.getByTestId('mock-delete-modal')).toBeInTheDocument();
+      expect(screen.getByTestId("mock-delete-modal")).toBeInTheDocument();
     });
 
-    it('closes delete modal when close button is clicked', () => {
+    it("closes delete modal when close button is clicked", () => {
       (useConseillerRoutes as jest.Mock).mockReturnValue({
         isConseillerAndEdit: true,
       });
       render(<QuoteErrorLine {...defaultProps} />);
-      const deleteButton = document.querySelector('.fr-icon-delete-line');
+      const deleteButton = document.querySelector(".fr-icon-delete-line");
       fireEvent.click(deleteButton as Element);
-      fireEvent.click(screen.getByTestId('close-delete-modal'));
-      expect(screen.queryByTestId('mock-delete-modal')).not.toBeInTheDocument();
+      fireEvent.click(screen.getByTestId("close-delete-modal"));
+      expect(screen.queryByTestId("mock-delete-modal")).not.toBeInTheDocument();
     });
   });
 
-  describe('Callback functions', () => {
-    it('calls onAddErrorComment when comment is submitted from comment modal', () => {
+  describe("Callback functions", () => {
+    it("calls onAddErrorComment when comment is submitted from comment modal", () => {
       (useConseillerRoutes as jest.Mock).mockReturnValue({
         isConseillerAndEdit: true,
       });
       render(
         <QuoteErrorLine
           {...defaultProps}
-          error={{ ...defaultError, comment: '' }}
+          error={{ ...defaultError, comment: "" }}
         />
       );
-      const chatButton = document.querySelector('.fr-icon-chat-new-line');
+      const chatButton = document.querySelector(".fr-icon-chat-new-line");
       fireEvent.click(chatButton as Element);
-      fireEvent.click(screen.getByTestId('submit-comment'));
+      fireEvent.click(screen.getByTestId("submit-comment"));
       expect(mockOnAddErrorComment).toHaveBeenCalledWith(
-        'quote-123',
-        'error-123',
-        'Test comment'
+        "quote-123",
+        "error-123",
+        "Test comment"
       );
     });
 
-    it('calls onDeleteError with correct reason when delete is confirmed', () => {
+    it("calls onDeleteError with correct reason when delete is confirmed", () => {
       (useConseillerRoutes as jest.Mock).mockReturnValue({
         isConseillerAndEdit: true,
       });
       render(<QuoteErrorLine {...defaultProps} />);
-      const deleteButton = document.querySelector('.fr-icon-delete-line');
+      const deleteButton = document.querySelector(".fr-icon-delete-line");
       fireEvent.click(deleteButton as Element);
-      fireEvent.click(screen.getByTestId('confirm-delete'));
+      fireEvent.click(screen.getByTestId("confirm-delete"));
       expect(mockOnDeleteError).toHaveBeenCalledWith(
-        'quote-123',
-        'error-123',
-        'Test Reason'
+        "quote-123",
+        "error-123",
+        "Test Reason"
       );
     });
 
-    it('calls onAddErrorComment when comment is updated from details modal', () => {
+    it("calls onAddErrorComment when comment is updated from details modal", () => {
       render(<QuoteErrorLine {...defaultProps} />);
-      fireEvent.click(screen.getByText('Voir le détail'));
-      fireEvent.click(screen.getByTestId('update-comment'));
+      fireEvent.click(screen.getByText("Voir le détail"));
+      fireEvent.click(screen.getByTestId("update-comment"));
       expect(mockOnAddErrorComment).toHaveBeenCalledWith(
-        'quote-123',
-        'error-123',
-        'Updated comment'
+        "quote-123",
+        "error-123",
+        "Updated comment"
       );
     });
 
-    it('calls onDeleteErrorComment when comment is deleted from details modal', () => {
+    it("calls onDeleteErrorComment when comment is deleted from details modal", () => {
       render(<QuoteErrorLine {...defaultProps} />);
-      fireEvent.click(screen.getByText('Voir le détail'));
-      fireEvent.click(screen.getByTestId('delete-comment'));
+      fireEvent.click(screen.getByText("Voir le détail"));
+      fireEvent.click(screen.getByTestId("delete-comment"));
       expect(mockOnDeleteErrorComment).toHaveBeenCalledWith(
-        'quote-123',
-        'error-123'
+        "quote-123",
+        "error-123"
       );
     });
 
-    it('handles empty reason in handleDeleteConfirm', () => {
+    it("handles empty reason in handleDeleteConfirm", () => {
       const consoleErrorSpy = jest
-        .spyOn(console, 'error')
+        .spyOn(console, "error")
         .mockImplementation(() => {});
 
       const TestComponent = () => {
@@ -400,7 +400,7 @@ describe('QuoteErrorLine', () => {
           reason: string
         ) => {
           if (!reason) {
-            console.error('reason est vide dans QuoteErrorLine !');
+            console.error("reason est vide dans QuoteErrorLine !");
             return;
           }
 
@@ -412,8 +412,8 @@ describe('QuoteErrorLine', () => {
 
         return (
           <button
-            data-testid='test-button'
-            onClick={() => handleDeleteConfirm('quote-123', 'error-123', '')}
+            data-testid="test-button"
+            onClick={() => handleDeleteConfirm("quote-123", "error-123", "")}
           >
             Test Empty Reason
           </button>
@@ -421,10 +421,10 @@ describe('QuoteErrorLine', () => {
       };
 
       render(<TestComponent />);
-      fireEvent.click(screen.getByTestId('test-button'));
+      fireEvent.click(screen.getByTestId("test-button"));
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'reason est vide dans QuoteErrorLine !'
+        "reason est vide dans QuoteErrorLine !"
       );
       expect(mockOnDeleteError).not.toHaveBeenCalled();
 
@@ -432,27 +432,27 @@ describe('QuoteErrorLine', () => {
     });
   });
 
-  describe('Edge cases', () => {
-    it('handles error without solution or comment', () => {
+  describe("Edge cases", () => {
+    it("handles error without solution or comment", () => {
       render(
         <QuoteErrorLine
           {...defaultProps}
-          error={{ ...defaultError, solution: '', comment: '' }}
+          error={{ ...defaultError, solution: "", comment: "" }}
         />
       );
-      expect(screen.queryByText('Voir le détail')).not.toBeInTheDocument();
+      expect(screen.queryByText("Voir le détail")).not.toBeInTheDocument();
     });
 
-    it('handles isLastErrorInTable prop correctly', () => {
+    it("handles isLastErrorInTable prop correctly", () => {
       render(<QuoteErrorLine {...defaultProps} isLastErrorInTable={true} />);
-      expect(screen.getByText('Test Error Title').closest('tr')).toHaveClass(
-        'border-b-0'
+      expect(screen.getByText("Test Error Title").closest("tr")).toHaveClass(
+        "border-b-0"
       );
     });
   });
 
-  describe('Branch coverage tests', () => {
-    it('handles case when deleteErrorReasons is undefined', () => {
+  describe("Branch coverage tests", () => {
+    it("handles case when deleteErrorReasons is undefined", () => {
       (useConseillerRoutes as jest.Mock).mockReturnValue({
         isConseillerAndEdit: true,
       });
@@ -461,18 +461,18 @@ describe('QuoteErrorLine', () => {
         <QuoteErrorLine {...defaultProps} deleteErrorReasons={undefined} />
       );
 
-      const deleteButton = document.querySelector('.fr-icon-delete-line');
+      const deleteButton = document.querySelector(".fr-icon-delete-line");
       fireEvent.click(deleteButton as Element);
-      fireEvent.click(screen.getByTestId('confirm-delete'));
+      fireEvent.click(screen.getByTestId("confirm-delete"));
 
       expect(mockOnDeleteError).toHaveBeenCalledWith(
-        'quote-123',
-        'error-123',
-        'test-reason'
+        "quote-123",
+        "error-123",
+        "test-reason"
       );
     });
 
-    it('handles case when reason is not found in deleteErrorReasons', () => {
+    it("handles case when reason is not found in deleteErrorReasons", () => {
       (useConseillerRoutes as jest.Mock).mockReturnValue({
         isConseillerAndEdit: true,
       });
@@ -484,7 +484,7 @@ describe('QuoteErrorLine', () => {
           reason: string
         ) => {
           if (!reason) {
-            console.error('reason est vide dans QuoteErrorLine !');
+            console.error("reason est vide dans QuoteErrorLine !");
             return;
           }
 
@@ -496,9 +496,9 @@ describe('QuoteErrorLine', () => {
 
         return (
           <button
-            data-testid='test-unknown-reason'
+            data-testid="test-unknown-reason"
             onClick={() =>
-              handleDeleteConfirm('quote-123', 'error-123', 'unknown-reason')
+              handleDeleteConfirm("quote-123", "error-123", "unknown-reason")
             }
           >
             Test Unknown Reason
@@ -507,19 +507,19 @@ describe('QuoteErrorLine', () => {
       };
 
       render(<TestComponent />);
-      fireEvent.click(screen.getByTestId('test-unknown-reason'));
+      fireEvent.click(screen.getByTestId("test-unknown-reason"));
 
       expect(mockOnDeleteError).toHaveBeenCalledWith(
-        'quote-123',
-        'error-123',
-        'unknown-reason'
+        "quote-123",
+        "error-123",
+        "unknown-reason"
       );
 
       const originalMock = jest.requireMock(
-        '../Modal/DeleteErrorModal/DeleteErrorModal'
+        "../Modal/DeleteErrorModal/DeleteErrorModal"
       );
       jest.resetModules();
-      jest.mock('../Modal/DeleteErrorModal/DeleteErrorModal', () => {
+      jest.mock("../Modal/DeleteErrorModal/DeleteErrorModal", () => {
         return function MockDeleteErrorModal({
           isOpen,
           onClose,
@@ -530,15 +530,15 @@ describe('QuoteErrorLine', () => {
         any) {
           if (!isOpen) return null;
           return (
-            <div data-testid='mock-delete-modal'>
-              <button onClick={onClose} data-testid='close-delete-modal'>
+            <div data-testid="mock-delete-modal">
+              <button onClick={onClose} data-testid="close-delete-modal">
                 Close
               </button>
               <button
                 onClick={() =>
-                  onDeleteError(quoteCheckId, errorDetailsId, 'unknown-reason')
+                  onDeleteError(quoteCheckId, errorDetailsId, "unknown-reason")
                 }
-                data-testid='confirm-delete'
+                data-testid="confirm-delete"
               >
                 Confirm Delete
               </button>
@@ -549,46 +549,46 @@ describe('QuoteErrorLine', () => {
 
       render(<QuoteErrorLine {...defaultProps} />);
 
-      const deleteButton = document.querySelector('.fr-icon-delete-line');
+      const deleteButton = document.querySelector(".fr-icon-delete-line");
       fireEvent.click(deleteButton as Element);
 
-      fireEvent.click(screen.getByTestId('confirm-delete'));
+      fireEvent.click(screen.getByTestId("confirm-delete"));
 
       expect(mockOnDeleteError).toHaveBeenCalledWith(
-        'quote-123',
-        'error-123',
-        'unknown-reason'
+        "quote-123",
+        "error-123",
+        "unknown-reason"
       );
 
       jest.mock(
-        '../Modal/DeleteErrorModal/DeleteErrorModal',
+        "../Modal/DeleteErrorModal/DeleteErrorModal",
         () => originalMock
       );
     });
 
-    it('handles case when onDeleteErrorComment is undefined', () => {
+    it("handles case when onDeleteErrorComment is undefined", () => {
       render(
         <QuoteErrorLine {...defaultProps} onDeleteErrorComment={undefined} />
       );
 
-      fireEvent.click(screen.getByText('Voir le détail'));
-      fireEvent.click(screen.getByTestId('delete-comment'));
+      fireEvent.click(screen.getByText("Voir le détail"));
+      fireEvent.click(screen.getByTestId("delete-comment"));
 
       expect(
-        screen.queryByTestId('mock-details-modal')
+        screen.queryByTestId("mock-details-modal")
       ).not.toBeInTheDocument();
     });
 
-    it('handles case when onAddErrorComment is undefined', () => {
+    it("handles case when onAddErrorComment is undefined", () => {
       render(
         <QuoteErrorLine {...defaultProps} onAddErrorComment={undefined} />
       );
 
-      fireEvent.click(screen.getByText('Voir le détail'));
-      fireEvent.click(screen.getByTestId('update-comment'));
+      fireEvent.click(screen.getByText("Voir le détail"));
+      fireEvent.click(screen.getByTestId("update-comment"));
 
       expect(
-        screen.queryByTestId('mock-details-modal')
+        screen.queryByTestId("mock-details-modal")
       ).not.toBeInTheDocument();
     });
   });

@@ -1,21 +1,21 @@
-import { usePathname } from 'next/navigation';
-import { renderHook } from '@testing-library/react';
+import { usePathname } from "next/navigation";
+import { renderHook } from "@testing-library/react";
 
-import { useConseillerRoutes } from '../useConseillerRoutes';
+import { useConseillerRoutes } from "../useConseillerRoutes";
 
-jest.mock('next/navigation', () => ({
+jest.mock("next/navigation", () => ({
   usePathname: jest.fn(),
 }));
 
-describe('useConseillerRoutes', () => {
+describe("useConseillerRoutes", () => {
   const mockUsePathname = usePathname as jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('returns isConseillerAndEdit true when path includes both conseiller and modifier', () => {
-    mockUsePathname.mockReturnValue('/conseiller/123/modifier');
+  it("returns isConseillerAndEdit true when path includes both conseiller and modifier", () => {
+    mockUsePathname.mockReturnValue("/conseiller/123/modifier");
 
     const { result } = renderHook(() => useConseillerRoutes());
 
@@ -23,8 +23,8 @@ describe('useConseillerRoutes', () => {
     expect(result.current.isConseillerAndNotEdit).toBe(false);
   });
 
-  it('returns isConseillerAndNotEdit true when path includes conseiller but not modifier', () => {
-    mockUsePathname.mockReturnValue('/conseiller/123');
+  it("returns isConseillerAndNotEdit true when path includes conseiller but not modifier", () => {
+    mockUsePathname.mockReturnValue("/conseiller/123");
 
     const { result } = renderHook(() => useConseillerRoutes());
 
@@ -32,8 +32,8 @@ describe('useConseillerRoutes', () => {
     expect(result.current.isConseillerAndNotEdit).toBe(true);
   });
 
-  it('returns both false when path does not include conseiller', () => {
-    mockUsePathname.mockReturnValue('/autre/chemin');
+  it("returns both false when path does not include conseiller", () => {
+    mockUsePathname.mockReturnValue("/autre/chemin");
 
     const { result } = renderHook(() => useConseillerRoutes());
 
@@ -41,7 +41,7 @@ describe('useConseillerRoutes', () => {
     expect(result.current.isConseillerAndNotEdit).toBe(false);
   });
 
-  it('handles null pathname gracefully', () => {
+  it("handles null pathname gracefully", () => {
     mockUsePathname.mockReturnValue(null);
 
     const { result } = renderHook(() => useConseillerRoutes());

@@ -1,1 +1,1 @@
-export { default } from './wording.json';
+export { default } from "./wording.json";

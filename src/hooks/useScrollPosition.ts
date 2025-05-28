@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 // scroll 90%
 export const useScrollPosition = (threshold = 0.9) => {
   const [isButtonSticky, setIsButtonSticky] = useState<boolean>(true);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       setIsButtonSticky(true);
       return;
     }
@@ -23,12 +23,12 @@ export const useScrollPosition = (threshold = 0.9) => {
     // Initial check
     handleScroll();
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [threshold]);
 
   // Return true by default for SSR
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return true;
   }
 

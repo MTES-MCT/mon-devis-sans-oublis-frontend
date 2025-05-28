@@ -1,37 +1,37 @@
-import { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react";
 
-import CommentErrorModal from './CommentErrorModal';
-import { Category } from '@/types';
+import CommentErrorModal from "./CommentErrorModal";
+import { Category } from "@/types";
 
 const meta = {
-  title: 'Components/Modal/CommentErrorModal',
+  title: "Components/Modal/CommentErrorModal",
   component: CommentErrorModal,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     isOpen: {
-      control: 'boolean',
-      description: 'Affiche ou cache la modale',
+      control: "boolean",
+      description: "Affiche ou cache la modale",
     },
     errorCategory: {
-      control: 'radio',
+      control: "radio",
       options: [Category.ADMIN, Category.GESTES],
       description: "Catégorie de l'erreur",
     },
     errorDetailsId: {
-      control: 'text',
+      control: "text",
       description: "ID de l'erreur",
     },
     errorTitle: {
-      control: 'text',
+      control: "text",
       description: "Titre de l'erreur",
     },
     initialComment: {
-      control: 'text',
-      description: 'Commentaire initial',
+      control: "text",
+      description: "Commentaire initial",
     },
   },
 } satisfies Meta<typeof CommentErrorModal>;
@@ -42,12 +42,12 @@ type Story = StoryObj<typeof CommentErrorModal>;
 export const Default: Story = {
   args: {
     errorCategory: Category.ADMIN,
-    errorDetailsId: '123',
-    errorTitle: 'Erreur dans le calcul de la TVA',
-    errorSolution: 'La solution proposée pour cette erreur',
-    initialComment: '',
+    errorDetailsId: "123",
+    errorTitle: "Erreur dans le calcul de la TVA",
+    errorSolution: "La solution proposée pour cette erreur",
+    initialComment: "",
     isOpen: false,
-    quoteCheckId: '456',
+    quoteCheckId: "456",
   },
   render: (args) => {
     const [isOpen, setIsOpen] = useState(args.isOpen);
@@ -58,7 +58,7 @@ export const Default: Story = {
       errorDetailsId: string,
       comment: string
     ) => {
-      console.log('Add comment:', { quoteCheckId, errorDetailsId, comment });
+      console.log("Add comment:", { quoteCheckId, errorDetailsId, comment });
       setIsOpen(false);
     };
 
@@ -66,14 +66,14 @@ export const Default: Story = {
       quoteCheckId: string,
       errorDetailsId: string
     ) => {
-      console.log('Delete comment:', { quoteCheckId, errorDetailsId });
+      console.log("Delete comment:", { quoteCheckId, errorDetailsId });
       setIsOpen(false);
     };
 
     return (
       <>
         <button
-          className='fr-btn fr-btn--primary'
+          className="fr-btn fr-btn--primary"
           onClick={() => setIsOpen(true)}
         >
           Ouvrir la modale de commentaire
@@ -94,6 +94,6 @@ export const WithInitialComment: Story = {
   ...Default,
   args: {
     ...Default.args,
-    initialComment: 'Ceci est un commentaire existant',
+    initialComment: "Ceci est un commentaire existant",
   },
 };

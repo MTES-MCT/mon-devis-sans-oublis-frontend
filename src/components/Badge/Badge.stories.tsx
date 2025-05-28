@@ -1,21 +1,21 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
 
-import Badge, { BadgeSize, BadgeVariant } from './Badge';
+import Badge, { BadgeSize, BadgeVariant } from "./Badge";
 
 const meta = {
-  title: 'Components/Badge',
+  title: "Components/Badge",
   component: Badge,
   argTypes: {
     size: {
-      control: 'radio',
+      control: "radio",
       options: Object.values(BadgeSize),
     },
     variant: {
-      control: 'radio',
+      control: "radio",
       options: Object.values(BadgeVariant),
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } satisfies Meta<typeof Badge>;
 
 export default meta;
@@ -23,7 +23,7 @@ type Story = StoryObj<typeof Badge>;
 
 export const BlueDark: Story = {
   args: {
-    label: 'Blue Dark Badge',
+    label: "Blue Dark Badge",
     size: BadgeSize.MEDIUM,
     variant: BadgeVariant.BLUE_DARK,
   },
@@ -31,7 +31,7 @@ export const BlueDark: Story = {
 
 export const BlueLight: Story = {
   args: {
-    label: 'Blue Light Badge',
+    label: "Blue Light Badge",
     size: BadgeSize.MEDIUM,
     variant: BadgeVariant.BLUE_LIGHT,
   },
@@ -39,7 +39,7 @@ export const BlueLight: Story = {
 
 export const Green: Story = {
   args: {
-    label: 'Green Badge',
+    label: "Green Badge",
     size: BadgeSize.MEDIUM,
     variant: BadgeVariant.GREEN,
   },
@@ -47,7 +47,7 @@ export const Green: Story = {
 
 export const Grey: Story = {
   args: {
-    label: 'Grey Badge',
+    label: "Grey Badge",
     size: BadgeSize.MEDIUM,
     variant: BadgeVariant.GREY,
   },

@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { default as NextLink } from 'next/link';
+import { default as NextLink } from "next/link";
 
 export enum LinkSize {
-  MEDIUM = 'medium',
-  LARGE = 'large',
-  SMALL = 'small',
+  MEDIUM = "medium",
+  LARGE = "large",
+  SMALL = "small",
 }
 
 export enum LinkVariant {
-  DISABLED = 'disabled',
-  PRIMARY = 'primary',
-  SECONDARY = 'secondary',
-  TERTIARY = 'tertiary',
+  DISABLED = "disabled",
+  PRIMARY = "primary",
+  SECONDARY = "secondary",
+  TERTIARY = "tertiary",
 }
 
 export interface LinkProps {
@@ -55,27 +55,27 @@ const Link: React.FC<LinkProps> = ({
   };
 
   const classNames = [
-    'fr-btn',
+    "fr-btn",
     `fr-btn--${variant}`,
-    size === LinkSize.LARGE && 'fr-btn--lg',
-    size === LinkSize.SMALL && 'fr-btn--sm',
+    size === LinkSize.LARGE && "fr-btn--lg",
+    size === LinkSize.SMALL && "fr-btn--sm",
     variant === LinkVariant.DISABLED &&
-      'bg-gray-300 text-gray-500 cursor-not-allowed',
+      "bg-gray-300 text-gray-500 cursor-not-allowed",
     (variant === LinkVariant.SECONDARY || variant === LinkVariant.TERTIARY) &&
-      'bg-white! hover:bg-gray-100! active:bg-gray-200!',
+      "bg-white! hover:bg-gray-100! active:bg-gray-200!",
   ]
     .filter(Boolean)
-    .join(' ');
+    .join(" ");
 
   return (
     <NextLink
       className={classNames}
-      href={variant === LinkVariant.DISABLED ? '' : href}
+      href={variant === LinkVariant.DISABLED ? "" : href}
       legacyBehavior={legacyBehavior}
       onClick={handleClick}
     >
       {legacyBehavior ? (
-        <a className={classNames} rel='noopener noreferrer' target='_blank'>
+        <a className={classNames} rel="noopener noreferrer" target="_blank">
           <span>{label}</span>
           {icon && <span className={`fr-btn--icon-right ${icon}`} />}
         </a>
@@ -89,5 +89,5 @@ const Link: React.FC<LinkProps> = ({
   );
 };
 
-Link.displayName = 'Link';
+Link.displayName = "Link";
 export default Link;

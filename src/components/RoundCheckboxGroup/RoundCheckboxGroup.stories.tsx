@@ -1,24 +1,24 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
 
 import RoundCheckboxGroup, {
   CheckboxOption,
   RoundCheckboxGroupProps,
-} from './RoundCheckboxGroup';
+} from "./RoundCheckboxGroup";
 
 const meta: Meta<typeof RoundCheckboxGroup> = {
-  title: 'Components/RoundCheckboxGroup',
+  title: "Components/RoundCheckboxGroup",
   component: RoundCheckboxGroup,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     onChange: {
       description: "Fonction appelée lors de la sélection d'une option",
     },
     options: {
-      description: 'Liste des options disponibles',
+      description: "Liste des options disponibles",
     },
   },
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 };
 
@@ -38,7 +38,7 @@ export const Default: Story = {
   args: {
     options: defaultOptions,
     onChange: (value: number) => {
-      console.log('Selected value:', value);
+      console.log("Selected value:", value);
     },
   },
 };
@@ -52,7 +52,7 @@ export const WithPreselection: Story = {
           defaultValue={3}
           options={defaultOptions}
           onChange={(value) => {
-            console.log('Selected value:', value);
+            console.log("Selected value:", value);
           }}
         />
       );
@@ -65,7 +65,7 @@ export const SingleOption: Story = {
   args: {
     options: [{ value: 1 }],
     onChange: (value: number) => {
-      console.log('Selected value:', value);
+      console.log("Selected value:", value);
     },
   },
 };

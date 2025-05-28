@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useRef } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 
-import { useIsDesktop } from '@/hooks';
+import { useIsDesktop } from "@/hooks";
 
 export enum ModalPosition {
-  CENTER = 'center',
-  RIGHT = 'right',
+  CENTER = "center",
+  RIGHT = "right",
 }
 
 export interface ModalProps {
@@ -37,11 +37,11 @@ const Modal: React.FC<ModalProps> = ({
   const isDesktop = useIsDesktop();
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     setMounted(true);
-    const element = document.createElement('div');
-    element.setAttribute('id', 'modal-root');
+    const element = document.createElement("div");
+    element.setAttribute("id", "modal-root");
     document.body.appendChild(element);
     setPortalElement(element);
 
@@ -53,25 +53,25 @@ const Modal: React.FC<ModalProps> = ({
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
     if (isOpen) {
       setShouldRender(true);
       setTimeout(() => {
         setVisibleClass(true);
       }, 10);
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
       setVisibleClass(false);
       const timer = setTimeout(() => {
         setShouldRender(false);
       }, 200);
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !isOpen) return;
+    if (typeof window === "undefined" || !isOpen) return;
 
     const closeButton = modalRef.current?.querySelector(
       '[data-testid="modal-close-button"]'
@@ -89,7 +89,7 @@ const Modal: React.FC<ModalProps> = ({
     ] as HTMLElement;
 
     const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
+      if (e.key !== "Tab") return;
 
       /* istanbul ignore if */
       if (e.shiftKey) {
@@ -107,29 +107,29 @@ const Modal: React.FC<ModalProps> = ({
     };
 
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && onClose) {
+      if (e.key === "Escape" && onClose) {
         onClose();
       }
     };
 
-    document.addEventListener('keydown', handleTabKey);
-    document.addEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleTabKey);
+    document.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.removeEventListener('keydown', handleTabKey);
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener("keydown", handleTabKey);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen, onClose]);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !isOpen) return;
+    if (typeof window === "undefined" || !isOpen) return;
 
-    const rootElements = document.querySelectorAll('body > *:not(#modal-root)');
+    const rootElements = document.querySelectorAll("body > *:not(#modal-root)");
 
     const originalValues = new Map();
     rootElements.forEach((element) => {
-      originalValues.set(element, element.getAttribute('aria-hidden'));
-      element.setAttribute('aria-hidden', 'true');
+      originalValues.set(element, element.getAttribute("aria-hidden"));
+      element.setAttribute("aria-hidden", "true");
     });
 
     return () => {
@@ -137,28 +137,28 @@ const Modal: React.FC<ModalProps> = ({
         const originalValue = originalValues.get(element);
 
         if (originalValue === null) {
-          element.removeAttribute('aria-hidden');
+          element.removeAttribute("aria-hidden");
         } else {
-          element.setAttribute('aria-hidden', originalValue);
+          element.setAttribute("aria-hidden", originalValue);
         }
       });
     };
   }, [isOpen]);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !isOpen || !portalElement) return;
+    if (typeof window === "undefined" || !isOpen || !portalElement) return;
 
     const siblingElements = Array.from(document.body.children).filter(
       (child) => child !== portalElement
     );
 
     siblingElements.forEach((element) => {
-      element.setAttribute('inert', '');
+      element.setAttribute("inert", "");
     });
 
     return () => {
       siblingElements.forEach((element) => {
-        element.removeAttribute('inert');
+        element.removeAttribute("inert");
       });
     };
   }, [isOpen, portalElement]);
@@ -167,58 +167,58 @@ const Modal: React.FC<ModalProps> = ({
     <div
       className={`fixed inset-0 bg-black/50 ${
         position === ModalPosition.CENTER
-          ? 'flex items-center justify-center'
-          : 'flex items-center justify-end'
+          ? "flex items-center justify-center"
+          : "flex items-center justify-end"
       } ${className}`}
-      data-testid='modal-overlay'
+      data-testid="modal-overlay"
       onClick={onClose}
       style={{ zIndex: 9999 }}
     >
       <div
-        aria-modal='true'
-        data-testid='modal-content'
+        aria-modal="true"
+        data-testid="modal-content"
         className={`flex flex-col px-6 md:px-8 py-4 bg-[var(--background-default-grey)] transform transition-transform duration-300 ease-in-out ${
           position === ModalPosition.CENTER
-            ? 'w-[792px] h-fit'
-            : `${isDesktop ? 'w-[480px]' : 'w-full'}`
+            ? "w-[792px] h-fit"
+            : `${isDesktop ? "w-[480px]" : "w-full"}`
         } 
             ${
               position === ModalPosition.CENTER
                 ? `rounded-lg ${
                     visibleClass
-                      ? 'scale-100 opacity-100'
-                      : 'scale-95 opacity-0'
+                      ? "scale-100 opacity-100"
+                      : "scale-95 opacity-0"
                   }`
                 : `h-full ${
-                    visibleClass ? 'translate-x-0' : 'translate-x-full'
+                    visibleClass ? "translate-x-0" : "translate-x-full"
                   }`
             }`}
         onClick={(e) => e.stopPropagation()}
         ref={modalRef}
-        role='dialog'
+        role="dialog"
         tabIndex={-1}
       >
         <div
           className={
             position === ModalPosition.CENTER
-              ? 'flex justify-end fr-mb-4w'
-              : 'flex justify-start'
+              ? "flex justify-end fr-mb-4w"
+              : "flex justify-start"
           }
         >
           <button
             className={`fr-link ${
               position === ModalPosition.RIGHT
-                ? 'fr-link--lg fr-icon-arrow-left-line fr-link--icon-left mt-6! text-[var(--border-plain-grey)]'
-                : 'fr-link--sm fr-link--icon-right fr-icon-close-line mt-2!'
+                ? "fr-link--lg fr-icon-arrow-left-line fr-link--icon-left mt-6! text-[var(--border-plain-grey)]"
+                : "fr-link--sm fr-link--icon-right fr-icon-close-line mt-2!"
             }`}
-            data-testid='modal-close-button'
+            data-testid="modal-close-button"
             onClick={onClose}
           >
             <span
               className={`${
                 position === ModalPosition.RIGHT
-                  ? 'text-[20px] ml-2.5! font-bold text-[var(--text-disabled-grey)]'
-                  : 'font-[500]'
+                  ? "text-[20px] ml-2.5! font-bold text-[var(--text-disabled-grey)]"
+                  : "font-[500]"
               }`}
             >
               {backButtonLabel}

@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
 
-import LoadingDots from './LoadingDots';
+import LoadingDots from "./LoadingDots";
 
 const meta = {
-  title: 'Components/LoadingDots',
+  title: "Components/LoadingDots",
   component: LoadingDots,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 } satisfies Meta<typeof LoadingDots>;
 
 export default meta;
@@ -13,6 +13,6 @@ type Story = StoryObj<typeof LoadingDots>;
 
 export const Default: Story = {
   args: {
-    title: 'Loading',
+    title: "Loading",
   },
 };

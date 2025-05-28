@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
-import InvalidQuote from './InvalidQuote';
-import ValidQuote from './ValidQuote';
-import { FILE_ERROR } from '../upload/UploadClient';
+import InvalidQuote from "./InvalidQuote";
+import ValidQuote from "./ValidQuote";
+import { FILE_ERROR } from "../upload/UploadClient";
 import {
   GlobalCommentModal,
   GlobalErrorFeedbacksModal,
   LoadingDots,
   Notice,
   Toast,
-} from '@/components';
-import { useConseillerRoutes, useScrollPosition } from '@/hooks';
-import { quoteService } from '@/lib/api';
-import { Category, ErrorDetails, QuoteChecksId, Rating, Status } from '@/types';
-import { formatDateToFrench } from '@/utils';
-import wording from '@/wording';
+} from "@/components";
+import { useConseillerRoutes, useScrollPosition } from "@/hooks";
+import { quoteService } from "@/lib/api";
+import { Category, ErrorDetails, QuoteChecksId, Rating, Status } from "@/types";
+import { formatDateToFrench } from "@/utils";
+import wording from "@/wording";
 
 interface ResultClientProps {
   currentDevis: QuoteChecksId | null;
@@ -62,7 +62,7 @@ export default function ResultClient({
   const { isConseillerAndEdit } = useConseillerRoutes();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       window.scrollTo(0, 0);
     }
   }, [pathname]);
@@ -123,7 +123,7 @@ export default function ResultClient({
           }
         }
       } catch (error) {
-        console.error('Error polling quote:', error);
+        console.error("Error polling quote:", error);
         if (retryCount < maxRetries) {
           retryCount++;
           setTimeout(pollQuote, pollingInterval);
@@ -176,12 +176,12 @@ export default function ResultClient({
     reason: string
   ) => {
     if (!reason) {
-      console.error('🚨 ERREUR: reason est vide dans ResultClient !');
+      console.error("🚨 ERREUR: reason est vide dans ResultClient !");
       return;
     }
 
     if (!currentDevis) {
-      console.error('🚨 ERREUR: currentDevis est null dans ResultClient !');
+      console.error("🚨 ERREUR: currentDevis est null dans ResultClient !");
       return;
     }
 
@@ -254,7 +254,7 @@ export default function ResultClient({
         quoteCheckId
       );
     } catch (error) {
-      console.error('Error sending feedbacks:', error);
+      console.error("Error sending feedbacks:", error);
     }
   };
 
@@ -269,14 +269,14 @@ export default function ResultClient({
         email,
         rating,
       });
-      if (typeof window !== 'undefined') {
-        document.body.style.overflow = 'unset';
+      if (typeof window !== "undefined") {
+        document.body.style.overflow = "unset";
       }
       setIsModalOpen(false);
       setShowToast(true);
       setHasFeedbackBeenSubmitted(true);
     } catch (error) {
-      console.error('Error sending feedback:', error);
+      console.error("Error sending feedback:", error);
     }
   };
 
@@ -292,14 +292,14 @@ export default function ResultClient({
       const updatedDevis = await quoteService.getQuote(quoteCheckId);
       setCurrentDevis(updatedDevis);
     } catch (error) {
-      console.error('Erreur lors de la suppression du commentaire:', error);
+      console.error("Erreur lors de la suppression du commentaire:", error);
 
       try {
         const refreshedDevis = await quoteService.getQuote(quoteCheckId);
         setCurrentDevis(refreshedDevis);
       } catch (refreshError) {
         console.error(
-          'Erreur lors du rafraîchissement des données:',
+          "Erreur lors du rafraîchissement des données:",
           refreshError
         );
       }
@@ -316,7 +316,7 @@ export default function ResultClient({
       setCurrentDevis(updatedDevis);
       setIsGlobalCommentModalOpen(false);
     } catch (error) {
-      console.error('Error adding global comment:', error);
+      console.error("Error adding global comment:", error);
     }
   };
 
@@ -327,7 +327,7 @@ export default function ResultClient({
         prev
           ? {
               ...prev,
-              comment: '',
+              comment: "",
             }
           : null
       );
@@ -335,13 +335,13 @@ export default function ResultClient({
       const updatedDevis = await quoteService.getQuote(quoteCheckId);
       setCurrentDevis(updatedDevis);
     } catch (error) {
-      console.error('Error deleting global comment:', error);
+      console.error("Error deleting global comment:", error);
     }
   };
 
   if (isLoading) {
     return (
-      <section className='fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center'>
+      <section className="fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center">
         <LoadingDots
           title={wording.page_upload_id.analysis_in_progress_title}
         />
@@ -352,7 +352,7 @@ export default function ResultClient({
 
   if (shouldRedirectToUpload) {
     return (
-      <section className='fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center'>
+      <section className="fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center">
         <LoadingDots title={wording.page_upload_id.analysis_redirect_title} />
         <p>{wording.page_upload_id.analysis_redirect}</p>
       </section>
@@ -363,21 +363,21 @@ export default function ResultClient({
     <>
       {showDeletedErrors && currentDevis && isConseillerAndEdit && (
         <Notice
-          className='fr-notice--warning'
-          description='Vous pouvez ajouter des commentaires et/ou supprimer des corrections.'
-          title='Mode personnalisation activé'
+          className="fr-notice--warning"
+          description="Vous pouvez ajouter des commentaires et/ou supprimer des corrections."
+          title="Mode personnalisation activé"
         />
       )}
       {showToast && (
-        <div className='fixed top-10 right-20 z-50'>
+        <div className="fixed top-10 right-20 z-50">
           <Toast
             duration={3000}
-            message='Votre avis a bien été pris en compte. Merci pour votre aide précieuse !'
+            message="Votre avis a bien été pris en compte. Merci pour votre aide précieuse !"
             onClose={() => setShowToast(false)}
           />
         </div>
       )}
-      <div className='fr-container-fluid fr-py-10w'>
+      <div className="fr-container-fluid fr-py-10w">
         {currentDevis?.status === Status.VALID ? (
           <ValidQuote
             analysisDate={formatDateToFrench(currentDevis.finished_at)}
@@ -386,7 +386,7 @@ export default function ResultClient({
         ) : currentDevis ? (
           <InvalidQuote
             analysisDate={formatDateToFrench(currentDevis.finished_at)}
-            comment={currentDevis.comment || ''}
+            comment={currentDevis.comment || ""}
             deleteErrorReasons={deleteErrorReasons}
             gestes={currentDevis.gestes}
             id={currentDevis.id}
@@ -398,8 +398,8 @@ export default function ResultClient({
               .map((error) => ({
                 ...error,
                 className: error.deleted
-                  ? 'line-through text-gray-500 opacity-50'
-                  : '',
+                  ? "line-through text-gray-500 opacity-50"
+                  : "",
               }))}
             onAddErrorComment={handleAddErrorComment}
             onAddGlobalComment={handleSubmitGlobalComment}
@@ -409,7 +409,7 @@ export default function ResultClient({
             onHelpClick={handleHelpClick}
             onOpenGlobalCommentModal={() => setIsGlobalCommentModalOpen(true)}
             onUndoDeleteError={handleUndoDeleteError}
-            uploadedFileName={currentDevis.filename || ''}
+            uploadedFileName={currentDevis.filename || ""}
           />
         ) : null}
         <GlobalCommentModal
@@ -420,19 +420,19 @@ export default function ResultClient({
           }
           quoteCheckId={quoteCheckId}
         />
-        <div className='fr-container flex flex-col relative'>
+        <div className="fr-container flex flex-col relative">
           {!hasFeedbackBeenSubmitted && (
             <div
               className={`${
                 currentDevis?.status === Status.VALID
-                  ? 'fixed bottom-14 md:right-37 right-4'
+                  ? "fixed bottom-14 md:right-37 right-4"
                   : isButtonSticky
-                  ? 'fixed bottom-14 md:right-37 right-4'
-                  : 'absolute bottom-[-40px] md:right-6 right-4'
+                    ? "fixed bottom-14 md:right-37 right-4"
+                    : "absolute bottom-[-40px] md:right-6 right-4"
               } self-end z-20`}
             >
               <button
-                className='fr-btn fr-btn--icon-right fr-icon-star-fill rounded-full'
+                className="fr-btn fr-btn--icon-right fr-icon-star-fill rounded-full"
                 onClick={() => setIsModalOpen(!isModalOpen)}
               >
                 Donner mon avis

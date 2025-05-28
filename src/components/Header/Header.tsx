@@ -1,7 +1,7 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import Badge, { BadgeVariant } from '../Badge/Badge';
-import { richTextParser } from '@/utils';
+import Badge, { BadgeVariant } from "../Badge/Badge";
+import { richTextParser } from "@/utils";
 
 export interface HeaderProps {
   affiliatedMinistry: string;
@@ -21,34 +21,34 @@ const Header: React.FC<HeaderProps> = ({
   organizationName,
 }) => {
   return (
-    <header className='fr-header' role='banner'>
-      <div className='fr-header__body'>
-        <div className='fr-container'>
-          <div className='fr-header__body-row'>
-            <div className='fr-header__brand cursor-default'>
-              <div className='fr-header__brand-top'>
-                <div className='fr-header__logo'>
-                  <p className='fr-logo'>
+    <header className="fr-header" role="banner">
+      <div className="fr-header__body">
+        <div className="fr-container">
+          <div className="fr-header__body-row">
+            <div className="fr-header__brand cursor-default">
+              <div className="fr-header__brand-top">
+                <div className="fr-header__logo">
+                  <p className="fr-logo">
                     {richTextParser(affiliatedMinistry)}
                   </p>
                 </div>
               </div>
-              <div className='fr-header__service'>
-                <div className='hover:bg-[var(--background-raised-grey-hover)] active:bg-[var(--background-raised-grey-active)]'>
+              <div className="fr-header__service">
+                <div className="hover:bg-[var(--background-raised-grey-hover)] active:bg-[var(--background-raised-grey-active)]">
                   <Link
-                    className='items-center'
+                    className="items-center"
                     href={organizationLink}
                     title={`Accueil - ${organizationName} - ${affiliatedMinistry}`}
                   >
-                    <span className='flex flex-row'>
-                      <p className='fr-header__service-title mr-4!'>
+                    <span className="flex flex-row">
+                      <p className="fr-header__service-title mr-4!">
                         {organizationName}
                       </p>
                       {beta && (
                         <Badge label={beta} variant={BadgeVariant.GREEN} />
                       )}
                     </span>
-                    <p className='fr-header__service-tagline'>
+                    <p className="fr-header__service-tagline">
                       {organizationDescription}
                     </p>
                   </Link>
@@ -56,9 +56,9 @@ const Header: React.FC<HeaderProps> = ({
               </div>
             </div>
             {buttons && (
-              <div className='fr-header__tools'>
-                <div className='fr-header__tools-links'>
-                  <ul className='fr-btns-group'>
+              <div className="fr-header__tools">
+                <div className="fr-header__tools-links">
+                  <ul className="fr-btns-group">
                     {buttons.map((button, index) => (
                       <li key={index}>
                         <Link

@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export interface LoadingDotsProps {
   title: string;
 }
 
 export default function LoadingDots({ title }: LoadingDotsProps) {
-  const [dots, setDots] = useState<string>('');
+  const [dots, setDots] = useState<string>("");
 
   useEffect(() => {
     let dotsInterval: NodeJS.Timeout | null = null;
 
     const animateDots = () => {
       dotsInterval = setInterval(() => {
-        setDots((prev) => (prev.length < 3 ? prev + '.' : '')); // Add a dot or reset
+        setDots((prev) => (prev.length < 3 ? prev + "." : "")); // Add a dot or reset
       }, 500); // Change the dots every 500ms
     };
 
@@ -27,9 +27,9 @@ export default function LoadingDots({ title }: LoadingDotsProps) {
   }, []);
 
   return (
-    <h1 className='mb-4'>
+    <h1 className="mb-4">
       <span>{title}</span>
-      <span className='inline-block w-12 text-left'>{dots}</span>
+      <span className="inline-block w-12 text-left">{dots}</span>
     </h1>
   );
 }

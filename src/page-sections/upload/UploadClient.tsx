@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useState, useTransition } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useState, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import {
   Alert,
@@ -11,12 +11,12 @@ import {
   LinkVariant,
   Notice,
   Upload,
-} from '@/components';
-import { quoteService } from '@/lib/api';
-import { Metadata, Profile } from '@/types';
-import wording from '@/wording';
+} from "@/components";
+import { quoteService } from "@/lib/api";
+import { Metadata, Profile } from "@/types";
+import wording from "@/wording";
 
-export const FILE_ERROR = 'file_error';
+export const FILE_ERROR = "file_error";
 
 export default function UploadClient({
   metadata,
@@ -57,7 +57,7 @@ export default function UploadClient({
     if (isSubmitting || isPending) return;
 
     if (!file) {
-      setFileError('Please upload a file.');
+      setFileError("Please upload a file.");
       return;
     }
 
@@ -78,14 +78,14 @@ export default function UploadClient({
         }
       });
     } catch (error) {
-      console.error('Error during upload:', error);
-      setFileError('An error occurred. Please try again.');
+      console.error("Error during upload:", error);
+      setFileError("An error occurred. Please try again.");
       setIsSubmitting(false);
     }
   };
 
   useEffect(() => {
-    const error = searchParams.get('error');
+    const error = searchParams.get("error");
     if (error === FILE_ERROR) {
       setFileUploadedError(wording.upload.error.notice.description);
       router.replace(`/${profile}/televersement`);
@@ -95,8 +95,8 @@ export default function UploadClient({
   useEffect(() => {
     if (fileUploadedError) {
       setTimeout(() => {
-        if (typeof window !== 'undefined') {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (typeof window !== "undefined") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }
       }, 0);
     }
@@ -105,10 +105,10 @@ export default function UploadClient({
   return (
     <>
       {fileUploadedError && (
-        <div className='absolute top-[186px] left-0 right-0 z-50'>
+        <div className="absolute top-[186px] left-0 right-0 z-50">
           <Notice
             buttonClose={true}
-            className='fr-notice--alert'
+            className="fr-notice--alert"
             description={fileUploadedError}
             title={wording.upload.error.notice.title}
           />
@@ -121,7 +121,7 @@ export default function UploadClient({
           setError={setFileError}
         />
         <Alert
-          className='fr-mb-8w fr-mt-4w'
+          className="fr-mb-8w fr-mt-4w"
           description={wording.upload.alert.description}
           moreDescription={wording.upload.alert.more_info}
           type={AlertType.INFO}
@@ -151,8 +151,8 @@ export default function UploadClient({
             options={metadata.aides}
           />
         )}
-        <div className='fr-mt-8w flex justify-center'>
-          <ul className='fr-btns-group fr-btns-group--inline-sm'>
+        <div className="fr-mt-8w flex justify-center">
+          <ul className="fr-btns-group fr-btns-group--inline-sm">
             <li>
               <Link
                 href={wording.upload.link_back.href}
@@ -162,7 +162,7 @@ export default function UploadClient({
             </li>
             <li>
               <button
-                className='fr-btn fr-text--lg'
+                className="fr-btn fr-text--lg"
                 disabled={isSubmitting || !file || fileError ? true : false}
                 onClick={handleSubmit}
               >
