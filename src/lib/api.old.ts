@@ -1,4 +1,5 @@
 // src/lib/api.ts
+// TODO : Remove this file when the API Server Action migration is complete
 import { ErrorDetails, Profile, Rating } from "@/types";
 import { isClient, isServer } from "./utils/env.utils";
 import { getServerEnv, getSharedEnv } from "./config/env.config";
