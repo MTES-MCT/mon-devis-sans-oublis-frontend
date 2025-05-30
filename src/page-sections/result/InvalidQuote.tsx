@@ -79,17 +79,20 @@ export default function InvalidQuote({
               </h1>
             </div>
           </div>
-          {analysisDate !== null && (
-            <p className="bg-[var(--background-default-grey-hover)] mt-2! md:mt-0! mb-0! p-2 rounded-sm text-sm!">
-              {wording.page_upload_id.analysis_date.replace(
-                "{date}",
-                analysisDate
-              )}
-            </p>
-          )}
         </span>
         <div className="flex flex-col items-center md:items-start">
           <div className="flex flex-wrap gap-4 fr-mb-4w justify-center md:justify-start">
+            {analysisDate && (
+              <Badge
+                label={wording.page_upload_id.analysis_date.replace(
+                  "{date}",
+                  analysisDate
+                )}
+                size={BadgeSize.SMALL}
+                variant={BadgeVariant.GREY}
+              />
+            )}
+
             {uploadedFileName && (
               <Badge
                 label={uploadedFileName}
@@ -97,32 +100,6 @@ export default function InvalidQuote({
                 variant={BadgeVariant.BLUE_DARK}
               />
             )}
-            <Badge
-              label={(() => {
-                const activeErrors = list.filter(
-                  (error) => !error.deleted
-                ).length;
-                if (activeErrors === 0) {
-                  return "Tout est bon";
-                }
-                return (
-                  activeErrors > 1
-                    ? wording.page_upload_id.badge_correction_plural
-                    : wording.page_upload_id.badge_correction
-                ).replace("{number}", activeErrors.toString());
-              })()}
-              icon={
-                list.filter((error) => !error.deleted).length === 0
-                  ? "fr-icon-success-fill"
-                  : undefined
-              }
-              size={BadgeSize.SMALL}
-              variant={
-                list.filter((error) => !error.deleted).length === 0
-                  ? BadgeVariant.GREEN_LIGHT
-                  : BadgeVariant.GREY
-              }
-            />
           </div>
         </div>
         <Alert
