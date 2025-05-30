@@ -446,6 +446,18 @@ export default function ResultClient({
     );
   }
 
+  // État de chargement ou données invalides
+  if (isLoading || !isDataValid(currentDevis)) {
+    return (
+      <section className="fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center">
+        <LoadingDots
+          title={wording.page_upload_id.analysis_in_progress_title}
+        />
+        <p>{wording.page_upload_id.analysis_in_progress}</p>
+      </section>
+    );
+  }
+
   if (shouldRedirectToUpload) {
     return (
       <section className="fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center">
