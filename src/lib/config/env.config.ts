@@ -22,6 +22,9 @@ const sharedSchema = z.object({
     .string()
     .min(1, "API URL is required")
     .url("API URL must be a valid URL"),
+  APP_ENV: z
+    .enum(["local", "docker", "staging", "production"])
+    .default("local"),
 });
 
 // Variables côté serveur (lazy loading)
@@ -85,6 +88,7 @@ export function getSharedEnv() {
     // Côté client : gestion simple et directe
     if (isClient()) {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const appEnv = process.env.APP_ENV || "local";
 
       if (!apiUrl || !apiUrl.startsWith("http")) {
         console.error(
@@ -95,7 +99,10 @@ export function getSharedEnv() {
         );
       }
 
-      _sharedEnv = { NEXT_PUBLIC_API_URL: apiUrl };
+      _sharedEnv = {
+        NEXT_PUBLIC_API_URL: apiUrl,
+        APP_ENV: appEnv as "local" | "docker" | "staging" | "production",
+      };
       return _sharedEnv;
     }
 
@@ -147,3 +154,10 @@ if (isServer()) {
   // Côté client : validation différée lors du premier appel
   console.log("Client side: environment validation will be done on first use");
 }
+
+// Helpers pour vérifier l'environnement
+export const isLocal = () => getSharedEnv().APP_ENV === "local";
+export const isStaging = () => getSharedEnv().APP_ENV === "staging";
+export const isProduction = () => getSharedEnv().APP_ENV === "production";
+export const isDevelopment = () =>
+  ["local", "docker"].includes(getSharedEnv().APP_ENV);

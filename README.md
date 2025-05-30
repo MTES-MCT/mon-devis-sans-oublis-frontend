@@ -52,19 +52,20 @@ cp .env.example .env.docker
 
 ### Variables d'environnement principales
 
-| Variable                      | Description                           | Exemple                                                  | Requis    | Type   |
-| ----------------------------- | ------------------------------------- | -------------------------------------------------------- | --------- | ------ |
-| `NODE_ENV`                    | Environnement d'exécution             | `development` ou `production`                            | Requis    | Server |
-| `NEXT_TELEMETRY_DISABLED`     | Désactive la télémétrie Next.js       | `1`                                                      | Optionnel | Server |
-| `NEXT_PRIVATE_API_AUTH_TOKEN` | Token d'authentification API          | `superAPIAuthTokenExample`                               | Requis    | Server |
-| `NEXT_PUBLIC_API_URL`         | URL de l'API backend                  | `https://api.staging.mon-devis-sans-oublis.beta.gouv.fr` | Requis    | Shared |
-| `NEXT_PUBLIC_MATOMO_SITE_ID`  | ID du site Matomo                     | `1`                                                      | Optionnel | Client |
-| `NEXT_PUBLIC_MATOMO_URL`      | URL de l'instance Matomo              | `https://stats.beta.gouv.fr`                             | Optionnel | Client |
-| `NEXT_PUBLIC_SENTRY_DSN`      | DSN Sentry pour le tracking d'erreurs | `https://xxx@sentry.io/xxx`                              | Optionnel | Client |
-| `NEXT_PUBLIC_SENTRY_ORG`      | Organisation Sentry                   | `mon-organisation`                                       | Optionnel | Client |
-| `NEXT_PUBLIC_SENTRY_PROJECT`  | Projet Sentry                         | `mon-devis-frontend`                                     | Optionnel | Client |
-| `NEXT_PUBLIC_SENTRY_URL`      | URL de l'instance Sentry              | `https://sentry.io/`                                     | Optionnel | Client |
-| `NEXT_PUBLIC_CRISP_WEBSITE_ID`| ID du Site Crisp                      | `b3f91d7a-e29c-4e12-8c76-3fd6a218b9f1`                   | Optionnel | Client |
+| Variable                       | Description                           | Exemple                                                  | Requis    | Type   |
+| ------------------------------ | ------------------------------------- | -------------------------------------------------------- | --------- | ------ |
+| `NODE_ENV`                     | Environnement d'exécution             | `development` ou `production`                            | Requis    | Server |
+| `APP_ENV`                      | Environnement applicatif              | `local`, `docker`, `staging`, `production`               | Requis    | Shared |
+| `NEXT_TELEMETRY_DISABLED`      | Désactive la télémétrie Next.js       | `1`                                                      | Optionnel | Server |
+| `NEXT_PRIVATE_API_AUTH_TOKEN`  | Token d'authentification API          | `superAPIAuthTokenExample`                               | Requis    | Server |
+| `NEXT_PUBLIC_API_URL`          | URL de l'API backend                  | `https://api.staging.mon-devis-sans-oublis.beta.gouv.fr` | Requis    | Shared |
+| `NEXT_PUBLIC_MATOMO_SITE_ID`   | ID du site Matomo                     | `1`                                                      | Optionnel | Client |
+| `NEXT_PUBLIC_MATOMO_URL`       | URL de l'instance Matomo              | `https://stats.beta.gouv.fr`                             | Optionnel | Client |
+| `NEXT_PUBLIC_SENTRY_DSN`       | DSN Sentry pour le tracking d'erreurs | `https://xxx@sentry.io/xxx`                              | Optionnel | Client |
+| `NEXT_PUBLIC_SENTRY_ORG`       | Organisation Sentry                   | `mon-organisation`                                       | Optionnel | Client |
+| `NEXT_PUBLIC_SENTRY_PROJECT`   | Projet Sentry                         | `mon-devis-frontend`                                     | Optionnel | Client |
+| `NEXT_PUBLIC_SENTRY_URL`       | URL de l'instance Sentry              | `https://sentry.io/`                                     | Optionnel | Client |
+| `NEXT_PUBLIC_CRISP_WEBSITE_ID` | ID du Site Crisp                      | `b3f91d7a-e29c-4e12-8c76-3fd6a218b9f1`                  | Optionnel | Client |
 
 ### Types de variables d'environnement
 
@@ -72,22 +73,40 @@ L'application utilise une gestion centralisée des variables d'environnement ave
 
 - **Server** : Variables sensibles accessibles uniquement côté serveur (tokens, clés privées)
 - **Client** : Variables publiques accessibles dans le navigateur (configuration UI, analytics)
-- **Shared** : Variables publiques utilisées côté serveur ET client (URL d'API)
+- **Shared** : Variables publiques utilisées côté serveur ET client (URL d'API, environnement)
 
-### Configuration Scalingo (Production)
+### Gestion des environnements
 
-Pour le déploiement en production sur Scalingo, configurez ces variables dans l'interface Scalingo :
+L'application distingue les environnements via la variable `APP_ENV` :
 
-**Variables obligatoires :**
+| Environnement | `NODE_ENV`    | `APP_ENV`    | URL                                              |
+| ------------- | ------------- | ------------ | ------------------------------------------------ |
+| Local         | `development` | `local`      | http://localhost:3000                            |
+| Docker        | `development` | `docker`     | http://localhost:3000                            |
+| Staging       | `production`  | `staging`    | https://staging.mon-devis-sans-oublis.beta.gouv.fr |
+| Production    | `production`  | `production` | https://mon-devis-sans-oublis.beta.gouv.fr        |
 
+Cette approche permet de contourner la contrainte Scalingo qui impose `NODE_ENV=production` sur tous les environnements distants.
+
+### Configuration Scalingo
+
+#### Staging
 ```bash
 NODE_ENV=production
+APP_ENV=staging
+NEXT_PRIVATE_API_AUTH_TOKEN=your-staging-token
+NEXT_PUBLIC_API_URL=https://api.staging.mon-devis-sans-oublis.beta.gouv.fr
+```
+
+#### Production
+```bash
+NODE_ENV=production
+APP_ENV=production
 NEXT_PRIVATE_API_AUTH_TOKEN=your-production-token
 NEXT_PUBLIC_API_URL=https://api.mon-devis-sans-oublis.beta.gouv.fr
 ```
 
-**Variables optionnelles :**
-
+**Variables optionnelles (staging et production) :**
 ```bash
 NEXT_PUBLIC_MATOMO_SITE_ID=your-matomo-id
 NEXT_PUBLIC_MATOMO_URL=https://stats.beta.gouv.fr
