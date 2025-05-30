@@ -86,8 +86,12 @@ export default function UploadClient({
 
   useEffect(() => {
     const error = searchParams.get("error");
+    const message = searchParams.get("message");
     if (error === FILE_ERROR) {
-      setFileUploadedError(wording.upload.error.notice.description);
+      const errorMessage = message
+        ? decodeURIComponent(message)
+        : wording.upload.error.notice.description;
+      setFileUploadedError(errorMessage);
       router.replace(`/${profile}/televersement`);
     }
   }, [router, profile, searchParams]);
