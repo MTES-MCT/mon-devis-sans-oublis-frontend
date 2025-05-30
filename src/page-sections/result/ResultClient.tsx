@@ -20,6 +20,9 @@ import wording from "@/wording";
 import { quoteService } from "@/lib/client/apiWrapper";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
+const MAX_RETRIES = 20;
+const POLLING_INTERVAL = 30000;
+
 interface ResultClientProps {
   currentDevis: QuoteChecksId | null;
   deleteErrorReasons?: { id: string; label: string }[];
@@ -59,8 +62,22 @@ export default function ResultClient({
   const [showToast, setShowToast] = useState<boolean>(false);
   const [shouldRedirectToUpload, setShouldRedirectToUpload] =
     useState<boolean>(false);
+  const [hasPollingError, setHasPollingError] = useState<boolean>(false);
 
   const { isConseillerAndEdit } = useConseillerRoutes();
+
+  // Validation des données critiques
+  const isDataValid = (devis: QuoteChecksId | null): boolean => {
+    if (!devis) return false;
+
+    // Vérification des champs critiques pour éviter "Invalid Date" et données partielles
+    return !!(
+      devis.finished_at &&
+      devis.filename &&
+      devis.status &&
+      devis.status !== Status.PENDING
+    );
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -80,8 +97,6 @@ export default function ResultClient({
 
     let isPollingActive = true;
     let retryCount = 0;
-    const maxRetries = 20;
-    const pollingInterval = 5000;
 
     const pollQuote = async () => {
       if (!isPollingActive) return;
@@ -89,10 +104,11 @@ export default function ResultClient({
       try {
         const data = await quoteService.getQuote(quoteCheckId);
 
+        // Validation plus stricte des données avant de continuer
         if (!data || !data.status) {
-          if (retryCount < maxRetries) {
+          if (retryCount < MAX_RETRIES) {
             retryCount++;
-            setTimeout(pollQuote, pollingInterval);
+            setTimeout(pollQuote, POLLING_INTERVAL);
           } else {
             setIsLoading(false);
           }
@@ -112,23 +128,31 @@ export default function ResultClient({
 
         setCurrentDevis(data);
 
-        if (data.status === Status.VALID || data.status === Status.INVALID) {
+        // Ne stopper le loading que si les données sont complètes ET valides
+        if (
+          (data.status === Status.VALID || data.status === Status.INVALID) &&
+          isDataValid(data)
+        ) {
           setIsLoading(false);
           isPollingActive = false;
-        } else if (data.status === Status.PENDING) {
-          if (retryCount < maxRetries) {
+        } else if (data.status === Status.PENDING || !isDataValid(data)) {
+          if (retryCount < MAX_RETRIES) {
             retryCount++;
-            setTimeout(pollQuote, pollingInterval);
+            setTimeout(pollQuote, POLLING_INTERVAL);
           } else {
+            console.error("Max retries reached - data still incomplete");
+            setHasPollingError(true);
             setIsLoading(false);
           }
         }
       } catch (error) {
         console.error("Error polling quote:", error);
-        if (retryCount < maxRetries) {
+        if (retryCount < MAX_RETRIES) {
           retryCount++;
-          setTimeout(pollQuote, pollingInterval);
+          setTimeout(pollQuote, POLLING_INTERVAL);
         } else {
+          console.error("Max retries reached - polling failed");
+          setHasPollingError(true);
           setIsLoading(false);
         }
       }
@@ -340,13 +364,49 @@ export default function ResultClient({
     }
   };
 
-  if (isLoading) {
+  // État de chargement ou données invalides
+  if (isLoading || !isDataValid(currentDevis)) {
     return (
       <section className="fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center">
         <LoadingDots
           title={wording.page_upload_id.analysis_in_progress_title}
         />
         <p>{wording.page_upload_id.analysis_in_progress}</p>
+      </section>
+    );
+  }
+
+  // État d'erreur de polling - fallback de sécurité
+  if (hasPollingError) {
+    return (
+      <section className="fr-container-fluid fr-py-10w">
+        <div className="fr-container">
+          <div className="fr-alert fr-alert--error fr-mb-4w">
+            <h3>{wording.page_upload_id.analysis_error}</h3>
+            <p>
+              L'analyse a pris plus de temps que prévu. Veuillez réessayer ou
+              contactez le support si le problème persiste.
+            </p>
+            <div className="fr-btns-group fr-mt-3w">
+              <button
+                className="fr-btn fr-btn--secondary"
+                onClick={() => {
+                  setHasPollingError(false);
+                  setIsLoading(true);
+                  window.location.reload();
+                }}
+              >
+                Réessayer
+              </button>
+              <button
+                className="fr-btn fr-btn--tertiary"
+                onClick={() => router.push(`/${profile}/televersement`)}
+              >
+                Nouvelle analyse
+              </button>
+            </div>
+          </div>
+        </div>
       </section>
     );
   }
