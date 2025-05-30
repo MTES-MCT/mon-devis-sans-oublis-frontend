@@ -8,6 +8,8 @@ import { useConseillerRoutes } from "@/hooks";
 import { ErrorDetails, Gestes } from "@/types";
 import QuoteErrorSharingModal from "./QuoteErrorSharingCard.modal";
 import { QUOTE_ERROR_SHARING_WORDING } from "./QuoteErrorSharingCard.wording";
+import { useMatomo } from "@/hooks/useMatomo";
+import { MATOMO_EVENTS } from "@/lib/constants/matomoEvents";
 
 export interface QuoteErrorSharingCardProps {
   baseUrl?: string;
@@ -31,6 +33,7 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
   const { isConseillerAndEdit } = useConseillerRoutes();
 
   const nonEditionPath = pathname.replace(/\/modifier$/, "");
+  const { trackEvent } = useMatomo();
 
   const copyUrlToClipboard = () => {
     /* istanbul ignore next */
@@ -43,6 +46,7 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
   };
 
   const handleOpenModal = () => {
+    trackEvent(MATOMO_EVENTS.BUTTON_EXPORT_FOR_MAIL);
     setIsModalOpen(true);
   };
 
