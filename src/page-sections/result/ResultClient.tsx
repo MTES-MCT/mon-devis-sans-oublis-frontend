@@ -424,6 +424,7 @@ export default function ResultClient({
             onOpenGlobalCommentModal={() => setIsGlobalCommentModalOpen(true)}
             onUndoDeleteError={handleUndoDeleteError}
             uploadedFileName={currentDevis.filename || ""}
+            controlsCount={currentDevis.controls_count}
           />
         ) : null}
         <GlobalCommentModal
