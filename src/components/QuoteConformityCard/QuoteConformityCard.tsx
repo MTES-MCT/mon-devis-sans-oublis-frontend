@@ -13,7 +13,9 @@ export default function QuoteConformityCard({
   className = "",
 }: QuoteConformityCardProps) {
   const percentage =
-    controlsCount > 0 ? (correctionsCount / controlsCount) * 100 : 0;
+    controlsCount > 0
+      ? ((controlsCount - correctionsCount) / controlsCount) * 100
+      : 0;
 
   const conformePointsCount = controlsCount - correctionsCount;
 
