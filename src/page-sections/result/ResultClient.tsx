@@ -121,6 +121,10 @@ export default function ResultClient({
             (error: ErrorDetails) => error.category === Category.FILE
           ) || [];
         if (isInvalidStatus && fileErrors.length > 0) {
+          const fileErrorMessage = encodeURIComponent(
+            fileErrors[0]?.title || wording.upload.error.notice.description
+          );
+          sessionStorage.setItem("fileErrorMessage", fileErrorMessage);
           setShouldRedirectToUpload(true);
           setIsLoading(false);
           return;
@@ -167,7 +171,14 @@ export default function ResultClient({
 
   useEffect(() => {
     if (shouldRedirectToUpload) {
-      router.push(`/${profile}/televersement?error=${FILE_ERROR}`);
+      const fileErrorMessage =
+        sessionStorage.getItem("fileErrorMessage") ||
+        wording.upload.error.notice.description;
+      const url = fileErrorMessage
+        ? `/${profile}/televersement?error=${FILE_ERROR}&message=${fileErrorMessage}`
+        : `/${profile}/televersement?error=${FILE_ERROR}`;
+      router.push(url);
+      sessionStorage.removeItem("fileErrorMessage");
     }
   }, [shouldRedirectToUpload, profile, router]);
 
