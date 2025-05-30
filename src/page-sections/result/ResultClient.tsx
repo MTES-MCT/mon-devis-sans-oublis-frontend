@@ -411,6 +411,41 @@ export default function ResultClient({
     );
   }
 
+  // État d'erreur de polling - fallback de sécurité
+  if (hasPollingError) {
+    return (
+      <section className="fr-container-fluid fr-py-10w">
+        <div className="fr-container">
+          <div className="fr-alert fr-alert--error fr-mb-4w">
+            <h3>{wording.page_upload_id.analysis_error}</h3>
+            <p>
+              L'analyse a pris plus de temps que prévu. Veuillez réessayer ou
+              contactez le support si le problème persiste.
+            </p>
+            <div className="fr-btns-group fr-mt-3w">
+              <button
+                className="fr-btn fr-btn--secondary"
+                onClick={() => {
+                  setHasPollingError(false);
+                  setIsLoading(true);
+                  window.location.reload();
+                }}
+              >
+                Réessayer
+              </button>
+              <button
+                className="fr-btn fr-btn--tertiary"
+                onClick={() => router.push(`/${profile}/televersement`)}
+              >
+                Nouvelle analyse
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   if (shouldRedirectToUpload) {
     return (
       <section className="fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center">
