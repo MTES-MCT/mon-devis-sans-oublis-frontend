@@ -1,6 +1,11 @@
 "use client";
 
-import { getClientEnv, getSharedEnv } from "@/lib/config/env.config";
+import {
+  getClientEnv,
+  getSharedEnv,
+  isProduction,
+  isStaging,
+} from "@/lib/config/env.config";
 import { useCrisp } from "@/hooks/useCrisp";
 import { useEffect, useState } from "react";
 
@@ -32,39 +37,41 @@ export default function DebugPage() {
       return false;
     };
 
-    const isProduction = process.env.NODE_ENV === "production";
-
-    if (!isProduction) {
+    if (!isProduction() && !isStaging()) {
       setMatomoStatus("disabled");
     } else {
       let matomoChecked = false;
 
       const interval = setInterval(() => {
-        if (!matomoChecked && isProduction && checkMatomo()) {
+        if (
+          !matomoChecked &&
+          (isProduction() || isStaging()) &&
+          checkMatomo()
+        ) {
           matomoChecked = true;
         }
 
         // Arrêter si tout est vérifié
-        if (matomoChecked || !isProduction) {
+        if (matomoChecked || (!isProduction() && !isStaging())) {
           clearInterval(interval);
         }
       }, 500);
 
       setTimeout(() => {
         clearInterval(interval);
-        if (matomoStatus === "loading" && isProduction) {
+        if (matomoStatus === "loading" && (isProduction() || isStaging())) {
           setMatomoStatus("error");
         }
       }, 10000);
 
-      if (isProduction) {
+      if (isProduction() || isStaging()) {
         checkMatomo();
       }
     }
   }, [matomoStatus]);
 
   // Protection production
-  if (process.env.NODE_ENV === "production") {
+  if (isProduction()) {
     return (
       <div className="fr-container fr-mt-8v">
         <div className="fr-grid-row fr-grid-row--center">

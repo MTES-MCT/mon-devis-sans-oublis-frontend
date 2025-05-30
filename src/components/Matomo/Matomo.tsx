@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { init, push } from "@socialgouv/matomo-next";
-import { getClientEnv } from "@/lib/config/env.config";
+import { getClientEnv, isProduction, isStaging } from "@/lib/config/env.config";
 
 const MatomoContent = () => {
   const [initialised, setInitialised] = useState<boolean>(false);
@@ -40,9 +40,8 @@ const MatomoContent = () => {
     push(["trackPageView"]);
   }, [pathname, searchParamsString]);
 
-  // Matomo activé sur production uniquement
-  const allowedEnvs = ["production"];
-  if (!allowedEnvs.includes(process.env.NODE_ENV || "")) {
+  // Matomo activé sur production & staging uniquement
+  if (!isProduction() && !isStaging()) {
     return null;
   }
 
