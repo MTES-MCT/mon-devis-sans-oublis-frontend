@@ -3,19 +3,13 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
-import {
-  Alert,
-  AlertType,
-  Badge,
-  BadgeSize,
-  BadgeVariant,
-  QuoteErrorTable,
-} from "@/components";
+import { Badge, BadgeSize, BadgeVariant, QuoteErrorTable } from "@/components";
 import { useConseillerRoutes } from "@/hooks";
 import { Category, ErrorDetails, Gestes } from "@/types";
 import wording from "@/wording";
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
+import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
 
 interface InvalidQuoteProps {
   analysisDate: string | null;
@@ -41,6 +35,7 @@ interface InvalidQuoteProps {
   onOpenGlobalCommentModal: () => void;
   onUndoDeleteError?: (quoteCheckId: string, errorDetailsId: string) => void;
   uploadedFileName: string;
+  controlsCount?: number;
 }
 
 export default function InvalidQuote({
@@ -59,6 +54,7 @@ export default function InvalidQuote({
   onOpenGlobalCommentModal,
   onUndoDeleteError,
   uploadedFileName,
+  controlsCount = 0,
 }: InvalidQuoteProps) {
   const [editedComment, setEditedComment] = useState(comment || "");
 
@@ -79,17 +75,20 @@ export default function InvalidQuote({
               </h1>
             </div>
           </div>
-          {analysisDate !== null && (
-            <p className="bg-[var(--background-default-grey-hover)] mt-2! md:mt-0! mb-0! p-2 rounded-sm text-sm!">
-              {wording.page_upload_id.analysis_date.replace(
-                "{date}",
-                analysisDate
-              )}
-            </p>
-          )}
         </span>
         <div className="flex flex-col items-center md:items-start">
           <div className="flex flex-wrap gap-4 fr-mb-4w justify-center md:justify-start">
+            {analysisDate && (
+              <Badge
+                label={wording.page_upload_id.analysis_date.replace(
+                  "{date}",
+                  analysisDate
+                )}
+                size={BadgeSize.SMALL}
+                variant={BadgeVariant.GREY}
+              />
+            )}
+
             {uploadedFileName && (
               <Badge
                 label={uploadedFileName}
@@ -97,39 +96,27 @@ export default function InvalidQuote({
                 variant={BadgeVariant.BLUE_DARK}
               />
             )}
-            <Badge
-              label={(() => {
-                const activeErrors = list.filter(
-                  (error) => !error.deleted
-                ).length;
-                if (activeErrors === 0) {
-                  return "Tout est bon";
-                }
-                return (
-                  activeErrors > 1
-                    ? wording.page_upload_id.badge_correction_plural
-                    : wording.page_upload_id.badge_correction
-                ).replace("{number}", activeErrors.toString());
-              })()}
-              icon={
-                list.filter((error) => !error.deleted).length === 0
-                  ? "fr-icon-success-fill"
-                  : undefined
-              }
-              size={BadgeSize.SMALL}
-              variant={
-                list.filter((error) => !error.deleted).length === 0
-                  ? BadgeVariant.GREEN_LIGHT
-                  : BadgeVariant.GREY
-              }
-            />
+          </div>
+
+          {/* Ligne Info & Conformité */}
+          <div className="flex flex-col lg:flex-row gap-4 w-full fr-mb-4w lg:items-start">
+            <div className="fr-alert fr-alert--info lg:w-3/5 !py-4">
+              <h3 className="fr-alert__title !mb-2">
+                {wording.page_upload_id.quotation_alert_ko_title}
+              </h3>
+              <p className="!mb-0">
+                {wording.page_upload_id.quotation_alert_ko_description}
+              </p>
+            </div>
+            <div className="lg:w-2/5">
+              <QuoteConformityCard
+                controlsCount={controlsCount}
+                correctionsCount={list.length}
+              />
+            </div>
           </div>
         </div>
-        <Alert
-          className="fr-pr-2w fr-mb-5w font-bold w-fit"
-          description={wording.page_upload_id.quotation_alert_ko}
-          type={AlertType.INFO}
-        />
+
         {isConseillerAndEdit ? (
           comment && comment !== "" ? (
             <div className="flex flex-row p-6 rounded-lg bg-[var(--background-alt-grey)]">
