@@ -9,6 +9,7 @@ import {
 import { useCrisp } from "@/hooks/useCrisp";
 import { useEffect, useState } from "react";
 import ProtectedDebugPage from "@/components/debug/ProtectedDebugPage";
+import { checkApiAuth } from "@/actions/debug/auth.actions";
 
 interface WindowWithServices extends Window {
   _paq?: unknown[];
@@ -19,6 +20,9 @@ export default function DebugPage() {
   const [matomoStatus, setMatomoStatus] = useState<
     "disabled" | "loading" | "ready" | "error"
   >("loading");
+  const [apiStatus, setApiStatus] = useState<"loading" | "ready" | "error">(
+    "loading"
+  );
 
   // Utilisation du hook useCrisp
   const { isLoaded: crispIsLoaded } = useCrisp();
@@ -71,6 +75,20 @@ export default function DebugPage() {
     }
   }, [matomoStatus]);
 
+  // useEffect pour l'API
+  useEffect(() => {
+    const checkApi = async () => {
+      try {
+        const result = await checkApiAuth();
+        setApiStatus(result.success ? "ready" : "error");
+      } catch {
+        setApiStatus("error");
+      }
+    };
+
+    checkApi();
+  }, []);
+
   if (!isMounted) {
     return (
       <div className="fr-container fr-mt-8v">
@@ -86,7 +104,6 @@ export default function DebugPage() {
     );
   }
 
-  // Récupération des variables d'environnement
   let clientEnv, sharedEnv;
   let clientError, sharedError;
 
@@ -118,7 +135,7 @@ export default function DebugPage() {
 
               <div className="fr-grid-row fr-grid-row--gutters">
                 {/* Crisp */}
-                <div className="fr-col-12 fr-col-md-6 fr-mb-4v">
+                <div className="fr-col-12 fr-mb-4v">
                   <div
                     className={`fr-alert ${
                       crispStatus === "ready"
@@ -141,9 +158,8 @@ export default function DebugPage() {
                     )}
                   </div>
                 </div>
-
                 {/* Matomo */}
-                <div className="fr-col-12 fr-col-md-6 fr-mb-4v">
+                <div className="fr-col-12 fr-mb-4v">
                   <div
                     className={`fr-alert ${
                       matomoStatus === "ready"
@@ -170,6 +186,37 @@ export default function DebugPage() {
                       <p>
                         <strong>Site ID:</strong>{" "}
                         {clientEnv.NEXT_PUBLIC_MATOMO_SITE_ID}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                {/* API Backend */}
+                {/* // TODO : Gestion de l'état de l'API Partenaire */}
+                <div className="fr-col-12 fr-mb-4v">
+                  <div
+                    className={`fr-alert ${
+                      apiStatus === "ready"
+                        ? "fr-alert--success"
+                        : apiStatus === "loading"
+                          ? "fr-alert--info"
+                          : "fr-alert--error"
+                    }`}
+                  >
+                    <h3 className="fr-alert__title">
+                      API Backend (Partenaire?)
+                    </h3>
+                    <p>
+                      <strong>État:</strong>{" "}
+                      {/* {apiStatus === "ready"
+                        ? "Connectée"
+                        : apiStatus === "loading"
+                          ? "Vérification..."
+                          : "Erreur"} */}
+                      TODO
+                    </p>
+                    {sharedEnv?.NEXT_PUBLIC_API_URL && (
+                      <p>
+                        <strong>URL:</strong> {sharedEnv.NEXT_PUBLIC_API_URL}
                       </p>
                     )}
                   </div>
@@ -410,6 +457,9 @@ export default function DebugPage() {
                             : matomoStatus === "disabled"
                               ? "Désactivé"
                               : "Inactif"}
+                          <br />
+                          <strong>API:</strong>{" "}
+                          {apiStatus === "ready" ? "Connectée" : "Déconnectée"}
                         </p>
                       </div>
                     </div>
