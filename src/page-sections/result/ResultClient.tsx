@@ -20,8 +20,8 @@ import wording from "@/wording";
 import { quoteService } from "@/lib/client/apiWrapper";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
-const MAX_RETRIES = 20;
-const POLLING_INTERVAL = 30000;
+const MAX_RETRIES = 20; // Nombre maximum de tentatives de polling
+const POLLING_INTERVAL = 30000; // 30 secondes d'intervalle entre les tentatives
 
 interface ResultClientProps {
   currentDevis: QuoteChecksId | null;
@@ -364,18 +364,6 @@ export default function ResultClient({
     }
   };
 
-  // État de chargement ou données invalides
-  if (isLoading || !isDataValid(currentDevis)) {
-    return (
-      <section className="fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center">
-        <LoadingDots
-          title={wording.page_upload_id.analysis_in_progress_title}
-        />
-        <p>{wording.page_upload_id.analysis_in_progress}</p>
-      </section>
-    );
-  }
-
   // État d'erreur de polling - fallback de sécurité
   if (hasPollingError) {
     return (
@@ -407,6 +395,18 @@ export default function ResultClient({
             </div>
           </div>
         </div>
+      </section>
+    );
+  }
+
+  // État de chargement ou données invalides
+  if (isLoading || !isDataValid(currentDevis)) {
+    return (
+      <section className="fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center">
+        <LoadingDots
+          title={wording.page_upload_id.analysis_in_progress_title}
+        />
+        <p>{wording.page_upload_id.analysis_in_progress}</p>
       </section>
     );
   }
