@@ -101,12 +101,14 @@ export default function InvalidQuote({
               />
             )}
           </div>
+          <div className="fr-alert fr-alert--info fr-mb-4w">
+            <h3 className="fr-alert__title">
+              {wording.page_upload_id.quotation_alert_ko_title}
+            </h3>
+            <p>{wording.page_upload_id.quotation_alert_ko_description}</p>
+          </div>
         </div>
-        <Alert
-          className="fr-pr-2w fr-mb-5w font-bold w-fit"
-          description={wording.page_upload_id.quotation_alert_ko}
-          type={AlertType.INFO}
-        />
+
         {isConseillerAndEdit ? (
           comment && comment !== "" ? (
             <div className="flex flex-row p-6 rounded-lg bg-[var(--background-alt-grey)]">
