@@ -3,19 +3,13 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
-import {
-  Alert,
-  AlertType,
-  Badge,
-  BadgeSize,
-  BadgeVariant,
-  QuoteErrorTable,
-} from "@/components";
+import { Badge, BadgeSize, BadgeVariant, QuoteErrorTable } from "@/components";
 import { useConseillerRoutes } from "@/hooks";
 import { Category, ErrorDetails, Gestes } from "@/types";
 import wording from "@/wording";
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
+import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
 
 interface InvalidQuoteProps {
   analysisDate: string | null;
@@ -41,6 +35,7 @@ interface InvalidQuoteProps {
   onOpenGlobalCommentModal: () => void;
   onUndoDeleteError?: (quoteCheckId: string, errorDetailsId: string) => void;
   uploadedFileName: string;
+  controlsCount?: number;
 }
 
 export default function InvalidQuote({
@@ -59,6 +54,7 @@ export default function InvalidQuote({
   onOpenGlobalCommentModal,
   onUndoDeleteError,
   uploadedFileName,
+  controlsCount = 0,
 }: InvalidQuoteProps) {
   const [editedComment, setEditedComment] = useState(comment || "");
 
@@ -101,11 +97,23 @@ export default function InvalidQuote({
               />
             )}
           </div>
-          <div className="fr-alert fr-alert--info fr-mb-4w">
-            <h3 className="fr-alert__title">
-              {wording.page_upload_id.quotation_alert_ko_title}
-            </h3>
-            <p>{wording.page_upload_id.quotation_alert_ko_description}</p>
+
+          {/* Ligne Info & Conformité */}
+          <div className="flex flex-col lg:flex-row gap-4 w-full fr-mb-4w lg:items-start">
+            <div className="fr-alert fr-alert--info lg:w-3/5 !py-4">
+              <h3 className="fr-alert__title !mb-2">
+                {wording.page_upload_id.quotation_alert_ko_title}
+              </h3>
+              <p className="!mb-0">
+                {wording.page_upload_id.quotation_alert_ko_description}
+              </p>
+            </div>
+            <div className="lg:w-2/5">
+              <QuoteConformityCard
+                controlsCount={controlsCount}
+                correctionsCount={list.length}
+              />
+            </div>
           </div>
         </div>
 
