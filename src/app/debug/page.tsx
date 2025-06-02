@@ -5,6 +5,8 @@ import {
   getSharedEnv,
   isProduction,
   isStaging,
+  isLocal,
+  isDevelopment,
 } from "@/lib/config/env.config";
 import { useCrisp } from "@/hooks/useCrisp";
 import { useEffect, useState } from "react";
@@ -119,6 +121,26 @@ export default function DebugPage() {
     sharedError = String(error);
   }
 
+  // Evaluation des helpers d'environnement
+  let envHelpers = {
+    isLocal: false,
+    isStaging: false,
+    isProduction: false,
+    isDevelopment: false,
+  };
+  let helpersError: string | null = null;
+
+  try {
+    envHelpers = {
+      isLocal: isLocal(),
+      isStaging: isStaging(),
+      isProduction: isProduction(),
+      isDevelopment: isDevelopment(),
+    };
+  } catch (error) {
+    helpersError = String(error);
+  }
+
   const crispStatus = crispIsLoaded ? "ready" : "loading";
 
   return (
@@ -127,6 +149,95 @@ export default function DebugPage() {
         <div className="fr-grid-row fr-grid-row--center">
           <div className="fr-col-12 fr-col-lg-10">
             <h1 className="fr-h2 fr-mb-6v">Debug - Variables et Services</h1>
+
+            {/* Section 0: Helpers d'environnement */}
+            <div className="fr-mb-8v">
+              <h2 className="fr-h4">Helpers d'Environnement</h2>
+              <hr />
+
+              {helpersError ? (
+                <div className="fr-alert fr-alert--error">
+                  <h3 className="fr-alert__title">Erreur des helpers</h3>
+                  <p>{helpersError}</p>
+                </div>
+              ) : (
+                <div className="fr-grid-row fr-grid-row--gutters">
+                  <div className="fr-col-12 fr-col-md-6">
+                    <div className="fr-card fr-card--grey">
+                      <div className="fr-card__body">
+                        <div className="fr-card__content">
+                          <h3 className="fr-card__title">État des Helpers</h3>
+                          <p className="fr-card__desc">
+                            <strong>isLocal():</strong>{" "}
+                            <span
+                              className={`fr-badge ${
+                                envHelpers.isLocal
+                                  ? "fr-badge--success"
+                                  : "fr-badge--info"
+                              }`}
+                            >
+                              {envHelpers.isLocal ? "true" : "false"}
+                            </span>
+                            <br />
+                            <strong>isStaging():</strong>{" "}
+                            <span
+                              className={`fr-badge ${
+                                envHelpers.isStaging
+                                  ? "fr-badge--success"
+                                  : "fr-badge--info"
+                              }`}
+                            >
+                              {envHelpers.isStaging ? "true" : "false"}
+                            </span>
+                            <br />
+                            <strong>isProduction():</strong>{" "}
+                            <span
+                              className={`fr-badge ${
+                                envHelpers.isProduction
+                                  ? "fr-badge--success"
+                                  : "fr-badge--info"
+                              }`}
+                            >
+                              {envHelpers.isProduction ? "true" : "false"}
+                            </span>
+                            <br />
+                            <strong>isDevelopment():</strong>{" "}
+                            <span
+                              className={`fr-badge ${
+                                envHelpers.isDevelopment
+                                  ? "fr-badge--success"
+                                  : "fr-badge--info"
+                              }`}
+                            >
+                              {envHelpers.isDevelopment ? "true" : "false"}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="fr-col-12 fr-col-md-6">
+                    <div className="fr-card fr-card--grey">
+                      <div className="fr-card__body">
+                        <div className="fr-card__content">
+                          <h3 className="fr-card__title">Variables brutes</h3>
+                          <p className="fr-card__desc">
+                            <strong>NODE_ENV:</strong>{" "}
+                            <code>{process.env.NODE_ENV || "undefined"}</code>
+                            <br />
+                            <strong>NEXT_PUBLIC_APP_ENV:</strong>{" "}
+                            <code>
+                              {process.env.NEXT_PUBLIC_APP_ENV || "undefined"}
+                            </code>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Section 1: État des Services */}
             <div className="fr-mb-8v">
@@ -402,6 +513,27 @@ export default function DebugPage() {
                             }`}
                           >
                             {sharedEnv?.NEXT_PUBLIC_API_URL ? "OK" : "Requise"}
+                          </span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <code>NEXT_PUBLIC_APP_ENV</code>
+                        </td>
+                        <td>
+                          <code>
+                            {sharedEnv?.NEXT_PUBLIC_APP_ENV || "Non définie"}
+                          </code>
+                        </td>
+                        <td>
+                          <span
+                            className={`fr-badge ${
+                              sharedEnv?.NEXT_PUBLIC_APP_ENV
+                                ? "fr-badge--success"
+                                : "fr-badge--error"
+                            }`}
+                          >
+                            {sharedEnv?.NEXT_PUBLIC_APP_ENV ? "OK" : "Requise"}
                           </span>
                         </td>
                       </tr>
