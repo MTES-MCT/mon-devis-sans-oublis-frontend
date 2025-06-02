@@ -10,6 +10,7 @@ import wording from "@/wording";
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
 import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
+import GlobalComment from "@/components/GlobalComment/GlobalComment";
 
 interface InvalidQuoteProps {
   analysisDate: string | null;
@@ -77,26 +78,52 @@ export default function InvalidQuote({
           </div>
         </span>
         <div className="flex flex-col items-center md:items-start">
-          <div className="flex flex-wrap gap-4 fr-mb-4w justify-center md:justify-start">
-            {analysisDate && (
-              <Badge
-                label={wording.page_upload_id.analysis_date.replace(
-                  "{date}",
-                  analysisDate
-                )}
-                size={BadgeSize.SMALL}
-                variant={BadgeVariant.GREY}
-              />
-            )}
+          <div className="flex flex-wrap gap-4 fr-mb-4w justify-center md:justify-between w-full">
+            {/* Conteneur pour les badges */}
+            <div className="flex flex-wrap gap-4">
+              {analysisDate && (
+                <Badge
+                  label={wording.page_upload_id.analysis_date.replace(
+                    "{date}",
+                    analysisDate
+                  )}
+                  size={BadgeSize.SMALL}
+                  variant={BadgeVariant.GREY}
+                />
+              )}
 
-            {uploadedFileName && (
-              <Badge
-                label={uploadedFileName}
-                size={BadgeSize.SMALL}
-                variant={BadgeVariant.BLUE_DARK}
-              />
-            )}
+              {uploadedFileName && (
+                <Badge
+                  label={uploadedFileName}
+                  size={BadgeSize.SMALL}
+                  variant={BadgeVariant.BLUE_DARK}
+                />
+              )}
+            </div>
+
+            {/* Bouton d'ajout de commentaire - uniquement si éditable et pas de commentaire */}
+            <GlobalComment
+              comment={comment}
+              isEditable={isConseillerAndEdit}
+              quoteCheckId={id}
+              onAddComment={onAddGlobalComment}
+              onDeleteComment={onDeleteGlobalComment}
+              onOpenModal={onOpenGlobalCommentModal}
+              placement="button"
+            />
           </div>
+
+          {/* Zone de commentaire - uniquement si commentaire existe */}
+          <GlobalComment
+            comment={comment}
+            isEditable={isConseillerAndEdit}
+            quoteCheckId={id}
+            onAddComment={onAddGlobalComment}
+            onDeleteComment={onDeleteGlobalComment}
+            onOpenModal={onOpenGlobalCommentModal}
+            placement="zone"
+            className="fr-mb-4w"
+          />
 
           {/* Ligne Info & Conformité */}
           <div className="flex flex-col lg:flex-row gap-4 w-full fr-mb-4w lg:items-start">
@@ -116,103 +143,8 @@ export default function InvalidQuote({
             </div>
           </div>
         </div>
-
-        {isConseillerAndEdit ? (
-          comment && comment !== "" ? (
-            <div className="flex flex-row p-6 rounded-lg bg-[var(--background-alt-grey)]">
-              <div>
-                <Image
-                  alt="delete"
-                  className="object-contain"
-                  height={64}
-                  src="/images/quotation_results/quotation_correction_comment.webp"
-                  width={64}
-                />
-              </div>
-              <div className="px-6 w-full">
-                <h6 className="fr-mb-1w">Votre commentaire général</h6>
-                <textarea
-                  className="fr-input h-[200px] w-full whitespace-pre-wrap"
-                  maxLength={1000}
-                  onChange={(e) => setEditedComment(e.target.value)}
-                  value={editedComment}
-                />
-                <div className="fr-hint-text text-right mb-3 mt-2">
-                  {editedComment.length}/1000 caractères
-                </div>
-                <div className="flex justify-end gap-2 mt-2">
-                  <button
-                    className="fr-btn fr-btn--secondary"
-                    onClick={() => {
-                      setEditedComment(comment || "");
-                    }}
-                  >
-                    Annuler
-                  </button>
-                  <button
-                    className="fr-btn fr-btn--primary"
-                    disabled={
-                      !editedComment.trim() || editedComment === comment
-                    }
-                    onClick={() => {
-                      onAddGlobalComment?.(id, editedComment);
-                    }}
-                  >
-                    Enregistrer
-                  </button>
-                </div>
-              </div>
-              <div className="relative">
-                <button
-                  className="fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line"
-                  onClick={() => {
-                    onDeleteGlobalComment?.(id);
-                  }}
-                />
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-row gap-6 p-6 rounded-lg bg-[var(--background-alt-grey)] items-center w-fit">
-              <div>
-                <Image
-                  alt="delete"
-                  height={64}
-                  src="/images/quotation_results/quotation_correction_comment.webp"
-                  width={64}
-                />
-              </div>
-              <div>
-                <h6 className="fr-mb-1w">Ajouter un commentaire global</h6>
-                <button
-                  className="fr-btn fr-btn--tertiary fr-btn--sm bg-white! hover:bg-gray-100! active:bg-gray-200! fr-icon-chat-3-line fr-btn--icon-right"
-                  onClick={onOpenGlobalCommentModal}
-                >
-                  Écrire le commentaire
-                </button>
-              </div>
-            </div>
-          )
-        ) : null}
-        {!isConseillerAndEdit && comment && comment !== "" ? (
-          <div className="flex flex-row p-6 rounded-lg bg-[var(--background-alt-grey)]">
-            <div>
-              <Image
-                alt="delete"
-                className="object-contain"
-                height={64}
-                src="/images/quotation_results/quotation_correction_comment.webp"
-                width={64}
-              />
-            </div>
-            <div className="pl-6 pr-2 w-full">
-              <h6 className="fr-mb-2w">
-                Commentaire général de votre conseiller
-              </h6>
-              <p className="whitespace-pre-wrap m-0! p-O!">{comment}</p>
-            </div>
-          </div>
-        ) : null}
       </section>
+
       <section className="fr-container">
         <h3 className="fr-mt-5w text-center md:text-left">
           {wording.page_upload_id.subtitle}
@@ -255,6 +187,7 @@ export default function InvalidQuote({
           />
         </div>
       </section>
+
       <section className="fr-container fr-my-6w">
         <div className="flex md:flex-row flex-col gap-6">
           <QuoteErrorSharingCard
