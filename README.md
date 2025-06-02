@@ -55,7 +55,7 @@ cp .env.example .env.docker
 | Variable                       | Description                           | Exemple                                                  | Requis    | Type   |
 | ------------------------------ | ------------------------------------- | -------------------------------------------------------- | --------- | ------ |
 | `NODE_ENV`                     | Environnement d'exécution             | `development` ou `production`                            | Requis    | Server |
-| `APP_ENV`                      | Environnement applicatif              | `local`, `docker`, `staging`, `production`               | Requis    | Shared |
+| `NEXT_PUBLIC_APP_ENV`          | Environnement applicatif              | `local`, `docker`, `staging`, `production`               | Requis    | Shared |
 | `NEXT_TELEMETRY_DISABLED`      | Désactive la télémétrie Next.js       | `1`                                                      | Optionnel | Server |
 | `NEXT_PRIVATE_API_AUTH_TOKEN`  | Token d'authentification API          | `superAPIAuthTokenExample`                               | Requis    | Server |
 | `NEXT_PUBLIC_API_URL`          | URL de l'API backend                  | `https://api.staging.mon-devis-sans-oublis.beta.gouv.fr` | Requis    | Shared |
@@ -65,7 +65,7 @@ cp .env.example .env.docker
 | `NEXT_PUBLIC_SENTRY_ORG`       | Organisation Sentry                   | `mon-organisation`                                       | Optionnel | Client |
 | `NEXT_PUBLIC_SENTRY_PROJECT`   | Projet Sentry                         | `mon-devis-frontend`                                     | Optionnel | Client |
 | `NEXT_PUBLIC_SENTRY_URL`       | URL de l'instance Sentry              | `https://sentry.io/`                                     | Optionnel | Client |
-| `NEXT_PUBLIC_CRISP_WEBSITE_ID` | ID du Site Crisp                      | `b3f91d7a-e29c-4e12-8c76-3fd6a218b9f1`                  | Optionnel | Client |
+| `NEXT_PUBLIC_CRISP_WEBSITE_ID` | ID du Site Crisp                      | `b3f91d7a-e29c-4e12-8c76-3fd6a218b9f1`                   | Optionnel | Client |
 
 ### Types de variables d'environnement
 
@@ -77,9 +77,9 @@ L'application utilise une gestion centralisée des variables d'environnement ave
 
 ### Gestion des environnements
 
-L'application distingue les environnements via la variable `APP_ENV` :
+L'application distingue les environnements via la variable `NEXT_PUBLIC_APP_ENV` :
 
-| Environnement | `NODE_ENV`    | `APP_ENV`    | URL                                              |
+| Environnement | `NODE_ENV`    | `NEXT_PUBLIC_APP_ENV`    | URL                                              |
 | ------------- | ------------- | ------------ | ------------------------------------------------ |
 | Local         | `development` | `local`      | http://localhost:3000                            |
 | Docker        | `development` | `docker`     | http://localhost:3000                            |
@@ -93,7 +93,7 @@ Cette approche permet de contourner la contrainte Scalingo qui impose `NODE_ENV=
 #### Staging
 ```bash
 NODE_ENV=production
-APP_ENV=staging
+NEXT_PUBLIC_APP_ENV=staging
 NEXT_PRIVATE_API_AUTH_TOKEN=your-staging-token
 NEXT_PUBLIC_API_URL=https://api.staging.mon-devis-sans-oublis.beta.gouv.fr
 ```
@@ -101,7 +101,7 @@ NEXT_PUBLIC_API_URL=https://api.staging.mon-devis-sans-oublis.beta.gouv.fr
 #### Production
 ```bash
 NODE_ENV=production
-APP_ENV=production
+NEXT_PUBLIC_APP_ENV=production
 NEXT_PRIVATE_API_AUTH_TOKEN=your-production-token
 NEXT_PUBLIC_API_URL=https://api.mon-devis-sans-oublis.beta.gouv.fr
 ```
