@@ -405,6 +405,27 @@ export default function DebugPage() {
                           </span>
                         </td>
                       </tr>
+                      <tr>
+                        <td>
+                          <code>NEXT_PUBLIC_APP_ENV</code>
+                        </td>
+                        <td>
+                          <code>
+                            {sharedEnv?.NEXT_PUBLIC_APP_ENV || "Non définie"}
+                          </code>
+                        </td>
+                        <td>
+                          <span
+                            className={`fr-badge ${
+                              sharedEnv?.NEXT_PUBLIC_APP_ENV
+                                ? "fr-badge--success"
+                                : "fr-badge--error"
+                            }`}
+                          >
+                            {sharedEnv?.NEXT_PUBLIC_APP_ENV ? "OK" : "Requise"}
+                          </span>
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
