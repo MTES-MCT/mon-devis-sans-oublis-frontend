@@ -38,19 +38,23 @@ const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
       backButtonLabel={QUOTE_ERROR_SHARING_WORDING_MODAL.close}
       className="z-50"
     >
-      <div className="flex flex-col h-full">
-        <h4
-          id="share-errors-title"
-          className="fr-mb-1w flex items-center gap-2"
-        >
-          {QUOTE_ERROR_SHARING_WORDING_MODAL.title}
-        </h4>
+      <div className="flex flex-col space-y-4">
+        {/* Header */}
+        <div>
+          <h4
+            id="share-errors-title"
+            className="fr-mb-1w flex items-center gap-2"
+          >
+            {QUOTE_ERROR_SHARING_WORDING_MODAL.title}
+          </h4>
 
-        <p className="text-xs text-[var(--text-mention-grey)] fr-mb-2w">
-          {QUOTE_ERROR_SHARING_WORDING_MODAL.subTitle}
-        </p>
+          <p className="text-xs text-[var(--text-mention-grey)] fr-mb-2w">
+            {QUOTE_ERROR_SHARING_WORDING_MODAL.subTitle}
+          </p>
+        </div>
 
-        <div className="flex justify-end fr-mb-2w">
+        {/* Toggle Preview/HTML */}
+        <div className="flex justify-end">
           <fieldset className="fr-segmented fr-segmented--sm">
             <div className="fr-segmented__elements">
               <div className="fr-segmented__element">
@@ -89,25 +93,35 @@ const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
           </fieldset>
         </div>
 
-        <div className="fr-input-group flex-1 min-h-0">
+        {/* Content Area - Hauteur limitée pour mobile */}
+        <div className="fr-input-group">
           {showHTML ? (
             <textarea
               id="email-content"
-              className="fr-input resize-none font-mono text-sm"
-              style={{ height: "400px", maxHeight: "60vh" }}
+              className="fr-input resize-none font-mono text-sm w-full"
+              style={{
+                height: "450px",
+                maxHeight: "45vh",
+                minHeight: "250px",
+              }}
               value={emailContent}
               onChange={(e) => setEmailContent(e.target.value)}
             />
           ) : (
             <div
-              className="p-4 bg-white border rounded text-base leading-relaxed overflow-y-auto"
-              style={{ height: "400px", maxHeight: "60vh" }}
+              className="p-4 bg-white border rounded text-base leading-relaxed overflow-y-auto w-full"
+              style={{
+                height: "450px",
+                maxHeight: "45vh",
+                minHeight: "250px",
+              }}
               dangerouslySetInnerHTML={{ __html: emailContent }}
             />
           )}
         </div>
 
-        <div className="mt-8 flex justify-end gap-4">
+        {/* Button - Toujours visible */}
+        <div className="flex justify-end">
           <button
             className={`fr-btn fr-btn--icon-left ${
               isCopied

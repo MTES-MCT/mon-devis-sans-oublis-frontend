@@ -167,8 +167,8 @@ const Modal: React.FC<ModalProps> = ({
     <div
       className={`fixed inset-0 bg-black/50 ${
         position === ModalPosition.CENTER
-          ? "flex items-center justify-center"
-          : "flex items-center justify-end"
+          ? "flex items-center justify-center px-0 py-4 md:p-4"
+          : "flex items-start justify-end"
       } ${className}`}
       data-testid="modal-overlay"
       onClick={onClose}
@@ -177,39 +177,38 @@ const Modal: React.FC<ModalProps> = ({
       <div
         aria-modal="true"
         data-testid="modal-content"
-        className={`flex flex-col px-6 md:px-8 py-4 bg-[var(--background-default-grey)] transform transition-transform duration-300 ease-in-out ${
+        className={`flex flex-col bg-[var(--background-default-grey)] transform transition-transform duration-300 ease-in-out ${
           position === ModalPosition.CENTER
-            ? "w-[792px] h-fit"
-            : `${isDesktop ? "w-[480px]" : "w-full"}`
+            ? "w-full max-w-[792px] max-h-[90vh] rounded-lg overflow-hidden"
+            : `${isDesktop ? "w-[480px]" : "w-full"} h-full`
         } 
             ${
               position === ModalPosition.CENTER
-                ? `rounded-lg ${
+                ? `${
                     visibleClass
                       ? "scale-100 opacity-100"
                       : "scale-95 opacity-0"
                   }`
-                : `h-full ${
-                    visibleClass ? "translate-x-0" : "translate-x-full"
-                  }`
+                : `${visibleClass ? "translate-x-0" : "translate-x-full"}`
             }`}
         onClick={(e) => e.stopPropagation()}
         ref={modalRef}
         role="dialog"
         tabIndex={-1}
       >
+        {/* Header avec bouton de fermeture - toujours sticky */}
         <div
-          className={
+          className={`flex-shrink-0 sticky top-0 bg-[var(--background-default-grey)] z-10 ${
             position === ModalPosition.CENTER
-              ? "flex justify-end fr-mb-4w"
-              : "flex justify-start"
-          }
+              ? "flex justify-end px-6 md:px-8 pt-4 pb-2"
+              : "flex justify-start px-4 md:px-6 pt-6 pb-4"
+          }`}
         >
           <button
             className={`fr-link ${
               position === ModalPosition.RIGHT
-                ? "fr-link--lg fr-icon-arrow-left-line fr-link--icon-left mt-6! text-[var(--border-plain-grey)]"
-                : "fr-link--sm fr-link--icon-right fr-icon-close-line mt-2!"
+                ? "fr-link--lg fr-icon-arrow-left-line fr-link--icon-left text-[var(--border-plain-grey)]"
+                : "fr-link--sm fr-link--icon-right fr-icon-close-line"
             }`}
             data-testid="modal-close-button"
             onClick={onClose}
@@ -217,7 +216,7 @@ const Modal: React.FC<ModalProps> = ({
             <span
               className={`${
                 position === ModalPosition.RIGHT
-                  ? "text-[20px] ml-2.5! font-bold text-[var(--text-disabled-grey)]"
+                  ? "text-[18px] md:text-[20px] ml-2.5! font-bold text-[var(--text-disabled-grey)]"
                   : "font-[500]"
               }`}
             >
@@ -225,7 +224,17 @@ const Modal: React.FC<ModalProps> = ({
             </span>
           </button>
         </div>
-        {children}
+
+        {/* Contenu scrollable avec padding bottom */}
+        <div
+          className={`flex-1 overflow-y-auto ${
+            position === ModalPosition.CENTER
+              ? "px-6 md:px-8 pb-4"
+              : "px-4 md:px-6 pb-6"
+          }`}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
