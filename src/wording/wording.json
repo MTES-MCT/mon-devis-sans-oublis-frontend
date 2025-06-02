@@ -29,7 +29,7 @@
       "contact_title": "Pouvons-nous vous recontacter pour d’éventuelles questions ?",
       "contact_title_optional": "Champ non obligatoire",
       "description": "Notre outil est continuellement en train d’apprendre. Vos retours sont précieux pour améliorer ses réponses et vous accompagner au mieux dans la correction de vos devis.",
-      "email_placeholder": "Votre adresse email (ex : jean.dupont@mail.fr)",
+      "email_placeholder": "Votre adresse e-mail (ex : jean.dupont@mail.fr)",
       "rating_title": "Sur une échelle de 0 à 5, notez la qualité des corrections proposées",
       "submit_button": "Envoyer mes réponses",
       "title": "Que pensez-vous de ces retours ?"
@@ -66,14 +66,6 @@
         "image_src": "/images/quotation_results/quotation_link_share.webp",
         "link_label": "Partager le lien",
         "title": "Partagez le résultat avec vos corrections"
-      },
-      "share": {
-        "button_copied_url": "Lien copié",
-        "button_copy_url": "Copier le lien",
-        "image_alt": "Image partagez les corrections du devis",
-        "image_src": "/images/documents/document-download.svg",
-        "title": "Partagez les corrections du devis",
-        "button_share_for_email": "Exporter pour email"
       },
       "upload": {
         "image_alt": "Image vérifier un devis",

@@ -4,5 +4,5 @@ export const QUOTE_ERROR_SHARING_WORDING = {
   image_alt: "Image partagez les corrections du devis",
   image_src: "/images/documents/document-download.svg",
   title: "Partagez les corrections du devis",
-  button_share_for_email: "Exporter pour email",
+  button_share_for_email: "Exporter pour e-mail",
 } as const;
