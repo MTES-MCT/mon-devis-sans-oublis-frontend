@@ -52,6 +52,7 @@ export interface Metadata {
 }
 
 export interface QuoteChecksId {
+  controls_count: number | undefined;
   id: string;
   parent_id: string;
   status: Status;

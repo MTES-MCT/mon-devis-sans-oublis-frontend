@@ -18,6 +18,7 @@ import { Category, ErrorDetails, QuoteChecksId, Rating, Status } from "@/types";
 import { formatDateToFrench } from "@/utils";
 import wording from "@/wording";
 import { quoteService } from "@/lib/client/apiWrapper";
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
 interface ResultClientProps {
   currentDevis: QuoteChecksId | null;
@@ -377,7 +378,20 @@ export default function ResultClient({
           />
         </div>
       )}
-      <div className="fr-container-fluid fr-py-10w">
+      <div className="fr-container">
+        <Breadcrumb
+          items={[
+            {
+              label: "Accueil",
+              href: "/",
+            },
+            {
+              label: `Résultats de l'analyse - ${currentDevis?.filename || "Devis"}`,
+            },
+          ]}
+        />
+      </div>
+      <div className="fr-container-fluid">
         {currentDevis?.status === Status.VALID ? (
           <ValidQuote
             analysisDate={formatDateToFrench(currentDevis.finished_at)}
@@ -410,6 +424,7 @@ export default function ResultClient({
             onOpenGlobalCommentModal={() => setIsGlobalCommentModalOpen(true)}
             onUndoDeleteError={handleUndoDeleteError}
             uploadedFileName={currentDevis.filename || ""}
+            controlsCount={currentDevis.controls_count || 0}
           />
         ) : null}
         <GlobalCommentModal
