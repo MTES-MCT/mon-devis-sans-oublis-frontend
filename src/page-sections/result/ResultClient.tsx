@@ -121,6 +121,10 @@ export default function ResultClient({
             (error: ErrorDetails) => error.category === Category.FILE
           ) || [];
         if (isInvalidStatus && fileErrors.length > 0) {
+          const fileErrorMessage = encodeURIComponent(
+            fileErrors[0]?.title || wording.upload.error.notice.description
+          );
+          sessionStorage.setItem("fileErrorMessage", fileErrorMessage);
           setShouldRedirectToUpload(true);
           setIsLoading(false);
           return;
@@ -167,7 +171,14 @@ export default function ResultClient({
 
   useEffect(() => {
     if (shouldRedirectToUpload) {
-      router.push(`/${profile}/televersement?error=${FILE_ERROR}`);
+      const fileErrorMessage =
+        sessionStorage.getItem("fileErrorMessage") ||
+        wording.upload.error.notice.description;
+      const url = fileErrorMessage
+        ? `/${profile}/televersement?error=${FILE_ERROR}&message=${fileErrorMessage}`
+        : `/${profile}/televersement?error=${FILE_ERROR}`;
+      router.push(url);
+      sessionStorage.removeItem("fileErrorMessage");
     }
   }, [shouldRedirectToUpload, profile, router]);
 
@@ -363,6 +374,53 @@ export default function ResultClient({
       console.error("Error deleting global comment:", error);
     }
   };
+
+  // État d'erreur de polling - fallback de sécurité
+  if (hasPollingError) {
+    return (
+      <section className="fr-container-fluid fr-py-10w">
+        <div className="fr-container">
+          <div className="fr-alert fr-alert--error fr-mb-4w">
+            <h3>{wording.page_upload_id.analysis_error}</h3>
+            <p>
+              L'analyse a pris plus de temps que prévu. Veuillez réessayer ou
+              contactez le support si le problème persiste.
+            </p>
+            <div className="fr-btns-group fr-mt-3w">
+              <button
+                className="fr-btn fr-btn--secondary"
+                onClick={() => {
+                  setHasPollingError(false);
+                  setIsLoading(true);
+                  window.location.reload();
+                }}
+              >
+                Réessayer
+              </button>
+              <button
+                className="fr-btn fr-btn--tertiary"
+                onClick={() => router.push(`/${profile}/televersement`)}
+              >
+                Nouvelle analyse
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // État de chargement ou données invalides
+  if (isLoading || !isDataValid(currentDevis)) {
+    return (
+      <section className="fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center">
+        <LoadingDots
+          title={wording.page_upload_id.analysis_in_progress_title}
+        />
+        <p>{wording.page_upload_id.analysis_in_progress}</p>
+      </section>
+    );
+  }
 
   // État d'erreur de polling - fallback de sécurité
   if (hasPollingError) {
