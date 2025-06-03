@@ -36,10 +36,12 @@ export default function DebugPage() {
     const checkMatomo = () => {
       if (typeof window !== "undefined") {
         const windowWithServices = window as WindowWithServices;
-        if (windowWithServices._paq && Array.isArray(windowWithServices._paq)) {
-          setMatomoStatus("ready");
-          return true;
-        }
+        const hasPaq =
+          windowWithServices._paq && Array.isArray(windowWithServices._paq);
+        const hasMatomoScript =
+          document.querySelector('script[src*="matomo"]') !== null;
+
+        return hasPaq || hasMatomoScript;
       }
       return false;
     };
