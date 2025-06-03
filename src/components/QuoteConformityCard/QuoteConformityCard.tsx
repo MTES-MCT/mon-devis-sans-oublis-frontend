@@ -31,8 +31,8 @@ export default function QuoteConformityCard({
     >
       <h6 className="text-black mb-4">{QUOTE_CONFORMITY_CARD.title}</h6>
 
-      <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
-        <div className="flex flex-col gap-2 flex-1">
+      <div className="flex flex-col sm:flex-row gap-6 items-start">
+        <div className="flex flex-col gap-2">
           {/* Badge corrections */}
           <p className="fr-badge fr-badge--warning mb-2">
             {formatText(QUOTE_CONFORMITY_CARD.corrections, correctionsCount)}
@@ -47,8 +47,8 @@ export default function QuoteConformityCard({
           </p>
         </div>
 
-        {/* Zone droite - Jauge */}
-        <div className="flex-shrink-0">
+        {/* Jauge */}
+        <div className="flex-shrink-0 sm:mt-2">
           <ProgressGauge percentage={percentage} />
         </div>
       </div>

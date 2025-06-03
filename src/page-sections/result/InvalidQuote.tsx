@@ -59,40 +59,39 @@ export default function InvalidQuote({
   return (
     <>
       <section className="fr-container fr-gap-8">
-        <span className="flex flex-col md:flex-row items-center justify-between fr-mb-2w">
-          <div className="flex flex-col md:flex-row justify-between">
-            <div className="flex flex-col md:flex-row flex-wrap gap-4 items-center">
-              <h1 className="mb-0! text-center md:text-left">
-                {wording.page_upload_id.title}
-              </h1>
-            </div>
+        <h1 className="text-left md:text-left fr-mb-4w">
+          {wording.page_upload_id.title}
+        </h1>
+
+        {/* Zone des badges */}
+        <div className="fr-mb-4w">
+          <div className="flex flex-wrap gap-2 justify-left md:justify-start fr-mb-3w">
+            {analysisDate && (
+              <Badge
+                label={wording.page_upload_id.analysis_date.replace(
+                  "{date}",
+                  analysisDate
+                )}
+                size={BadgeSize.SMALL}
+                variant={BadgeVariant.GREY}
+              />
+            )}
+
+            {uploadedFileName && (
+              <Badge
+                label={
+                  uploadedFileName.length > 40
+                    ? `${uploadedFileName.substring(0, 37)}...`
+                    : uploadedFileName
+                }
+                size={BadgeSize.SMALL}
+                variant={BadgeVariant.BLUE_DARK}
+              />
+            )}
           </div>
-        </span>
-        <div className="flex flex-col items-center md:items-start">
-          <div className="flex flex-wrap gap-4 fr-mb-4w justify-center md:justify-between w-full">
-            {/* Conteneur pour les badges */}
-            <div className="flex flex-wrap gap-4">
-              {analysisDate && (
-                <Badge
-                  label={wording.page_upload_id.analysis_date.replace(
-                    "{date}",
-                    analysisDate
-                  )}
-                  size={BadgeSize.SMALL}
-                  variant={BadgeVariant.GREY}
-                />
-              )}
 
-              {uploadedFileName && (
-                <Badge
-                  label={uploadedFileName}
-                  size={BadgeSize.SMALL}
-                  variant={BadgeVariant.BLUE_DARK}
-                />
-              )}
-            </div>
-
-            {/* Bouton d'ajout de commentaire - uniquement si éditable et pas de commentaire */}
+          {/* Bouton de commentaire global */}
+          <div className="flex justify-center md:justify-start">
             <GlobalComment
               comment={comment}
               isEditable={isConseillerAndEdit}
@@ -103,41 +102,41 @@ export default function InvalidQuote({
               placement="button"
             />
           </div>
+        </div>
 
-          {/* Zone de commentaire - uniquement si commentaire existe */}
-          <GlobalComment
-            comment={comment}
-            isEditable={isConseillerAndEdit}
-            quoteCheckId={id}
-            onAddComment={onAddGlobalComment}
-            onDeleteComment={onDeleteGlobalComment}
-            onOpenModal={onOpenGlobalCommentModal}
-            placement="zone"
-            className="fr-mb-4w"
-          />
+        {/* Zone de commentaire */}
+        <GlobalComment
+          comment={comment}
+          isEditable={isConseillerAndEdit}
+          quoteCheckId={id}
+          onAddComment={onAddGlobalComment}
+          onDeleteComment={onDeleteGlobalComment}
+          onOpenModal={onOpenGlobalCommentModal}
+          placement="zone"
+          className="fr-mb-4w"
+        />
 
-          {/* Ligne Info & Conformité */}
-          <div className="flex flex-col lg:flex-row gap-4 w-full fr-mb-4w lg:items-start">
-            <div className="fr-alert fr-alert--info lg:w-3/5 !py-4">
-              <h3 className="fr-alert__title !mb-2">
-                {wording.page_upload_id.quotation_alert_ko_title}
-              </h3>
-              <p className="!mb-0">
-                {wording.page_upload_id.quotation_alert_ko_description}
-              </p>
-            </div>
-            <div className="lg:w-2/5">
-              <QuoteConformityCard
-                controlsCount={controlsCount}
-                correctionsCount={list.length}
-              />
-            </div>
+        {/* Ligne Info & Conformité */}
+        <div className="flex flex-col lg:flex-row gap-4 w-full fr-mb-4w lg:items-start">
+          <div className="fr-alert fr-alert--info lg:w-3/5 !py-4">
+            <h3 className="fr-alert__title !mb-2">
+              {wording.page_upload_id.quotation_alert_ko_title}
+            </h3>
+            <p className="!mb-0">
+              {wording.page_upload_id.quotation_alert_ko_description}
+            </p>
+          </div>
+          <div className="lg:w-2/5">
+            <QuoteConformityCard
+              controlsCount={controlsCount}
+              correctionsCount={list.length}
+            />
           </div>
         </div>
       </section>
 
       <section className="fr-container">
-        <h3 className="fr-mt-5w text-center md:text-left">
+        <h3 className="fr-mt-5w text-left md:text-left">
           {wording.page_upload_id.subtitle}
         </h3>
         <div className="flex flex-col gap-8">

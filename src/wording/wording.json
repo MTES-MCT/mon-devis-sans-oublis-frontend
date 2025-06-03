@@ -298,7 +298,7 @@
     "badge_correction": "{number} correction",
     "badge_correction_plural": "{number} corrections",
     "quotation_alert_ko_title": "Le devis n’est pas conforme aux attentes des aides énergétiques, il risque d’être retoqué.",
-    "quotation_alert_ko_description": "Le devis n’est pas conforme aux attentes des aides énergétiques, il risque d’être retoqué.",
+    "quotation_alert_ko_description": "Pas d’inquiétudes : suivez nos recommandations ci-dessous pour corriger les erreurs et relancez une analyse pour vérifier que tout est en ordre.",
     "quotation_alert_ok": "Bravo, votre devis est complet. Il est conforme aux aides de rénovation énergétique et pourra être instruit sans demande complémentaire.",
     "subtitle": "Pas de panique, voici les corrections à apporter ⬇️",
     "title": "Résultat de l’analyse"
