@@ -1,8 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
-
 import { Badge, BadgeSize, BadgeVariant, QuoteErrorTable } from "@/components";
 import { useConseillerRoutes } from "@/hooks";
 import { Category, ErrorDetails, Gestes } from "@/types";
@@ -57,13 +54,7 @@ export default function InvalidQuote({
   uploadedFileName,
   controlsCount = 0,
 }: InvalidQuoteProps) {
-  const [editedComment, setEditedComment] = useState(comment || "");
-
   const { isConseillerAndEdit } = useConseillerRoutes();
-
-  useEffect(() => {
-    setEditedComment(comment || "");
-  }, [comment]);
 
   return (
     <>
