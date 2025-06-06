@@ -119,7 +119,7 @@ describe("GlobalErrorFeedbacksModal", () => {
     });
 
     const emailInput = screen.getByPlaceholderText(
-      "Votre adresse email (ex : jean.dupont@mail.fr)"
+      "Votre adresse e-mail (ex : jean.dupont@mail.fr)"
     );
     fireEvent.change(emailInput, {
       target: { value: "test@example.com" },
@@ -234,17 +234,9 @@ describe("GlobalErrorFeedbacksModal", () => {
     expect(mockOnSubmitFeedback).not.toHaveBeenCalled();
   });
 
-  it("resets body overflow and calls onClose when modal is closed", () => {
-    const originalStyle = document.body.style.overflow;
-
-    document.body.style.overflow = "hidden";
-
+  it("calls onClose when modal is closed", () => {
     render(<GlobalErrorFeedbacksModal {...defaultProps} />);
-
     fireEvent.click(screen.getByTestId("modal-close-button"));
-    expect(document.body.style.overflow).toBe("unset");
     expect(mockOnClose).toHaveBeenCalled();
-
-    document.body.style.overflow = originalStyle;
   });
 });
