@@ -55,6 +55,7 @@ export default function InvalidQuote({
   controlsCount = 0,
 }: InvalidQuoteProps) {
   const { isConseillerAndEdit } = useConseillerRoutes();
+  const shouldShowConformityCard = () => controlsCount > 0;
 
   return (
     <>
@@ -118,7 +119,11 @@ export default function InvalidQuote({
 
         {/* Ligne Info & Conformité */}
         <div className="flex flex-col lg:flex-row gap-4 w-full fr-mb-4w lg:items-start">
-          <div className="fr-alert fr-alert--info lg:w-3/5 !py-4">
+          <div
+            className={`fr-alert fr-alert--info !py-4 ${
+              shouldShowConformityCard() ? "lg:w-3/5" : "lg:w-full"
+            }`}
+          >
             <h3 className="fr-alert__title !mb-2">
               {wording.page_upload_id.quotation_alert_ko_title}
             </h3>
@@ -126,12 +131,15 @@ export default function InvalidQuote({
               {wording.page_upload_id.quotation_alert_ko_description}
             </p>
           </div>
-          <div className="lg:w-2/5">
-            <QuoteConformityCard
-              controlsCount={controlsCount}
-              correctionsCount={list.length}
-            />
-          </div>
+
+          {shouldShowConformityCard() && (
+            <div className="lg:w-2/5">
+              <QuoteConformityCard
+                controlsCount={controlsCount}
+                correctionsCount={list.length}
+              />
+            </div>
+          )}
         </div>
       </section>
 
