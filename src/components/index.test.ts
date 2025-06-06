@@ -35,7 +35,6 @@ describe("Components exports", () => {
       "Notice",
       "QuoteErrorLine",
       "QuoteErrorTable",
-      "QuoteStatusType",
       "RoundCheckboxGroup",
       "SVGLoader",
       "Tile",
