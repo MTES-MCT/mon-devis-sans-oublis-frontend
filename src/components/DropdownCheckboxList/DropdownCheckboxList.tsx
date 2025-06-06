@@ -187,7 +187,7 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
 
   const displayValue = localSelectedValues.length
     ? multiple && localSelectedValues.length > 1
-      ? `${localSelectedValues.length} sélections`
+      ? `${localSelectedValues.length} élements sélectionnés`
       : getDisplayLabel(localSelectedValues[0])
     : "Sélectionner une option";
 

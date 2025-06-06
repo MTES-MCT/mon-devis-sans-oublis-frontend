@@ -212,21 +212,21 @@
           "description": "Je souhaite gagner du temps en évitant les multiples changements sur mes devis",
           "image": "/images/who_are_you/card_artisan.webp",
           "title": "Je suis artisan",
-          "url": "/artisan/televersement"
+          "url": "/artisan/type-renovation"
         },
         {
           "alt": "Particulier qui souhaite gagner du temps",
           "description": "Je souhaite effectuer une demande d’aide de rénovation énergétique sans encombre",
           "image": "/images/who_are_you/card_individual.webp",
           "title": "Je suis particulier",
-          "url": "/particulier/televersement"
+          "url": "/particulier/type-renovation"
         },
         {
           "alt": "Conseiller qui souhaite accompagner ses clients",
           "description": "Je souhaite accompagner mes clients dans leurs démarches",
           "image": "/images/who_are_you/card_advisor.webp",
-          "title": "J'accompagne un projet de rénovation",
-          "url": "/conseiller/televersement"
+          "title": "Je suis conseiller",
+          "url": "/conseiller/type-renovation"
         }
       ],
       "description": "L’outil s’adresse à plusieurs usagers, dites-nous en plus sur vous et vos besoins",
@@ -361,7 +361,7 @@
           "description": "Je souhaite accompagner mes clients dans leurs démarches",
           "href": "/conseiller/televersement",
           "icon": "customer-service-fill",
-          "title": "J'accompagne un projet de rénovation"
+          "title": "Je suis conseiller"
         }
       ],
       "subtitle": "Pouvez-vous nous en dire plus sur vous ?",
