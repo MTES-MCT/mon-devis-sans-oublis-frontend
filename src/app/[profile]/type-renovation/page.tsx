@@ -5,25 +5,26 @@ import { Tile } from "@/components";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import { quoteService } from "@/lib/client/apiWrapper";
 import RenovationTypeSelection from "@/page-sections/upload/RenovationTypeSelection";
-import { Metadata } from "@/types";
-import { useRouter } from "next/navigation";
+import { Metadata, RenovationType } from "@/types";
+import { useRouter, useParams } from "next/navigation";
 
-export default function TypeRenovation({}: {
-  params: Promise<{ profile: string }>;
-}) {
+export default function TypeRenovation() {
   const [selectedType, setSelectedType] = useState<string>("");
   const [metadata, setMetadata] = useState<Metadata>({ aides: [], gestes: [] });
 
   const router = useRouter();
+  const params = useParams();
 
-  // Charger les métadonnées au montage du composant
+  const userProfile = params.profile as string;
+
+  // Chargement des métadonnées au montage du composant
   useEffect(() => {
     const loadMetadata = async () => {
       try {
         const data = await quoteService.getQuoteMetadata();
         setMetadata(data);
       } catch (error) {
-        console.error("Error fetching metadata:", error);
+        console.error("Error loading metadata:", error);
       }
     };
     loadMetadata();
@@ -34,9 +35,15 @@ export default function TypeRenovation({}: {
   };
 
   const handleNext = () => {
-    if (selectedType) {
-      router.push(`/envoi-devis?type=${selectedType}`);
+    if (selectedType && userProfile) {
+      router.push(
+        `/${userProfile}/televersement?typeRenovation=${selectedType}`
+      );
     }
+  };
+
+  const handlePrevious = () => {
+    router.back();
   };
 
   return (
@@ -77,9 +84,9 @@ export default function TypeRenovation({}: {
                     title="Rénovation par gestes"
                     horizontal={true}
                     isCheckbox={true}
-                    isChecked={selectedType === "gestes"}
-                    onCheck={() => handleTypeSelection("gestes")}
-                    value="gestes"
+                    isChecked={selectedType === RenovationType.GESTES}
+                    onCheck={() => handleTypeSelection(RenovationType.GESTES)}
+                    value={RenovationType.GESTES}
                   />
                 </div>
                 <div className="fr-col-12 fr-col-md-6 flex">
@@ -89,9 +96,9 @@ export default function TypeRenovation({}: {
                     title="Rénovation d'ampleur"
                     horizontal={true}
                     isCheckbox={true}
-                    isChecked={selectedType === "ampleur"}
-                    onCheck={() => handleTypeSelection("ampleur")}
-                    value="ampleur"
+                    isChecked={selectedType === RenovationType.AMPLEUR}
+                    onCheck={() => handleTypeSelection(RenovationType.AMPLEUR)}
+                    value={RenovationType.AMPLEUR}
                   />
                 </div>
               </div>
@@ -107,9 +114,7 @@ export default function TypeRenovation({}: {
                   <div className="flex justify-center items-center gap-4">
                     <button
                       className="fr-btn fr-btn--secondary"
-                      onClick={() => {
-                        router.back();
-                      }}
+                      onClick={handlePrevious}
                     >
                       Précédent
                     </button>
