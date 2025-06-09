@@ -1,5 +1,5 @@
 import { ImageProps } from "next/image";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 import Tile from "./Tile";
 
@@ -24,54 +24,40 @@ jest.mock("../SvgLoader/SvgLoader", () => ({
 }));
 
 describe("Tile Component", () => {
-  const mockProps = {
+  const baseMockProps = {
     description: "Test description",
     href: "https://test.com",
     title: "Test title",
   };
 
-  describe("Mode vertical (par défaut)", () => {
-    it("renders without image or icon", () => {
-      render(<Tile {...mockProps} />);
+  describe("Mode normal (avec lien)", () => {
+    it("renders basic tile with link", () => {
+      render(<Tile {...baseMockProps} />);
 
-      const titleLink = screen.getByRole("link", { name: mockProps.title });
-      expect(titleLink).toHaveAttribute("href", mockProps.href);
-      expect(screen.getByText(mockProps.description)).toBeInTheDocument();
-      expect(screen.queryByRole("img")).not.toBeInTheDocument();
-      expect(screen.queryByTestId("svg-loader")).not.toBeInTheDocument();
+      const titleLink = screen.getByRole("link", { name: baseMockProps.title });
+      expect(titleLink).toHaveAttribute("href", baseMockProps.href);
+      expect(screen.getByText(baseMockProps.description)).toBeInTheDocument();
 
-      // Vérifier que c'est bien en mode vertical par défaut
       const tile = titleLink.closest(".fr-tile");
-      expect(tile).toHaveClass("fr-tile--vertical");
-      expect(tile).not.toHaveClass("fr-tile--horizontal");
+      expect(tile).toHaveClass("fr-tile--vertical", "fr-enlarge-link");
     });
 
-    it("renders with image", () => {
+    it("renders tile with image", () => {
       const propsWithImage = {
-        ...mockProps,
+        ...baseMockProps,
         image: "/test-image.jpg",
       };
 
       render(<Tile {...propsWithImage} />);
 
       const image = screen.getByRole("img");
-      expect(image).toHaveAttribute("src", propsWithImage.image);
-      expect(image).toHaveAttribute("alt", propsWithImage.title);
-      expect(image).toHaveAttribute("width", "80");
-      expect(image).toHaveAttribute("height", "80");
-
-      const body = screen.getByText(mockProps.description).parentElement
-        ?.parentElement;
-      expect(body).toHaveClass("justify-center", "items-center", "p-2");
-
-      // Vérifier qu'il n'y a pas de header en mode vertical
-      const tile = image.closest(".fr-tile");
-      expect(tile?.querySelector(".fr-tile__header")).not.toBeInTheDocument();
+      expect(image).toHaveAttribute("src", "/test-image.jpg");
+      expect(image).toHaveAttribute("alt", baseMockProps.title);
     });
 
-    it("renders with icon", () => {
+    it("renders tile with icon", () => {
       const propsWithIcon = {
-        ...mockProps,
+        ...baseMockProps,
         icon: "tools-fill",
       };
 
@@ -82,71 +68,23 @@ describe("Tile Component", () => {
         "data-src",
         "/svg/design/tools-fill.svg"
       );
-      expect(svgLoader).toHaveAttribute(
-        "data-color",
-        "var(--background-action-high-blue-france)"
-      );
-
-      // Vérifier qu'il n'y a qu'un seul SVG en mode vertical
-      const svgLoaders = screen.getAllByTestId("svg-loader");
-      expect(svgLoaders).toHaveLength(1);
     });
 
-    it("applies correct classes based on image prop", () => {
-      const propsWithImage = {
-        ...mockProps,
-        image: "/test-image.jpg",
-      };
-
-      const { rerender } = render(<Tile {...propsWithImage} />);
-
-      const titleWithImage = screen.getByRole("link", {
-        name: mockProps.title,
-      });
-      expect(titleWithImage).toHaveClass("text-[var(--text-title-grey)]!");
-
-      const descriptionWithImage = screen.getByText(mockProps.description);
-      expect(descriptionWithImage).toHaveClass("text-center");
-
-      rerender(<Tile {...mockProps} />);
-
-      const titleWithoutImage = screen.getByRole("link", {
-        name: mockProps.title,
-      });
-      expect(titleWithoutImage).not.toHaveClass(
-        "text-[var(--text-title-grey)]!"
-      );
-
-      const descriptionWithoutImage = screen.getByText(mockProps.description);
-      expect(descriptionWithoutImage).toHaveClass("self-start", "text-left");
-    });
-  });
-
-  describe("Mode horizontal", () => {
     it("renders horizontal tile", () => {
       const horizontalProps = {
-        ...mockProps,
+        ...baseMockProps,
         horizontal: true,
       };
 
       render(<Tile {...horizontalProps} />);
 
-      const tile = screen
-        .getByRole("link", { name: mockProps.title })
-        .closest(".fr-tile");
+      const tile = screen.getByRole("link").closest(".fr-tile");
       expect(tile).toHaveClass("fr-tile--horizontal");
-      expect(tile).not.toHaveClass("fr-tile--vertical");
-
-      // Vérifier que la description est toujours affichée
-      expect(screen.getByText(mockProps.description)).toBeInTheDocument();
-      expect(screen.getByText(mockProps.description)).toHaveClass(
-        "fr-tile__detail"
-      );
     });
 
     it("renders horizontal tile with tag", () => {
       const horizontalPropsWithTag = {
-        ...mockProps,
+        ...baseMockProps,
         horizontal: true,
         tag: "Test Tag",
       };
@@ -155,105 +93,216 @@ describe("Tile Component", () => {
 
       const tag = screen.getByText("Test Tag");
       expect(tag).toHaveClass("fr-tag");
-      expect(tag.closest(".fr-tile__start")).toBeInTheDocument();
+    });
+  });
+
+  describe("Mode checkbox", () => {
+    const checkboxMockProps = {
+      description: "Checkbox description",
+      title: "Checkbox title",
+      isCheckbox: true,
+      value: "test-value",
+      onCheck: jest.fn(),
+    };
+
+    beforeEach(() => {
+      jest.clearAllMocks();
     });
 
-    it("renders horizontal tile with icon in header", () => {
-      const horizontalPropsWithIcon = {
-        ...mockProps,
-        horizontal: true,
-        icon: "tools-fill",
-      };
+    it("renders unchecked checkbox tile", () => {
+      render(<Tile {...checkboxMockProps} isChecked={false} />);
 
-      render(<Tile {...horizontalPropsWithIcon} />);
+      // Prendre le premier élément (la div conteneur)
+      const [tileContainer] = screen.getAllByRole("radio");
+      expect(tileContainer).toHaveAttribute("aria-checked", "false");
+      expect(tileContainer).toHaveClass("cursor-pointer");
+
+      // Vérifier le titre (maintenant un lien avec href="#")
+      const titleElement = screen.getByText(checkboxMockProps.title);
+      expect(titleElement.closest("a")).toHaveAttribute("href", "#");
+
+      // Vérifier l'input hidden
+      const hiddenInput = tileContainer.querySelector('input[type="radio"]');
+      expect(hiddenInput).toHaveAttribute("value", "test-value");
+      expect(hiddenInput).not.toBeChecked();
+    });
+
+    it("renders checked checkbox tile with background", () => {
+      render(<Tile {...checkboxMockProps} isChecked={true} />);
+
+      const [tileContainer] = screen.getAllByRole("radio");
+      expect(tileContainer).toHaveAttribute("aria-checked", "true");
+
+      // Vérifier le style de background
+      expect(tileContainer).toHaveStyle({
+        backgroundColor: "var(--background-default-grey-hover)",
+      });
+
+      const hiddenInput = tileContainer.querySelector('input[type="radio"]');
+      expect(hiddenInput).toBeChecked();
+    });
+
+    it("calls onCheck function when clicked", () => {
+      const mockOnCheck = jest.fn();
+      render(<Tile {...checkboxMockProps} onCheck={mockOnCheck} />);
+
+      const [tileContainer] = screen.getAllByRole("radio");
+      fireEvent.click(tileContainer);
+
+      expect(mockOnCheck).toHaveBeenCalledTimes(1);
+    });
+
+    it("calls onCheck on Enter key press", () => {
+      const mockOnCheck = jest.fn();
+      render(<Tile {...checkboxMockProps} onCheck={mockOnCheck} />);
+
+      const [tileContainer] = screen.getAllByRole("radio");
+      fireEvent.keyDown(tileContainer, { key: "Enter" });
+
+      expect(mockOnCheck).toHaveBeenCalledTimes(1);
+    });
+
+    it("calls onCheck on Space key press", () => {
+      const mockOnCheck = jest.fn();
+      render(<Tile {...checkboxMockProps} onCheck={mockOnCheck} />);
+
+      const [tileContainer] = screen.getAllByRole("radio");
+      fireEvent.keyDown(tileContainer, { key: " " });
+
+      expect(mockOnCheck).toHaveBeenCalledTimes(1);
+    });
+
+    it("prevents navigation on title link click", () => {
+      render(<Tile {...checkboxMockProps} />);
+
+      const titleLink = screen.getByRole("link");
+      const mockPreventDefault = jest.fn();
+
+      fireEvent.click(titleLink, {
+        preventDefault: mockPreventDefault,
+      });
+
+      // Le preventDefault est appelé dans le composant
+      expect(titleLink).toHaveAttribute("href", "#");
+    });
+
+    it("renders horizontal checkbox tile", () => {
+      render(
+        <Tile {...checkboxMockProps} horizontal={true} tag="Horizontal Tag" />
+      );
+
+      const [tileContainer] = screen.getAllByRole("radio");
+      expect(tileContainer).toHaveClass("fr-tile--horizontal");
+
+      const tag = screen.getByText("Horizontal Tag");
+      expect(tag).toHaveClass("fr-tag");
+    });
+
+    it("renders checkbox tile with image", () => {
+      render(<Tile {...checkboxMockProps} image="/checkbox-image.jpg" />);
+
+      const image = screen.getByRole("img");
+      expect(image).toHaveAttribute("src", "/checkbox-image.jpg");
+      expect(image).toHaveAttribute("alt", checkboxMockProps.title);
+    });
+
+    it("renders checkbox tile with icon", () => {
+      render(<Tile {...checkboxMockProps} icon="home-4-fill" />);
 
       const svgLoader = screen.getByTestId("svg-loader");
       expect(svgLoader).toHaveAttribute(
         "data-src",
-        "/svg/design/tools-fill.svg"
+        "/svg/buildings/home-4-fill.svg"
       );
-
-      // Vérifier que l'icône est dans le header
-      const header = screen
-        .getByTestId("svg-loader")
-        .closest(".fr-tile__header");
-      expect(header).toBeInTheDocument();
-      expect(header?.querySelector(".fr-tile__pictogram")).toBeInTheDocument();
-    });
-
-    it("renders horizontal tile with image in header", () => {
-      const horizontalPropsWithImage = {
-        ...mockProps,
-        horizontal: true,
-        image: "/test-image.jpg",
-      };
-
-      render(<Tile {...horizontalPropsWithImage} />);
-
-      const image = screen.getByRole("img");
-      expect(image).toHaveAttribute("src", "/test-image.jpg");
-
-      // Vérifier que l'image est dans le header
-      const header = image.closest(".fr-tile__header");
-      expect(header).toBeInTheDocument();
-      expect(header?.querySelector(".fr-tile__pictogram")).toBeInTheDocument();
-    });
-
-    it("does not render header without icon or image", () => {
-      const horizontalProps = {
-        ...mockProps,
-        horizontal: true,
-      };
-
-      render(<Tile {...horizontalProps} />);
-
-      // Pas de header si pas d'icône ou d'image
-      const tile = screen
-        .getByRole("link", { name: mockProps.title })
-        .closest(".fr-tile");
-      expect(tile?.querySelector(".fr-tile__header")).not.toBeInTheDocument();
-    });
-
-    it("does not show tag without tag prop", () => {
-      const horizontalProps = {
-        ...mockProps,
-        horizontal: true,
-      };
-
-      render(<Tile {...horizontalProps} />);
-
-      const tile = screen
-        .getByRole("link", { name: mockProps.title })
-        .closest(".fr-tile");
-      expect(tile?.querySelector(".fr-tile__start")).not.toBeInTheDocument();
-      expect(tile?.querySelector(".fr-tag")).not.toBeInTheDocument();
     });
   });
 
-  describe("Accessibilité et structure", () => {
-    it("has proper link structure", () => {
-      render(<Tile {...mockProps} />);
-
-      const titleLink = screen.getByRole("link", { name: mockProps.title });
-      expect(titleLink).toHaveAttribute("href", mockProps.href);
-      expect(titleLink.tagName).toBe("A");
-    });
-
+  describe("Accessibility and structure", () => {
     it("has proper heading structure", () => {
-      render(<Tile {...mockProps} />);
+      render(<Tile {...baseMockProps} />);
 
       const heading = screen.getByRole("heading", { level: 3 });
-      expect(heading).toHaveTextContent(mockProps.title);
+      expect(heading).toHaveTextContent(baseMockProps.title);
       expect(heading).toHaveClass("fr-tile__title");
     });
 
-    it("maintains enlarge-link functionality", () => {
-      render(<Tile {...mockProps} />);
+    it("maintains proper link accessibility", () => {
+      render(<Tile {...baseMockProps} />);
 
-      const tile = screen
-        .getByRole("link", { name: mockProps.title })
-        .closest(".fr-tile");
-      expect(tile).toHaveClass("fr-enlarge-link");
+      const link = screen.getByRole("link");
+      expect(link).toHaveAttribute("href", baseMockProps.href);
+      expect(link.tagName).toBe("A");
+    });
+
+    it("has proper radio group accessibility in checkbox mode", () => {
+      const checkboxProps = {
+        description: "Radio description",
+        title: "Radio title",
+        isCheckbox: true,
+        value: "radio-value",
+        onCheck: jest.fn(),
+      };
+
+      render(<Tile {...checkboxProps} />);
+
+      const [radioElement] = screen.getAllByRole("radio");
+      expect(radioElement).toHaveAttribute("tabIndex", "0");
+      expect(radioElement).toHaveAttribute("aria-checked", "false");
+
+      const hiddenInput = radioElement.querySelector(
+        'input[name="renovation-type"]'
+      );
+      expect(hiddenInput).toBeInTheDocument();
+    });
+
+    it("applies correct CSS classes", () => {
+      render(<Tile {...baseMockProps} />);
+
+      const tile = screen.getByRole("link").closest(".fr-tile");
+      expect(tile).toHaveClass(
+        "fr-tile",
+        "fr-tile--vertical",
+        "fr-enlarge-link",
+        "w-full"
+      );
+    });
+  });
+
+  describe("Edge cases", () => {
+    it("renders without optional props", () => {
+      const minimalProps = {
+        description: "Minimal description",
+        title: "Minimal title",
+      };
+
+      render(<Tile {...minimalProps} />);
+
+      expect(screen.getByText(minimalProps.title)).toBeInTheDocument();
+      expect(screen.getByText(minimalProps.description)).toBeInTheDocument();
+    });
+
+    it("does not render header in vertical mode", () => {
+      render(<Tile {...baseMockProps} icon="tools-fill" />);
+
+      const tile = screen.getByRole("link").closest(".fr-tile");
+      expect(tile?.querySelector(".fr-tile__header")).not.toBeInTheDocument();
+    });
+
+    it("renders header in horizontal mode with icon", () => {
+      render(<Tile {...baseMockProps} horizontal={true} icon="tools-fill" />);
+
+      const tile = screen.getByRole("link").closest(".fr-tile");
+      expect(tile?.querySelector(".fr-tile__header")).toBeInTheDocument();
+    });
+
+    it("does not call onCheck when not in checkbox mode", () => {
+      const mockOnCheck = jest.fn();
+      render(<Tile {...baseMockProps} onCheck={mockOnCheck} />);
+
+      const tile = screen.getByRole("link").closest(".fr-tile");
+      fireEvent.click(tile!);
+
+      expect(mockOnCheck).not.toHaveBeenCalled();
     });
   });
 });

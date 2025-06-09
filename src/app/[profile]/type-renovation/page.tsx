@@ -1,21 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Notice, Tile } from "@/components";
+import { Tile } from "@/components";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import { quoteService } from "@/lib/client/apiWrapper";
-import { UploadClient } from "@/page-sections";
 import RenovationTypeSelection from "@/page-sections/upload/RenovationTypeSelection";
 import { Metadata } from "@/types";
-import wording from "@/wording";
+import { useRouter } from "next/navigation";
 
-export default function TypeRenovation({
-  params: initialParams,
-}: {
+export default function TypeRenovation({}: {
   params: Promise<{ profile: string }>;
 }) {
   const [selectedType, setSelectedType] = useState<string>("");
   const [metadata, setMetadata] = useState<Metadata>({ aides: [], gestes: [] });
+
+  const router = useRouter();
 
   // Charger les métadonnées au montage du composant
   useEffect(() => {
@@ -28,7 +27,7 @@ export default function TypeRenovation({
       }
     };
     loadMetadata();
-  }, []); // Tableau de dépendances vide = exécution une seule fois
+  }, []);
 
   const handleTypeSelection = (type: string) => {
     setSelectedType(type);
@@ -36,9 +35,7 @@ export default function TypeRenovation({
 
   const handleNext = () => {
     if (selectedType) {
-      // Navigation vers la page suivante
-      console.log("Type sélectionné:", selectedType);
-      // router.push(`/next-page?type=${selectedType}`);
+      router.push(`/envoi-devis?type=${selectedType}`);
     }
   };
 
@@ -111,9 +108,7 @@ export default function TypeRenovation({
                     <button
                       className="fr-btn fr-btn--secondary"
                       onClick={() => {
-                        // Navigation vers la page précédente
-                        console.log("Retour page précédente");
-                        // router.back() ou router.push('/page-precedente')
+                        router.back();
                       }}
                     >
                       Précédent
