@@ -51,11 +51,11 @@ const Tile: React.FC<TileProps> = ({
     }
   };
 
-  // Mode checkbox
+  // Mode checkbox avec hover
   if (isCheckbox) {
     return (
       <div
-        className={`fr-tile ${horizontal ? "fr-tile--horizontal" : "fr-tile--vertical"} fr-enlarge-link w-full cursor-pointer`}
+        className={`fr-tile ${horizontal ? "fr-tile--horizontal" : "fr-tile--vertical"} fr-enlarge-link w-full cursor-pointer hover:bg-[var(--background-default-grey-hover)]`}
         style={{
           backgroundColor: isChecked
             ? "var(--background-default-grey-hover)"
@@ -101,13 +101,7 @@ const Tile: React.FC<TileProps> = ({
             <h3
               className={`fr-tile__title fr-text--lg ${image && !horizontal ? "self-center" : horizontal ? "" : "self-start"}`}
             >
-              <a
-                href="#"
-                className={
-                  !horizontal && image ? "text-[var(--text-title-grey)]!" : ""
-                }
-                onClick={(e) => e.preventDefault()}
-              >
+              <a href="#" onClick={(e) => e.preventDefault()}>
                 {title}
               </a>
             </h3>
@@ -152,7 +146,7 @@ const Tile: React.FC<TileProps> = ({
     );
   }
 
-  // Mode normal (avec lien)
+  // Mode normal avec lien
   return (
     <div
       className={`fr-tile ${horizontal ? "fr-tile--horizontal" : "fr-tile--vertical"} fr-enlarge-link w-full`}
@@ -182,14 +176,7 @@ const Tile: React.FC<TileProps> = ({
           <h3
             className={`fr-tile__title fr-text--lg ${image && !horizontal ? "self-center" : horizontal ? "" : "self-start"}`}
           >
-            <a
-              className={
-                !horizontal && image ? "text-[var(--text-title-grey)]!" : ""
-              }
-              href={href}
-            >
-              {title}
-            </a>
+            <a href={href}>{title}</a>
           </h3>
 
           {!horizontal && (
