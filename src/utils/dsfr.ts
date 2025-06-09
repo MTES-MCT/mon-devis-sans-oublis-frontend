@@ -1,6 +1,9 @@
 // Import main styles from the DSFR
 import "@gouvfr/dsfr/dist/dsfr.min.css";
 
+// Import colors from the DSFR
+import "@gouvfr/dsfr/dist/utility/colors/colors.min.css";
+
 // Import icons from the DSFR
 import "@gouvfr/dsfr/dist/utility/icons/icons-business/icons-business.min.css";
 // fr-icon-calendar-event-line,fr-icon-mail-line
