@@ -27,9 +27,9 @@ export default function NotFound() {
             </p>
             <ul className="fr-btns-group fr-btns-group--inline-md">
               <li>
-                <a className="fr-btn" href="/">
+                <Link className="fr-btn" href="/">
                   Page d'accueil
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

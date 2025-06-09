@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { DropdownCheckboxList } from "@/components";
 import { Metadata } from "@/types";
-import wording from "@/wording";
 
 export const FILE_ERROR = "file_error";
 
@@ -29,7 +28,7 @@ export default function RenovationTypeSelection({
       <h1 className="fr-h2 fr-mb-6v text-left">Pourriez vous préciser</h1>
       {metadata.gestes && (
         <DropdownCheckboxList
-          label="Le(s) geste(s) technique(s) concerné(s) par le devis"
+          label="Le(s) geste(s) technique(s) concerné(s) par le(s) devis"
           multiple={true}
           onChange={handleGestesChange}
           optionnal={true}

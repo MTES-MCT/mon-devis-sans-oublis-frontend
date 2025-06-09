@@ -225,7 +225,7 @@
           "alt": "Conseiller qui souhaite accompagner ses clients",
           "description": "Je souhaite accompagner mes clients dans leurs démarches",
           "image": "/images/who_are_you/card_advisor.webp",
-          "title": "Je suis conseiller",
+          "title": "J'accompagne un projet de rénovation",
           "url": "/conseiller/type-renovation"
         }
       ],
@@ -338,7 +338,7 @@
       "label": "Retour"
     },
     "select_aides": "Aide(s) visée(s) avec le devis",
-    "select_gestes": "Geste(s) technique(s) concerné(s) par le devis",
+    "select_gestes": "Geste(s) technique(s) concerné(s) par le(s) devis",
     "subtitle": "Votre projet",
     "title": "Vérifier votre devis"
   },
@@ -361,7 +361,7 @@
           "description": "Je souhaite accompagner mes clients dans leurs démarches",
           "href": "/conseiller/televersement",
           "icon": "customer-service-fill",
-          "title": "Je suis conseiller"
+          "title": "J'accompagne un projet de rénovation"
         }
       ],
       "subtitle": "Pouvez-vous nous en dire plus sur vous ?",
