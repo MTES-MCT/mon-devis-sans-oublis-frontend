@@ -104,8 +104,6 @@ export default function ResultClient({
     triggerEvent,
     quoteCheckId,
     profile,
-    currentDevis?.status,
-    currentDevis?.filename,
   ]);
 
   // Validation des données critiques
