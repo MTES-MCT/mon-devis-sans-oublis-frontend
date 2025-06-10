@@ -24,6 +24,7 @@ import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 const MAX_RETRIES = 20;
 const POLLING_INTERVAL = 30000;
 const WAIT_FOR_CRISP_MESSAGE = 20000;
+const CRISP_NPS_EVENT_NAME = "nps";
 
 interface ResultClientProps {
   currentDevis: QuoteChecksId | null;
@@ -51,7 +52,7 @@ export default function ResultClient({
   const pathname = usePathname();
   const router = useRouter();
   const isButtonSticky = useScrollPosition();
-  const { isLoaded, promptUser } = useCrisp();
+  const { isLoaded, triggerEvent } = useCrisp();
 
   const [currentDevis, setCurrentDevis] = useState<QuoteChecksId | null>(
     initialDevis
@@ -71,26 +72,41 @@ export default function ResultClient({
 
   const { isConseillerAndEdit } = useConseillerRoutes();
 
-  // Gestion du message Crisp automatique
+  // Gestion de l'événement Crisp automatique
   useEffect(() => {
     if (!enableCrispFeedback || !isLoaded || isLoading) return;
 
-    const hasPromptedUser = localStorage.getItem("crispFeedbackPrompted");
-    if (hasPromptedUser) return;
+    const hasEventTriggered = localStorage.getItem("crispEventTriggered");
+    if (hasEventTriggered) return;
 
     const timer = setTimeout(() => {
-      const feedbackMessage =
-        "Bonjour ! Merci d'avoir utilisé Mon Devis Sans Oublis.\n\n" +
-        "Nous avons besoin de votre aide pour améliorer notre outil. Quelle note de satisfaction entre 0 (pas satisfait) et 5 (très satisfait) donneriez-vous à Mon Devis Sans Oublis ?\n\n" +
-        "Si vous avez d'autres remarques, n'hésitez pas, c'est le moment ! À vous de jouer, il vous suffit d'écrire votre réponse dans cette discussion.";
+      const eventData = {
+        devisId: quoteCheckId,
+        profile: profile,
+        timestamp: new Date().toISOString(),
+      };
 
-      promptUser(feedbackMessage);
+      // Déclenche l'événement Crisp : nps
+      triggerEvent(CRISP_NPS_EVENT_NAME, eventData);
 
-      localStorage.setItem("crispFeedbackPrompted", "true");
+      localStorage.setItem("crispEventTriggered", "true");
+      console.log(
+        "Événement CrispEventTest déclenché avec les données:",
+        eventData
+      );
     }, WAIT_FOR_CRISP_MESSAGE);
 
     return () => clearTimeout(timer);
-  }, [isLoaded, enableCrispFeedback, isLoading, promptUser]);
+  }, [
+    isLoaded,
+    enableCrispFeedback,
+    isLoading,
+    triggerEvent,
+    quoteCheckId,
+    profile,
+    currentDevis?.status,
+    currentDevis?.filename,
+  ]);
 
   // Validation des données critiques
   const isDataValid = (devis: QuoteChecksId | null): boolean => {
