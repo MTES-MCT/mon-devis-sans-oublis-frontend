@@ -75,6 +75,9 @@ export default function ResultClient({
   useEffect(() => {
     if (!enableCrispFeedback || !isLoaded || isLoading) return;
 
+    const hasPromptedUser = localStorage.getItem("crispFeedbackPrompted");
+    if (hasPromptedUser) return;
+
     const timer = setTimeout(() => {
       const feedbackMessage =
         "Bonjour ! Merci d'avoir utilisé Mon Devis Sans Oublis.\n\n" +
@@ -82,6 +85,8 @@ export default function ResultClient({
         "Si vous avez d'autres remarques, n'hésitez pas, c'est le moment ! À vous de jouer, il vous suffit d'écrire votre réponse dans cette discussion.";
 
       promptUser(feedbackMessage);
+
+      localStorage.setItem("crispFeedbackPrompted", "true");
     }, WAIT_FOR_CRISP_MESSAGE);
 
     return () => clearTimeout(timer);
