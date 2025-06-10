@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useCrisp } from "@/hooks/useCrisp";
 
 import InvalidQuote from "./InvalidQuote";
 import ValidQuote from "./ValidQuote";
@@ -20,8 +21,9 @@ import wording from "@/wording";
 import { quoteService } from "@/lib/client/apiWrapper";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
-const MAX_RETRIES = 20; // Nombre maximum de tentatives de polling
-const POLLING_INTERVAL = 30000; // 30 secondes d'intervalle entre les tentatives
+const MAX_RETRIES = 20;
+const POLLING_INTERVAL = 30000;
+const WAIT_FOR_CRISP_MESSAGE = 20000;
 
 interface ResultClientProps {
   currentDevis: QuoteChecksId | null;
@@ -34,6 +36,7 @@ interface ResultClientProps {
   profile: string;
   quoteCheckId: string;
   showDeletedErrors: boolean;
+  enableCrispFeedback?: boolean;
 }
 
 export default function ResultClient({
@@ -43,10 +46,12 @@ export default function ResultClient({
   profile,
   quoteCheckId,
   showDeletedErrors,
+  enableCrispFeedback = false,
 }: ResultClientProps) {
   const pathname = usePathname();
   const router = useRouter();
   const isButtonSticky = useScrollPosition();
+  const { isLoaded, promptUser } = useCrisp();
 
   const [currentDevis, setCurrentDevis] = useState<QuoteChecksId | null>(
     initialDevis
@@ -66,11 +71,26 @@ export default function ResultClient({
 
   const { isConseillerAndEdit } = useConseillerRoutes();
 
+  // Gestion du message Crisp automatique
+  useEffect(() => {
+    if (!enableCrispFeedback || !isLoaded || isLoading) return;
+
+    const timer = setTimeout(() => {
+      const feedbackMessage =
+        "Bonjour ! Merci d'avoir utilisé Mon Devis Sans Oublis.\n\n" +
+        "Nous avons besoin de votre aide pour améliorer notre outil. Quelle note de satisfaction entre 0 (pas satisfait) et 5 (très satisfait) donneriez-vous à Mon Devis Sans Oublis ?\n\n" +
+        "Si vous avez d'autres remarques, n'hésitez pas, c'est le moment ! À vous de jouer, il vous suffit d'écrire votre réponse dans cette discussion.";
+
+      promptUser(feedbackMessage);
+    }, WAIT_FOR_CRISP_MESSAGE);
+
+    return () => clearTimeout(timer);
+  }, [isLoaded, enableCrispFeedback, isLoading, promptUser]);
+
   // Validation des données critiques
   const isDataValid = (devis: QuoteChecksId | null): boolean => {
     if (!devis) return false;
 
-    // Vérification des champs critiques pour éviter "Invalid Date" et données partielles
     return !!(
       devis.finished_at &&
       devis.filename &&
@@ -104,7 +124,6 @@ export default function ResultClient({
       try {
         const data = await quoteService.getQuote(quoteCheckId);
 
-        // Validation plus stricte des données avant de continuer
         if (!data || !data.status) {
           if (retryCount < MAX_RETRIES) {
             retryCount++;
@@ -132,7 +151,6 @@ export default function ResultClient({
 
         setCurrentDevis(data);
 
-        // Ne stopper le loading que si les données sont complètes ET valides
         if (
           (data.status === Status.VALID || data.status === Status.INVALID) &&
           isDataValid(data)
@@ -212,12 +230,12 @@ export default function ResultClient({
     reason: string
   ) => {
     if (!reason) {
-      console.error("🚨 ERREUR: reason est vide dans ResultClient !");
+      console.error("Erreur: reason est vide dans ResultClient !");
       return;
     }
 
     if (!currentDevis) {
-      console.error("🚨 ERREUR: currentDevis est null dans ResultClient !");
+      console.error("Erreur: currentDevis est null dans ResultClient !");
       return;
     }
 
@@ -374,53 +392,6 @@ export default function ResultClient({
       console.error("Error deleting global comment:", error);
     }
   };
-
-  // État d'erreur de polling - fallback de sécurité
-  if (hasPollingError) {
-    return (
-      <section className="fr-container-fluid fr-py-10w">
-        <div className="fr-container">
-          <div className="fr-alert fr-alert--error fr-mb-4w">
-            <h3>{wording.page_upload_id.analysis_error}</h3>
-            <p>
-              L'analyse a pris plus de temps que prévu. Veuillez réessayer ou
-              contactez le support si le problème persiste.
-            </p>
-            <div className="fr-btns-group fr-mt-3w">
-              <button
-                className="fr-btn fr-btn--secondary"
-                onClick={() => {
-                  setHasPollingError(false);
-                  setIsLoading(true);
-                  window.location.reload();
-                }}
-              >
-                Réessayer
-              </button>
-              <button
-                className="fr-btn fr-btn--tertiary"
-                onClick={() => router.push(`/${profile}/televersement`)}
-              >
-                Nouvelle analyse
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // État de chargement ou données invalides
-  if (isLoading || !isDataValid(currentDevis)) {
-    return (
-      <section className="fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center">
-        <LoadingDots
-          title={wording.page_upload_id.analysis_in_progress_title}
-        />
-        <p>{wording.page_upload_id.analysis_in_progress}</p>
-      </section>
-    );
-  }
 
   // État d'erreur de polling - fallback de sécurité
   if (hasPollingError) {

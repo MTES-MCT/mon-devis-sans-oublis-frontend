@@ -33,6 +33,7 @@ export default async function Result({
         profile={params.profile}
         quoteCheckId={params.quoteCheckId}
         showDeletedErrors={false}
+        enableCrispFeedback={true}
       />
     </>
   );
