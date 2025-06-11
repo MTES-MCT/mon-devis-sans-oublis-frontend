@@ -2,6 +2,7 @@
 interface CrispAPI {
   push: (
     command:
+      | ["safe", boolean]
       | [string, string]
       | [string, string, [string, string]]
       | [string, string, [string]]

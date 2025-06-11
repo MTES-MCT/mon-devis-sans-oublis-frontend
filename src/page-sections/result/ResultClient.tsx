@@ -23,8 +23,9 @@ import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
 const MAX_RETRIES = 20;
 const POLLING_INTERVAL = 30000;
-const WAIT_FOR_CRISP_MESSAGE = 20000;
+const CRISP_NPS_EVENT_DELAY = 20000;
 const CRISP_NPS_EVENT_NAME = "nps";
+const CRISP_NPS_LOCALSTORAGE_FLAG = "crispNpsEventTriggered";
 
 interface ResultClientProps {
   currentDevis: QuoteChecksId | null;
@@ -75,25 +76,18 @@ export default function ResultClient({
   // Gestion de l'événement Crisp automatique
   useEffect(() => {
     if (!enableCrispFeedback || !isLoaded || isLoading) return;
-    const hasEventTriggered = localStorage.getItem("crispEventTriggered");
+    const hasEventTriggered = localStorage.getItem(CRISP_NPS_LOCALSTORAGE_FLAG);
     if (hasEventTriggered) return;
 
     const timer = setTimeout(() => {
       // Déclenche l'événement Crisp NPS
       triggerEvent(CRISP_NPS_EVENT_NAME);
-      localStorage.setItem("crispEventTriggered", "true");
+      localStorage.setItem(CRISP_NPS_LOCALSTORAGE_FLAG, "true");
       console.log(`Événement ${CRISP_NPS_EVENT_NAME} déclenché`);
-    }, WAIT_FOR_CRISP_MESSAGE);
+    }, CRISP_NPS_EVENT_DELAY);
 
     return () => clearTimeout(timer);
-  }, [
-    isLoaded,
-    enableCrispFeedback,
-    isLoading,
-    triggerEvent,
-    quoteCheckId,
-    profile,
-  ]);
+  }, [isLoaded, enableCrispFeedback, isLoading, triggerEvent]);
 
   // Validation des données critiques
   const isDataValid = (devis: QuoteChecksId | null): boolean => {
