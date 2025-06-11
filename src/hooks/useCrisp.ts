@@ -95,14 +95,13 @@ export const useCrisp = () => {
   /**
    * Déclenche un événement personnalisé dans Crisp
    */
-  const triggerEvent = (eventName: string, data?: Record<string, unknown>) => {
+  const triggerEvent = (eventName: string) => {
     if (typeof window !== "undefined") {
       const windowWithCrisp = window as WindowWithCrisp;
       const crisp = windowWithCrisp.$crisp;
       if (crisp && typeof crisp.push === "function") {
-        console.log(`Déclenchement de l'événement Crisp: ${eventName}`, data);
-        const eventData = data ? JSON.stringify(data) : "{}";
-        crisp.push(["do", "trigger:run", [eventName, eventData]]);
+        console.log(`Déclenchement de l'événement Crisp: ${eventName}`);
+        crisp.push(["do", "trigger:run", [eventName]]);
       } else {
         console.log(
           `Impossible de déclencher l'événement ${eventName} - Crisp non disponible`

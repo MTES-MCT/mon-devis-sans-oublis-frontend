@@ -75,25 +75,14 @@ export default function ResultClient({
   // Gestion de l'événement Crisp automatique
   useEffect(() => {
     if (!enableCrispFeedback || !isLoaded || isLoading) return;
-
     const hasEventTriggered = localStorage.getItem("crispEventTriggered");
     if (hasEventTriggered) return;
 
     const timer = setTimeout(() => {
-      const eventData = {
-        devisId: quoteCheckId,
-        profile: profile,
-        timestamp: new Date().toISOString(),
-      };
-
-      // Déclenche l'événement Crisp : nps
-      triggerEvent(CRISP_NPS_EVENT_NAME, eventData);
-
+      // Déclenche l'événement Crisp NPS
+      triggerEvent(CRISP_NPS_EVENT_NAME);
       localStorage.setItem("crispEventTriggered", "true");
-      console.log(
-        "Événement CrispEventTest déclenché avec les données:",
-        eventData
-      );
+      console.log(`Événement ${CRISP_NPS_EVENT_NAME} déclenché`);
     }, WAIT_FOR_CRISP_MESSAGE);
 
     return () => clearTimeout(timer);
