@@ -12,6 +12,7 @@ export const useCrisp = () => {
         const windowWithCrisp = window as WindowWithCrisp;
         const crisp = windowWithCrisp.$crisp;
         if (crisp && typeof crisp.push === "function") {
+          crisp.push(["safe", true]);
           console.log("Crisp détecté et fonctionnel");
           setIsLoaded(true);
           return true;
