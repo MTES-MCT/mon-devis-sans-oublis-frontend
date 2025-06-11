@@ -1,7 +1,11 @@
-
 // Interface API Crisp
 interface CrispAPI {
-  push: (command: [string, string] | [string, string, [string, string]]) => void;
+  push: (
+    command:
+      | [string, string]
+      | [string, string, [string, string]]
+      | [string, string, [string]]
+  ) => void;
 }
 
 interface WindowWithCrisp extends Window {
