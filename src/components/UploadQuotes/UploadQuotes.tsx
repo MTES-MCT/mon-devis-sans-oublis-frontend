@@ -301,19 +301,21 @@ const UploadQuotes: React.FC<UploadQuotesProps> = ({
 
       {/* Container des tags dynamiques */}
       <div className="flex flex-wrap gap-2 mb-4 mt-4">
-        {uploadedFiles.map((fileStatus, index) => (
-          <button
-            key={index}
-            className="fr-tag fr-tag--dismiss fr-background-contrast--blue-france fr-text-action-high--blue-france"
-            aria-label={`Retirer ${fileStatus.file.name}`}
-            onClick={(e) => {
-              e.preventDefault();
-              handleRemoveFile(index);
-            }}
-          >
-            {fileStatus.file.name} - {formatFileSize(fileStatus.file.size)}
-          </button>
-        ))}
+        {uploadedFiles.map((fileStatus, index) =>
+          fileStatus.isValid ? (
+            <button
+              key={index}
+              className="fr-tag fr-tag--dismiss fr-background-contrast--blue-france fr-text-action-high--blue-france"
+              aria-label={`Retirer ${fileStatus.file.name}`}
+              onClick={(e) => {
+                e.preventDefault();
+                handleRemoveFile(index);
+              }}
+            >
+              {fileStatus.file.name} - {formatFileSize(fileStatus.file.size)}
+            </button>
+          ) : null
+        )}
       </div>
 
       {/* Détail des erreurs de fichiers */}
