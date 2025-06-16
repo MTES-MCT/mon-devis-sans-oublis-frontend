@@ -54,22 +54,6 @@ export default function UploadPage() {
         <div className="fr-container">
           <div className="fr-grid-row fr-grid-row--center">
             <div className="fr-col-12 fr-col-md-10 fr-col-lg-8">
-              {/* Bandeau d'information PDF */}
-              <div className="fr-alert fr-alert--info fr-mb-8v">
-                <p>
-                  Pour analyser vos devis, ils doivent être au format PDF avec
-                  texte sélectionnable. Si ça n’est pas le cas, voici un outil
-                  en ligne gratuit pour les convertir :{" "}
-                  <Link
-                    href="https://www.ilovepdf.com/fr"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline"
-                  >
-                    I Love PDF
-                  </Link>
-                </p>
-              </div>
               <h1>
                 {multipleDocumentUploadMode
                   ? "Ajoutez vos devis"
