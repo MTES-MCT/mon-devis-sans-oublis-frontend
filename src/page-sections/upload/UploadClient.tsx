@@ -57,7 +57,7 @@ export default function UploadClient({ profile }: { profile: string }) {
     setIsSubmitting(true);
 
     try {
-      const data = await quoteService.uploadQuote(
+      const data = await quoteService.uploadQuoteCheck(
         file,
         { aides: selectedAides, gestes: selectedGestes },
         profile as Profile

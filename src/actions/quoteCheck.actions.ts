@@ -4,7 +4,7 @@ import { apiClient } from "@/lib/server/apiClient";
 import { Profile } from "@/types";
 import { revalidatePath } from "next/cache";
 
-interface QuoteUpdateData {
+interface QuoteCheckUpdateData {
   status?: string;
   metadata?: {
     aides?: string[];
@@ -18,7 +18,7 @@ interface QuoteUploadResult {
 }
 
 // Récupération d'un devis
-export async function getQuote(quoteCheckId: string) {
+export async function getQuoteCheck(quoteCheckId: string) {
   try {
     if (!quoteCheckId) {
       throw new Error("Quote check ID is required");
@@ -32,7 +32,7 @@ export async function getQuote(quoteCheckId: string) {
 }
 
 // Envoi d'un devis simple (pour geste simple)
-export async function uploadQuote(
+export async function uploadQuoteCheck(
   file: File,
   metadata: { aides: string[]; gestes: string[] },
   profile: Profile
@@ -58,7 +58,7 @@ export async function uploadQuote(
 }
 
 // Envoi d'un devis lié à un dossier (pour rénovation d'ampleur)
-export async function uploadQuoteToCase(
+export async function uploadQuoteCheckToCase(
   file: File,
   quoteCaseId: string,
   profile: Profile
@@ -84,14 +84,14 @@ export async function uploadQuoteToCase(
 }
 
 // Upload de plusieurs devis pour geste simple
-export async function uploadMultipleQuotes(
+export async function uploadMultipleQuotesCheck(
   files: File[],
   metadata: { aides: string[]; gestes: string[] },
   profile: Profile
 ) {
   try {
     const uploadPromises = files.map((file) =>
-      uploadQuote(file, metadata, profile)
+      uploadQuoteCheck(file, metadata, profile)
     );
 
     const results = await Promise.allSettled(uploadPromises);
@@ -120,14 +120,14 @@ export async function uploadMultipleQuotes(
 }
 
 // Upload de plusieurs devis pour un dossier de rénovation d'ampleur
-export async function uploadMultipleQuotesToCase(
+export async function uploadMultipleQuotesCheckToCase(
   files: File[],
   quoteCaseId: string,
   profile: Profile
 ) {
   try {
     const uploadPromises = files.map((file) =>
-      uploadQuoteToCase(file, quoteCaseId, profile)
+      uploadQuoteCheckToCase(file, quoteCaseId, profile)
     );
 
     const results = await Promise.allSettled(uploadPromises);
@@ -157,9 +157,9 @@ export async function uploadMultipleQuotesToCase(
 }
 
 // Mise à jour d'un devis
-export async function updateQuote(
+export async function updateQuoteCheck(
   quoteCheckId: string,
-  updatedData: QuoteUpdateData
+  updatedData: QuoteCheckUpdateData
 ) {
   try {
     if (!quoteCheckId) {
@@ -179,7 +179,7 @@ export async function updateQuote(
 }
 
 // Mise à jour du commentaire d'un devis
-export async function updateQuoteComment(
+export async function updateQuoteCheckComment(
   quoteCheckId: string,
   comment: string | null
 ) {
@@ -203,22 +203,25 @@ export async function updateQuoteComment(
 }
 
 // Ajout d'un commentaire
-export async function addQuoteComment(quoteCheckId: string, comment: string) {
+export async function addQuoteCheckComment(
+  quoteCheckId: string,
+  comment: string
+) {
   if (!comment.trim()) {
     throw new Error("Comment cannot be empty");
   }
 
-  await updateQuoteComment(quoteCheckId, comment);
-  return getQuote(quoteCheckId);
+  await updateQuoteCheckComment(quoteCheckId, comment);
+  return getQuoteCheck(quoteCheckId);
 }
 
 // Suppression d'un commentaire
-export async function removeQuoteComment(quoteCheckId: string) {
-  return updateQuoteComment(quoteCheckId, null);
+export async function removeQuoteCheckComment(quoteCheckId: string) {
+  return updateQuoteCheckComment(quoteCheckId, null);
 }
 
 // Récupération des métadonnées des devis
-export async function getQuoteMetadata() {
+export async function getQuoteCheckMetadata() {
   try {
     return await apiClient.get("/api/v1/quote_checks/metadata");
   } catch (error) {

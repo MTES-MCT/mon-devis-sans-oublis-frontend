@@ -16,7 +16,7 @@ export default async function Result({
 
   let currentDevis = null;
   try {
-    currentDevis = await quoteService.getQuote(params.quoteCheckId);
+    currentDevis = await quoteService.getQuoteCheck(params.quoteCheckId);
   } catch (error) {
     console.error("Error fetching devis:", error);
   }

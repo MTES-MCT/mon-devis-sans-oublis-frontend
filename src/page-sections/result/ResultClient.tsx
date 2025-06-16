@@ -124,7 +124,7 @@ export default function ResultClient({
       if (!isPollingActive) return;
 
       try {
-        const data = await quoteService.getQuote(quoteCheckId);
+        const data = await quoteService.getQuoteCheck(quoteCheckId);
 
         if (!data || !data.status) {
           if (retryCount < MAX_RETRIES) {
@@ -285,7 +285,7 @@ export default function ResultClient({
         return;
       }
 
-      const updatedDevis = await quoteService.getQuote(quoteCheckId);
+      const updatedDevis = await quoteService.getQuoteCheck(quoteCheckId);
       setCurrentDevis(updatedDevis);
     } catch (error) {
       console.error("Erreur lors de l'annulation de la suppression:", error);
@@ -345,13 +345,13 @@ export default function ResultClient({
     try {
       await quoteService.removeErrorDetailComment(quoteCheckId, errorDetailsId);
 
-      const updatedDevis = await quoteService.getQuote(quoteCheckId);
+      const updatedDevis = await quoteService.getQuoteCheck(quoteCheckId);
       setCurrentDevis(updatedDevis);
     } catch (error) {
       console.error("Erreur lors de la suppression du commentaire:", error);
 
       try {
-        const refreshedDevis = await quoteService.getQuote(quoteCheckId);
+        const refreshedDevis = await quoteService.getQuoteCheck(quoteCheckId);
         setCurrentDevis(refreshedDevis);
       } catch (refreshError) {
         console.error(
@@ -367,8 +367,8 @@ export default function ResultClient({
     comment: string
   ) => {
     try {
-      await quoteService.addQuoteComment(quoteCheckId, comment);
-      const updatedDevis = await quoteService.getQuote(quoteCheckId);
+      await quoteService.addQuoteCheckComment(quoteCheckId, comment);
+      const updatedDevis = await quoteService.getQuoteCheck(quoteCheckId);
       setCurrentDevis(updatedDevis);
       setIsGlobalCommentModalOpen(false);
     } catch (error) {
@@ -378,7 +378,7 @@ export default function ResultClient({
 
   const handleDeleteGlobalComment = async (quoteCheckId: string) => {
     try {
-      await quoteService.removeQuoteComment(quoteCheckId);
+      await quoteService.removeQuoteCheckComment(quoteCheckId);
       setCurrentDevis((prev) =>
         prev
           ? {
@@ -388,7 +388,7 @@ export default function ResultClient({
           : null
       );
 
-      const updatedDevis = await quoteService.getQuote(quoteCheckId);
+      const updatedDevis = await quoteService.getQuoteCheck(quoteCheckId);
       setCurrentDevis(updatedDevis);
     } catch (error) {
       console.error("Error deleting global comment:", error);

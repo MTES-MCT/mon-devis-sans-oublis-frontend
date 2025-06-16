@@ -27,7 +27,7 @@ export default function TypeRenovation() {
 
     const loadMetadata = async () => {
       try {
-        const data = await quoteService.getQuoteMetadata();
+        const data = await quoteService.getQuoteCheckMetadata();
         setMetadata(data);
       } catch (error) {
         console.error("Error loading metadata:", error);
