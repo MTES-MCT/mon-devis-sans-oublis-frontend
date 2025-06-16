@@ -5,6 +5,7 @@ import { type MatomoEvent } from "@/lib/constants/matomoEvents";
 interface UseMatomo {
   trackEvent: (eventName: MatomoEvent, additionalData?: string) => void;
   trackPageView: (customUrl?: string) => void;
+  enableHeatmaps: () => void;
   isEnabled: boolean;
 }
 
@@ -42,9 +43,23 @@ export function useMatomo(): UseMatomo {
     }
   };
 
+  const enableHeatmaps = () => {
+    if (!isEnabled) {
+      console.log("[Matomo Debug] Heatmaps enabled");
+      return;
+    }
+
+    try {
+      push(["HeatmapSessionRecording::enable"]);
+    } catch (error) {
+      console.warn("Erreur Matomo heatmaps:", error);
+    }
+  };
+
   return {
     trackEvent,
     trackPageView,
+    enableHeatmaps,
     isEnabled,
   };
 }
