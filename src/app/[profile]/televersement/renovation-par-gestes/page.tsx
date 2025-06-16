@@ -1,4 +1,5 @@
 import { Notice } from "@/components";
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import { quoteService } from "@/lib/client/apiWrapper";
 import { UploadClient } from "@/page-sections";
 import { Metadata } from "@/types";
@@ -20,11 +21,25 @@ export default async function Upload({
 
   return (
     <>
-      <Notice
-        className="fr-notice--info"
-        description={wording.layout.notice.description}
-        title={wording.layout.notice.title}
-      />
+      <div className="fr-container-fluid">
+        <div className="fr-container">
+          <Breadcrumb
+            items={[
+              {
+                label: "Accueil",
+                href: "/",
+              },
+              {
+                label: "Analyse des devis",
+                href: "#",
+              },
+              {
+                label: `Etape 3/4`,
+              },
+            ]}
+          />
+        </div>
+      </div>
       <section className="fr-container-fluid fr-py-10w">
         <div className="fr-container">
           <div className="fr-grid-row fr-grid-row--center">

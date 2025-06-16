@@ -68,6 +68,6 @@ export interface QuoteChecksId {
 }
 
 export enum RenovationType {
-  GESTES = "gestes",
-  AMPLEUR = "ampleur",
+  GESTES = "renovation-par-gestes",
+  AMPLEUR = "renovation-ampleur",
 }

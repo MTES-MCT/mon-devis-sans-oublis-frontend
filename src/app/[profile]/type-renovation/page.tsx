@@ -34,11 +34,27 @@ export default function TypeRenovation() {
     setSelectedType(type);
   };
 
+  // Dans type-renovation/page.tsx
   const handleNext = () => {
     if (selectedType && userProfile) {
-      router.push(
-        `/${userProfile}/televersement?typeRenovation=${selectedType}`
+      // Sauvegarder les sélections
+      const renovationData = {
+        aides: selectedAides,
+        gestes: selectedGestes,
+        type: selectedType,
+      };
+
+      sessionStorage.setItem(
+        "renovationMetadata",
+        JSON.stringify(renovationData)
       );
+
+      const routePath =
+        selectedType === RenovationType.GESTES
+          ? "renovation-par-geste"
+          : "renovation-ampleur";
+
+      router.push(`/${userProfile}/televersement/${routePath}`);
     }
   };
 

@@ -347,19 +347,19 @@
       "cards": [
         {
           "description": "Je souhaite gagner du temps en évitant les multiples changements sur mes devis",
-          "href": "/artisan/televersement",
+          "href": "/artisan/type-renovation",
           "icon": "tools-fill",
           "title": "Je suis artisan"
         },
         {
           "description": "Je souhaite effectuer une demande d’aide de rénovation énergétique sans encombre",
-          "href": "/particulier/televersement",
+          "href": "/particulier/type-renovation",
           "icon": "home-4-fill",
           "title": "Je suis particulier"
         },
         {
           "description": "Je souhaite accompagner mes clients dans leurs démarches",
-          "href": "/conseiller/televersement",
+          "href": "/conseiller/type-renovation",
           "icon": "customer-service-fill",
           "title": "J'accompagne un projet de rénovation"
         }

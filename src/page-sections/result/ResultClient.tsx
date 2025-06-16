@@ -419,7 +419,9 @@ export default function ResultClient({
               </button>
               <button
                 className="fr-btn fr-btn--tertiary"
-                onClick={() => router.push(`/${profile}/televersement`)}
+                onClick={() =>
+                  router.push(`/${profile}/televersement/renovation-par-gestes`)
+                }
               >
                 Nouvelle analyse
               </button>

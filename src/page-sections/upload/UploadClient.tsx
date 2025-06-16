@@ -6,25 +6,18 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   Alert,
   AlertType,
-  DropdownCheckboxList,
   Link,
   LinkVariant,
   Notice,
   Upload,
 } from "@/components";
-import { Metadata, Profile } from "@/types";
+import { Profile } from "@/types";
 import wording from "@/wording";
 import { quoteService } from "@/lib/client/apiWrapper";
 
 export const FILE_ERROR = "file_error";
 
-export default function UploadClient({
-  metadata,
-  profile,
-}: {
-  metadata: Metadata;
-  profile: string;
-}) {
+export default function UploadClient({ profile }: { profile: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -35,21 +28,11 @@ export default function UploadClient({
     null
   );
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [selectedAides, setSelectedAides] = useState<string[]>([]);
-  const [selectedGestes, setSelectedGestes] = useState<string[]>([]);
 
   const handleFileUpload = useCallback((uploadedFile: File) => {
     setFile(uploadedFile);
     setFileError(null);
   }, []);
-
-  const handleAidesChange = (values: string[]) => {
-    setSelectedAides(values);
-  };
-
-  const handleGestesChange = (values: string[]) => {
-    setSelectedGestes(values);
-  };
 
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -72,9 +55,13 @@ export default function UploadClient({
 
       startTransition(() => {
         if (profile === Profile.CONSEILLER) {
-          router.push(`/${profile}/televersement/${data.id}/modifier`);
+          router.push(
+            `/${profile}/televersement/renovation-par-gestes/${data.id}/modifier`
+          );
         } else {
-          router.push(`/${profile}/televersement/${data.id}`);
+          router.push(
+            `/${profile}/televersement/renovation-par-gestes/${data.id}`
+          );
         }
       });
     } catch (error) {
@@ -130,36 +117,12 @@ export default function UploadClient({
           moreDescription={wording.upload.alert.more_info}
           type={AlertType.INFO}
         />
-        <h2>{wording.upload.subtitle}</h2>
-        {metadata.gestes && (
-          <DropdownCheckboxList
-            label={wording.upload.select_gestes}
-            multiple={true}
-            onChange={handleGestesChange}
-            optionnal={true}
-            options={metadata.gestes.flatMap((group) =>
-              group.values.map((value) => ({
-                id: value,
-                label: value,
-                group: group.group,
-              }))
-            )}
-          />
-        )}
-        {metadata.aides && (
-          <DropdownCheckboxList
-            label={wording.upload.select_aides}
-            multiple={true}
-            onChange={handleAidesChange}
-            optionnal={true}
-            options={metadata.aides}
-          />
-        )}
+
         <div className="fr-mt-8w flex justify-center">
           <ul className="fr-btns-group fr-btns-group--inline-sm">
             <li>
               <Link
-                href={wording.upload.link_back.href}
+                href={`/${profile}/type-renovation`}
                 label={wording.upload.link_back.label}
                 variant={LinkVariant.SECONDARY}
               />
