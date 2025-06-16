@@ -2,7 +2,7 @@ import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import { UploadClient } from "@/page-sections";
 import wording from "@/wording";
 
-export default async function Upload({
+export default async function UploadRenovationParGestesPage({
   params: initialParams,
 }: {
   params: Promise<{ profile: string }>;

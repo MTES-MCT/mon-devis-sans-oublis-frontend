@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { typeRenovationStorage } from "@/lib/utils/typeRenovationStorage.utils";
 import UploadMultiple from "@/components/Upload/UploadMultiple";
 
-export default function UploadPage() {
+export default function UploadRenovationAmpleurPage() {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
   const [selectedAides, setSelectedAides] = useState<string[]>([]);
