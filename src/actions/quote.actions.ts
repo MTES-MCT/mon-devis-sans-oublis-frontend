@@ -17,9 +17,7 @@ interface QuoteUploadResult {
   [key: string]: unknown;
 }
 
-// Suppression du type restrictif QuoteResponse
-
-// Récupération d'un devis - SANS typage restrictif
+// Récupération d'un devis
 export async function getQuote(quoteCheckId: string) {
   try {
     if (!quoteCheckId) {
@@ -33,7 +31,7 @@ export async function getQuote(quoteCheckId: string) {
   }
 }
 
-// Envoi d'un devis - SANS typage restrictif
+// Envoi d'un devis simple (pour geste simple)
 export async function uploadQuote(
   file: File,
   metadata: { aides: string[]; gestes: string[] },
@@ -59,7 +57,33 @@ export async function uploadQuote(
   }
 }
 
-// Upload de plusieurs devis en parallèle
+// Envoi d'un devis lié à un dossier (pour rénovation d'ampleur)
+export async function uploadQuoteToCase(
+  file: File,
+  quoteCaseId: string,
+  profile: Profile
+) {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("profile", profile);
+    formData.append("renovation_type", "renovation_ampleur");
+    formData.append("quote_case_id", quoteCaseId);
+
+    const result = await apiClient.post("/api/v1/quote_checks", formData);
+
+    if (!result.id) {
+      throw new Error("The API didn't return an ID.");
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Error uploading quote to case:", error);
+    throw error;
+  }
+}
+
+// Upload de plusieurs devis pour geste simple
 export async function uploadMultipleQuotes(
   files: File[],
   metadata: { aides: string[]; gestes: string[] },
@@ -95,7 +119,44 @@ export async function uploadMultipleQuotes(
   }
 }
 
-// Mise à jour d'un devis - SANS typage restrictif
+// Upload de plusieurs devis pour un dossier de rénovation d'ampleur
+export async function uploadMultipleQuotesToCase(
+  files: File[],
+  quoteCaseId: string,
+  profile: Profile
+) {
+  try {
+    const uploadPromises = files.map((file) =>
+      uploadQuoteToCase(file, quoteCaseId, profile)
+    );
+
+    const results = await Promise.allSettled(uploadPromises);
+
+    const successful = results
+      .filter((result) => result.status === "fulfilled")
+      .map(
+        (result) => (result as PromiseFulfilledResult<QuoteUploadResult>).value
+      );
+
+    const failed = results
+      .filter((result) => result.status === "rejected")
+      .map((result) => (result as PromiseRejectedResult).reason);
+
+    return {
+      successful,
+      failed,
+      totalCount: files.length,
+      successCount: successful.length,
+      failureCount: failed.length,
+      quoteCaseId,
+    };
+  } catch (error) {
+    console.error("Error uploading multiple quotes to case:", error);
+    throw error;
+  }
+}
+
+// Mise à jour d'un devis
 export async function updateQuote(
   quoteCheckId: string,
   updatedData: QuoteUpdateData
