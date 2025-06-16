@@ -3,8 +3,8 @@
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import UploadQuotes from "@/components/UploadQuotes/UploadQuotes";
 import { typeRenovationStorage } from "@/lib/utils/typeRenovationStorage.utils";
+import UploadMultiple from "@/components/Upload/UploadMultiple";
 
 export default function UploadPage() {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -71,7 +71,7 @@ export default function UploadPage() {
           <div className="fr-grid-row fr-grid-row--center">
             <div className="fr-col-12 fr-col-md-10 fr-col-lg-8">
               <h1>Ajoutez vos devis</h1>
-              <UploadQuotes
+              <UploadMultiple
                 maxFileSize={50}
                 onFileUpload={(files) => {
                   setUploadedFiles(files);
