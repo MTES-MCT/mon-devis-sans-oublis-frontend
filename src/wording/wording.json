@@ -212,21 +212,21 @@
           "description": "Je souhaite gagner du temps en évitant les multiples changements sur mes devis",
           "image": "/images/who_are_you/card_artisan.webp",
           "title": "Je suis artisan",
-          "url": "/artisan/televersement"
+          "url": "/artisan/type-renovation"
         },
         {
           "alt": "Particulier qui souhaite gagner du temps",
           "description": "Je souhaite effectuer une demande d’aide de rénovation énergétique sans encombre",
           "image": "/images/who_are_you/card_individual.webp",
           "title": "Je suis particulier",
-          "url": "/particulier/televersement"
+          "url": "/particulier/type-renovation"
         },
         {
           "alt": "Conseiller qui souhaite accompagner ses clients",
           "description": "Je souhaite accompagner mes clients dans leurs démarches",
           "image": "/images/who_are_you/card_advisor.webp",
           "title": "J'accompagne un projet de rénovation",
-          "url": "/conseiller/televersement"
+          "url": "/conseiller/type-renovation"
         }
       ],
       "description": "L’outil s’adresse à plusieurs usagers, dites-nous en plus sur vous et vos besoins",
@@ -338,7 +338,7 @@
       "label": "Retour"
     },
     "select_aides": "Aide(s) visée(s) avec le devis",
-    "select_gestes": "Geste(s) technique(s) concerné(s) par le devis",
+    "select_gestes": "Geste(s) technique(s) concerné(s) par le(s) devis",
     "subtitle": "Votre projet",
     "title": "Vérifier votre devis"
   },
@@ -347,19 +347,19 @@
       "cards": [
         {
           "description": "Je souhaite gagner du temps en évitant les multiples changements sur mes devis",
-          "href": "/artisan/televersement",
+          "href": "/artisan/type-renovation",
           "icon": "tools-fill",
           "title": "Je suis artisan"
         },
         {
           "description": "Je souhaite effectuer une demande d’aide de rénovation énergétique sans encombre",
-          "href": "/particulier/televersement",
+          "href": "/particulier/type-renovation",
           "icon": "home-4-fill",
           "title": "Je suis particulier"
         },
         {
           "description": "Je souhaite accompagner mes clients dans leurs démarches",
-          "href": "/conseiller/televersement",
+          "href": "/conseiller/type-renovation",
           "icon": "customer-service-fill",
           "title": "J'accompagne un projet de rénovation"
         }

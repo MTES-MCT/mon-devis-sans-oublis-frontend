@@ -12,6 +12,11 @@ interface QuoteUpdateData {
   };
 }
 
+interface QuoteUploadResult {
+  id: string;
+  [key: string]: unknown;
+}
+
 // Suppression du type restrictif QuoteResponse
 
 // Récupération d'un devis - SANS typage restrictif
@@ -50,6 +55,42 @@ export async function uploadQuote(
     return result;
   } catch (error) {
     console.error("Error uploading quote:", error);
+    throw error;
+  }
+}
+
+// Upload de plusieurs devis en parallèle
+export async function uploadMultipleQuotes(
+  files: File[],
+  metadata: { aides: string[]; gestes: string[] },
+  profile: Profile
+) {
+  try {
+    const uploadPromises = files.map((file) =>
+      uploadQuote(file, metadata, profile)
+    );
+
+    const results = await Promise.allSettled(uploadPromises);
+
+    const successful = results
+      .filter((result) => result.status === "fulfilled")
+      .map(
+        (result) => (result as PromiseFulfilledResult<QuoteUploadResult>).value
+      );
+
+    const failed = results
+      .filter((result) => result.status === "rejected")
+      .map((result) => (result as PromiseRejectedResult).reason);
+
+    return {
+      successful,
+      failed,
+      totalCount: files.length,
+      successCount: successful.length,
+      failureCount: failed.length,
+    };
+  } catch (error) {
+    console.error("Error uploading multiple quotes:", error);
     throw error;
   }
 }
