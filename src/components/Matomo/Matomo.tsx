@@ -4,9 +4,11 @@ import { Suspense, useEffect, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { init, push } from "@socialgouv/matomo-next";
 import { getClientEnv, isProduction, isStaging } from "@/lib/config/env.config";
+import { useMatomo } from "@/hooks/useMatomo";
 
 const MatomoContent = () => {
   const [initialised, setInitialised] = useState<boolean>(false);
+  const { enableHeatmaps } = useMatomo();
 
   useEffect(() => {
     const clientEnv = getClientEnv();
@@ -24,6 +26,13 @@ const MatomoContent = () => {
       setInitialised(true);
     }
   }, [initialised]);
+
+  // Activation des heatmaps quand Matomo est initialisé
+  useEffect(() => {
+    if (initialised) {
+      enableHeatmaps();
+    }
+  }, [initialised, enableHeatmaps]);
 
   const pathname = usePathname();
   const searchParams = useSearchParams();

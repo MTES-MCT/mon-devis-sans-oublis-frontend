@@ -6,8 +6,6 @@ import wording from "@/wording";
 import { marianne, spectral } from "../styles/fonts";
 import "../styles/globals.css";
 import CrispWrapper from "@/components/Crisp/Crisp";
-import { useMatomo } from "@/hooks/useMatomo";
-import { useEffect } from "react";
 
 // DSFR initialization
 initDsfr();
@@ -24,12 +22,6 @@ export default function RootLayout({
 }>) {
   const footerData: FooterProps = wording.layout.footer;
   const headerData: HeaderProps = wording.layout.header;
-  const { enableHeatmaps } = useMatomo();
-
-  // Activation heatMaps Matomo au chargement
-  useEffect(() => {
-    enableHeatmaps();
-  }, [enableHeatmaps]);
 
   return (
     <html
