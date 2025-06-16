@@ -31,6 +31,10 @@ export default function UploadPage() {
     //   { aides: selectedAides, gestes: selectedGestes },
     //   profile
     // );
+    console.log("selectedAides :>> ", selectedAides);
+    console.log("selectedGestes :>> ", selectedGestes);
+    if (fileError) console.log("fileError :>> ", fileError);
+
     const resultId = "123";
 
     router.push(`/${profile}/televersement/renovation-ampleur/${resultId}`);

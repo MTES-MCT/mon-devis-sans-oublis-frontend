@@ -50,7 +50,7 @@ describe("DropdownCheckboxList", () => {
       "Option 1",
       "Option 2",
     ]);
-    expect(screen.getByText("2 sélections")).toBeInTheDocument();
+    expect(screen.getByText("2 éléments sélectionnés")).toBeInTheDocument();
   });
 
   it("handles single selection correctly", async () => {

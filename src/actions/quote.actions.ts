@@ -12,6 +12,11 @@ interface QuoteUpdateData {
   };
 }
 
+interface QuoteUploadResult {
+  id: string;
+  [key: string]: unknown;
+}
+
 // Suppression du type restrictif QuoteResponse
 
 // Récupération d'un devis - SANS typage restrictif
@@ -69,7 +74,9 @@ export async function uploadMultipleQuotes(
 
     const successful = results
       .filter((result) => result.status === "fulfilled")
-      .map((result) => (result as PromiseFulfilledResult<any>).value);
+      .map(
+        (result) => (result as PromiseFulfilledResult<QuoteUploadResult>).value
+      );
 
     const failed = results
       .filter((result) => result.status === "rejected")

@@ -1,8 +1,5 @@
-import { Notice } from "@/components";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
-import { quoteService } from "@/lib/client/apiWrapper";
 import { UploadClient } from "@/page-sections";
-import { Metadata } from "@/types";
 import wording from "@/wording";
 
 export default async function Upload({
@@ -11,13 +8,6 @@ export default async function Upload({
   params: Promise<{ profile: string }>;
 }) {
   const params = await initialParams;
-
-  let metadata: Metadata = { aides: [], gestes: [] };
-  try {
-    metadata = await quoteService.getQuoteMetadata();
-  } catch (error) {
-    console.error("Error fetching metadata:", error);
-  }
 
   return (
     <>
@@ -45,7 +35,7 @@ export default async function Upload({
           <div className="fr-grid-row fr-grid-row--center">
             <div className="fr-col-12 fr-col-md-10 fr-col-lg-8">
               <h1>{wording.upload.title}</h1>
-              <UploadClient metadata={metadata} profile={params.profile} />
+              <UploadClient profile={params.profile} />
             </div>
           </div>
         </div>
