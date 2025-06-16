@@ -1,17 +1,20 @@
 "use client";
 
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import { DropdownCheckboxList } from "@/components";
 import { Metadata } from "@/types";
 
 export const FILE_ERROR = "file_error";
 
+interface RenovationTypeSelectionProps {
+  metadata: Metadata;
+  onSelectionChange?: (aides: string[], gestes: string[]) => void;
+}
+
 export default function RenovationTypeSelection({
   metadata,
-}: {
-  metadata: Metadata;
-}) {
+  onSelectionChange,
+}: RenovationTypeSelectionProps) {
   const [selectedAides, setSelectedAides] = useState<string[]>([]);
   const [selectedGestes, setSelectedGestes] = useState<string[]>([]);
 
@@ -22,6 +25,11 @@ export default function RenovationTypeSelection({
   const handleGestesChange = (values: string[]) => {
     setSelectedGestes(values);
   };
+
+  // Notification parent à chaque modification
+  useEffect(() => {
+    onSelectionChange?.(selectedAides, selectedGestes);
+  }, [selectedAides, selectedGestes, onSelectionChange]);
 
   return (
     <>

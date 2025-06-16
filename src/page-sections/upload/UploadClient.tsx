@@ -14,6 +14,7 @@ import {
 import { Profile } from "@/types";
 import wording from "@/wording";
 import { quoteService } from "@/lib/client/apiWrapper";
+import { typeRenovationStorage } from "@/lib/utils/typeRenovationStorage.utils";
 
 export const FILE_ERROR = "file_error";
 
@@ -28,6 +29,15 @@ export default function UploadClient({ profile }: { profile: string }) {
     null
   );
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [selectedAides, setSelectedAides] = useState<string[]>([]);
+  const [selectedGestes, setSelectedGestes] = useState<string[]>([]);
+
+  // Récupération des données metadata au montage
+  useEffect(() => {
+    const savedData = typeRenovationStorage.load();
+    setSelectedAides(savedData.aides);
+    setSelectedGestes(savedData.gestes);
+  }, []);
 
   const handleFileUpload = useCallback((uploadedFile: File) => {
     setFile(uploadedFile);

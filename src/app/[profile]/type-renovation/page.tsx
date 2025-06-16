@@ -7,10 +7,13 @@ import { quoteService } from "@/lib/client/apiWrapper";
 import RenovationTypeSelection from "@/page-sections/upload/RenovationTypeSelection";
 import { Metadata, RenovationType } from "@/types";
 import { useRouter, useParams } from "next/navigation";
+import { typeRenovationStorage } from "@/lib/utils/typeRenovationStorage.utils";
 
 export default function TypeRenovation() {
   const [selectedType, setSelectedType] = useState<string>("");
   const [metadata, setMetadata] = useState<Metadata>({ aides: [], gestes: [] });
+  const [selectedAides, setSelectedAides] = useState<string[]>([]);
+  const [selectedGestes, setSelectedGestes] = useState<string[]>([]);
 
   const router = useRouter();
   const params = useParams();
@@ -19,6 +22,9 @@ export default function TypeRenovation() {
 
   // Chargement des métadonnées au montage du composant
   useEffect(() => {
+    // Remise à zéro des données sauvegardées quand on arrive sur cette page
+    typeRenovationStorage.clear();
+
     const loadMetadata = async () => {
       try {
         const data = await quoteService.getQuoteMetadata();
@@ -34,24 +40,23 @@ export default function TypeRenovation() {
     setSelectedType(type);
   };
 
-  // Dans type-renovation/page.tsx
+  const handleSelectionChange = (aides: string[], gestes: string[]) => {
+    setSelectedAides(aides);
+    setSelectedGestes(gestes);
+  };
+
   const handleNext = () => {
     if (selectedType && userProfile) {
-      // Sauvegarder les sélections
-      const renovationData = {
+      // Sauvegarde en sessionStorage du type de reno & des metadata
+      typeRenovationStorage.save({
         aides: selectedAides,
         gestes: selectedGestes,
         type: selectedType,
-      };
-
-      sessionStorage.setItem(
-        "renovationMetadata",
-        JSON.stringify(renovationData)
-      );
+      });
 
       const routePath =
         selectedType === RenovationType.GESTES
-          ? "renovation-par-geste"
+          ? "renovation-par-gestes"
           : "renovation-ampleur";
 
       router.push(`/${userProfile}/televersement/${routePath}`);
@@ -121,7 +126,10 @@ export default function TypeRenovation() {
 
               {/* Zone de choix de précisions */}
               <div className="fr-mb-8v">
-                <RenovationTypeSelection metadata={metadata} />
+                <RenovationTypeSelection
+                  metadata={metadata}
+                  onSelectionChange={handleSelectionChange}
+                />
               </div>
 
               {/* Zone de navigation */}
