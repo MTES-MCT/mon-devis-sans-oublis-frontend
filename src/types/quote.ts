@@ -67,7 +67,7 @@ export interface QuoteChecksId {
   error_messages: Record<string, string>;
 }
 
-export enum RenovationType {
-  GESTES = "renovation-par-gestes",
-  AMPLEUR = "renovation-ampleur",
+export enum RenovationTypes {
+  GESTES = "geste",
+  AMPLEUR = "ampleur",
 }

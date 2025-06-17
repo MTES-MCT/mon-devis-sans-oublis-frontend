@@ -1,7 +1,7 @@
 "use server";
 
 import { apiClient } from "@/lib/server/apiClient";
-import { Profile } from "@/types";
+import { Profile, RenovationType, RenovationTypes } from "@/types";
 import { revalidatePath } from "next/cache";
 
 interface QuoteCheckUpdateData {
@@ -67,7 +67,7 @@ export async function uploadQuoteCheckToCase(
     const formData = new FormData();
     formData.append("file", file);
     formData.append("profile", profile);
-    formData.append("renovation_type", "renovation_ampleur");
+    formData.append("renovation_type", RenovationTypes.AMPLEUR);
     formData.append("quote_case_id", quoteCaseId);
 
     const result = await apiClient.post("/api/v1/quote_checks", formData);
