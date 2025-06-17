@@ -1,3 +1,7 @@
+import { Metadata } from "next";
+import { ErrorDetails } from "./errorDetails.types";
+import { Gestes } from "./gestes.types";
+
 export enum Category {
   ADMIN = "admin",
   FILE = "file",
@@ -21,34 +25,9 @@ export enum Type {
   WRONG = "wrong",
 }
 
-export interface ErrorDetails {
-  id: string;
-  code: string;
-  deleted: boolean;
-  comment: string | null;
-  type: string;
-  title: string;
-  category: string;
-  geste_id?: string | null;
-  problem?: string | null;
-  solution?: string | null;
-  provided_value?: string | null;
-}
-
-export interface Gestes {
-  id: string;
-  intitule: string;
-  valid: boolean;
-}
-
-export interface GestesGroup {
-  group: string;
-  values: string[];
-}
-
-export interface Metadata {
-  aides: string[];
-  gestes: GestesGroup[];
+export enum RenovationTypes {
+  GESTES = "geste",
+  AMPLEUR = "ampleur",
 }
 
 export interface QuoteChecksId {
@@ -67,7 +46,15 @@ export interface QuoteChecksId {
   error_messages: Record<string, string>;
 }
 
-export enum RenovationTypes {
-  GESTES = "geste",
-  AMPLEUR = "ampleur",
+export interface QuoteCheckUpdateData {
+  status?: string;
+  metadata?: {
+    aides?: string[];
+    gestes?: string[];
+  };
+}
+
+export interface QuoteUploadResult {
+  id: string;
+  [key: string]: unknown;
 }

@@ -1,21 +1,13 @@
 "use server";
 
 import { apiClient } from "@/lib/server/apiClient";
-import { Profile, RenovationType, RenovationTypes } from "@/types";
+import {
+  Profile,
+  QuoteCheckUpdateData,
+  QuoteUploadResult,
+  RenovationTypes,
+} from "@/types";
 import { revalidatePath } from "next/cache";
-
-interface QuoteCheckUpdateData {
-  status?: string;
-  metadata?: {
-    aides?: string[];
-    gestes?: string[];
-  };
-}
-
-interface QuoteUploadResult {
-  id: string;
-  [key: string]: unknown;
-}
 
 // Récupération d'un devis
 export async function getQuoteCheck(quoteCheckId: string) {

@@ -1,25 +1,37 @@
 "use server";
 
 import { apiClient } from "@/lib/server/apiClient";
-import { Profile } from "@/types";
+import {
+  Profile,
+  RenovationTypes,
+  QuoteCase,
+  QuoteCaseUpdateData,
+} from "@/types";
 
 // Création d'un dossier de rénovation d'ampleur
 export async function createQuoteCase(
   metadata: { aides: string[]; gestes: string[] },
-  profile: Profile
-) {
+  profile: Profile,
+  reference?: string | null
+): Promise<QuoteCase> {
   try {
-    const result = await apiClient.post("/api/v1/quote_cases", {
+    const requestData = {
       profile,
-      renovation_type: "renovation_ampleur",
-      metadata: JSON.stringify(metadata),
-    });
+      renovation_type: RenovationTypes.AMPLEUR,
+      metadata: {
+        aides: metadata.aides,
+        gestes: metadata.gestes,
+      },
+      reference: reference || null,
+    };
+
+    const result = await apiClient.post("/api/v1/quote_cases", requestData);
 
     if (!result.id) {
       throw new Error("The API didn't return an ID for the quote case.");
     }
 
-    return result;
+    return result as QuoteCase;
   } catch (error) {
     console.error("Error creating quote case:", error);
     throw error;
@@ -27,13 +39,14 @@ export async function createQuoteCase(
 }
 
 // Récupération d'un dossier de rénovation d'ampleur
-export async function getQuoteCase(quoteCaseId: string) {
+export async function getQuoteCase(quoteCaseId: string): Promise<QuoteCase> {
   try {
     if (!quoteCaseId) {
       throw new Error("Quote case ID is required");
     }
 
-    return await apiClient.get(`/api/v1/quote_cases/${quoteCaseId}`);
+    const result = await apiClient.get(`/api/v1/quote_cases/${quoteCaseId}`);
+    return result as QuoteCase;
   } catch (error) {
     console.error("Error fetching quote case:", error);
     throw error;
@@ -43,22 +56,23 @@ export async function getQuoteCase(quoteCaseId: string) {
 // Mise à jour d'un dossier de rénovation d'ampleur
 export async function updateQuoteCase(
   quoteCaseId: string,
-  updatedData: {
-    status?: string;
-    metadata?: { aides?: string[]; gestes?: string[] };
-  }
-) {
+  updatedData: QuoteCaseUpdateData
+): Promise<QuoteCase> {
   try {
     if (!quoteCaseId) {
       throw new Error("Quote case ID is required");
     }
 
+    const requestData = {
+      reference: updatedData.reference || null,
+    };
+
     const result = await apiClient.patch(
       `/api/v1/quote_cases/${quoteCaseId}`,
-      updatedData
+      requestData
     );
 
-    return result;
+    return result as QuoteCase;
   } catch (error) {
     console.error("Error updating quote case:", error);
     throw error;
