@@ -303,17 +303,28 @@ const UploadQuotes: React.FC<UploadQuotesProps> = ({
       <div className="flex flex-wrap gap-2 mb-4 mt-4">
         {uploadedFiles.map((fileStatus, index) =>
           fileStatus.isValid ? (
-            <button
+            <div
               key={index}
               className="fr-tag fr-tag--dismiss fr-background-contrast--blue-france fr-text-action-high--blue-france"
-              aria-label={`Retirer ${fileStatus.file.name}`}
-              onClick={(e) => {
-                e.preventDefault();
-                handleRemoveFile(index);
-              }}
             >
-              {fileStatus.file.name} - {formatFileSize(fileStatus.file.size)}
-            </button>
+              <span className="fr-tag__label">
+                {fileStatus.file.name} - {formatFileSize(fileStatus.file.size)}
+              </span>
+              <button
+                className="fr-tag__dismiss fr-ml-2v"
+                aria-label={`Retirer ${fileStatus.file.name}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleRemoveFile(index);
+                }}
+              >
+                <span
+                  className="fr-icon-close-line fr-icon--sm"
+                  aria-hidden="true"
+                ></span>
+              </button>
+            </div>
           ) : null
         )}
       </div>
@@ -331,15 +342,33 @@ const UploadQuotes: React.FC<UploadQuotesProps> = ({
             Vous pouvez les corriger ou lancer l'analyse avec les devis valides
           </div>
           <div className="flex flex-wrap gap-2">
-            {invalidFiles.map((fileStatus, index) => (
-              <div
-                key={index}
-                className="fr-tag fr-background-contrast--red-marianne fr-text-action-high--red-marianne"
-                data-testid={`file-error-${index}`}
-              >
-                {fileStatus.file.name} - {fileStatus.error}
-              </div>
-            ))}
+            {uploadedFiles.map((fileStatus, index) =>
+              !fileStatus.isValid ? (
+                <div
+                  key={index}
+                  className="fr-tag fr-tag--dismiss fr-background-contrast--red-marianne fr-text-action-high--red-marianne"
+                  data-testid={`file-error-${index}`}
+                >
+                  <span className="fr-tag__label">
+                    {fileStatus.file.name} - {fileStatus.error}
+                  </span>
+                  <button
+                    className="fr-tag__dismiss fr-ml-2v"
+                    aria-label={`Retirer ${fileStatus.file.name}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleRemoveFile(index);
+                    }}
+                  >
+                    <span
+                      className="fr-icon-close-line fr-icon--sm"
+                      aria-hidden="true"
+                    ></span>
+                  </button>
+                </div>
+              ) : null
+            )}
           </div>
         </div>
       )}
