@@ -255,7 +255,7 @@ export default function InvalidQuoteCase({
                       <div className="fr-col-12 fr-col-md-4">
                         <div className="fr-btns-group fr-btns-group--right">
                           <a
-                            href={`/${profile}/result/${devis.id}`}
+                            href={`/${profile}/devis/${devis.id}`}
                             className="fr-btn fr-btn--sm fr-btn--secondary"
                             target="_blank"
                             rel="noopener noreferrer"

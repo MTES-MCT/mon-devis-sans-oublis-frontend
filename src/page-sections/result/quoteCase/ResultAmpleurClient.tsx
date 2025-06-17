@@ -275,7 +275,7 @@ export default function ResultAmpleurClient({
             profile={profile}
             quoteCaseId={quoteCaseId}
             onNavigateToQuote={(quoteId: string) =>
-              router.push(`/${profile}/result/${quoteId}`)
+              router.push(`/${profile}/devis/${quoteId}`)
             }
           />
         )}

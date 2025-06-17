@@ -43,9 +43,7 @@ export default function UploadRenovationAmpleurPage() {
       );
 
       // Redirection vers page résultat
-      router.push(
-        `/${profile}/televersement/renovation-ampleur/${quoteCase.id}`
-      );
+      router.push(`/${profile}/dossier/${quoteCase.id}`);
     } catch (error) {
       console.error("Erreur lors du processus d'upload:", error);
       setFileError(

@@ -195,8 +195,8 @@ export default function ResultGestesClient({
         sessionStorage.getItem("fileErrorMessage") ||
         wording.upload.error.notice.description;
       const url = fileErrorMessage
-        ? `/${profile}/televersement?error=${FILE_ERROR}&message=${fileErrorMessage}`
-        : `/${profile}/televersement?error=${FILE_ERROR}`;
+        ? `/${profile}/televersement/renovation-par-gestes?error=${FILE_ERROR}&message=${fileErrorMessage}`
+        : `/${profile}/televersement/renovation-par-gestes?error=${FILE_ERROR}`;
       router.push(url);
       sessionStorage.removeItem("fileErrorMessage");
     }

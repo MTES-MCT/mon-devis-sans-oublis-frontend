@@ -65,13 +65,9 @@ export default function UploadClient({ profile }: { profile: string }) {
 
       startTransition(() => {
         if (profile === Profile.CONSEILLER) {
-          router.push(
-            `/${profile}/televersement/renovation-par-gestes/${data.id}/modifier`
-          );
+          router.push(`/${profile}/devis/${data.id}/modifier`);
         } else {
-          router.push(
-            `/${profile}/televersement/renovation-par-gestes/${data.id}`
-          );
+          router.push(`/${profile}/devis/${data.id}`);
         }
       });
     } catch (error) {
