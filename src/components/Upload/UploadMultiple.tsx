@@ -118,9 +118,15 @@ const UploadMultiple: React.FC<UploadMultipleProps> = ({
       .filter((status) => status.isValid)
       .map((status) => status.file);
 
-    if (validFiles.length > 0) {
-      onFileUpload(validFiles);
-    } else if (updatedFiles.length === 0) {
+    // Notification du parent dans tous les cas
+    onFileUpload(validFiles);
+
+    // Gestion erreurs
+    if (updatedFiles.length === 0) {
+      setError(null);
+    } else if (validFiles.length === 0) {
+      setError("Aucun fichier valide");
+    } else {
       setError(null);
     }
   };
