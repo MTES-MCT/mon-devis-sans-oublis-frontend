@@ -1,4 +1,12 @@
-import { QuoteCase, Status } from "@/types";
+import { Badge, BadgeSize, BadgeVariant, QuoteErrorTable } from "@/components";
+import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
+import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
+import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
+import { Category, QuoteCase, Status } from "@/types";
+import { mockQuoteCase } from "@/utils/data/testData";
+import { removeFileExtension } from "@/utils/fileUtils";
+import wording from "@/wording";
+import Link from "next/link";
 
 interface QuoteStats {
   total: number;
@@ -15,303 +23,277 @@ interface InvalidQuoteCaseProps {
   profile: string;
   quoteCaseId: string;
   onNavigateToQuote: (quoteId: string) => void;
+  onDeleteIncoherenceError?: (
+    quoteCaseId: string,
+    errorDetailsId: string,
+    reason: string
+  ) => void;
+  onAddIncoherenceErrorComment?: (
+    quoteCaseId: string,
+    errorDetailsId: string,
+    comment: string
+  ) => void;
+  onDeleteIncoherenceErrorComment?: (
+    quoteCaseId: string,
+    errorDetailsId: string
+  ) => void;
+  onUndoDeleteIncoherenceError?: (
+    quoteCaseId: string,
+    errorDetailsId: string
+  ) => void;
+  onHelpClickIncoherence?: (comment: string, errorDetailsId: string) => void;
+  deleteErrorReasons?: { id: string; label: string }[];
 }
 
 export default function InvalidQuoteCase({
   analysisDate,
-  dossier,
+  dossier, // TODO REMOVE
   stats,
   profile,
+  quoteCaseId,
   onNavigateToQuote,
+  onDeleteIncoherenceError,
+  onAddIncoherenceErrorComment,
+  onDeleteIncoherenceErrorComment,
+  onUndoDeleteIncoherenceError,
+  onHelpClickIncoherence,
+  deleteErrorReasons = [],
 }: InvalidQuoteCaseProps) {
-  // Séparer les devis par statut
-  const invalidQuotes =
-    dossier.quote_checks?.filter((q) => q.status === Status.INVALID) || [];
-  const validQuotes =
-    dossier.quote_checks?.filter((q) => q.status === Status.VALID) || [];
+  // TODO HACK TEMPORAIRE : Utiliser les données de test si activé
+  // const dossier = mockQuoteCase;
+  // console.log("🚨 UTILISATION DES DONNÉES DE TEST :", dossier);
 
-  // Calculer le total d'erreurs
+  const quoteChecks = dossier.quote_checks ?? [];
+  const quoteCaseErrors = dossier.error_details ?? [];
+
+  const invalidQuotes = quoteChecks.filter((q) => q.status === Status.INVALID);
+  const validQuotes = quoteChecks.filter((q) => q.status === Status.VALID);
+
   const totalErrors = invalidQuotes.reduce(
-    (total, quote) => total + (quote.error_details?.length || 0),
+    (total, quote) => total + (quote.error_details?.length ?? 0),
     0
   );
 
+  const totalControls = quoteChecks.reduce(
+    (sum, qc) => sum + (qc.controls_count ?? 0),
+    0
+  );
+
+  const shouldShowConformityCard = () => totalControls > 0;
+
+  // Handlers par défaut pour les incohérences
+  const handleDeleteIncoherenceError =
+    onDeleteIncoherenceError ||
+    ((quoteCaseId: string, errorDetailsId: string, reason: string) => {
+      console.log("Delete incoherence error:", {
+        quoteCaseId,
+        errorDetailsId,
+        reason,
+      });
+      // TODO: Implémenter l'appel API
+    });
+
+  const handleAddIncoherenceErrorComment =
+    onAddIncoherenceErrorComment ||
+    ((quoteCaseId: string, errorDetailsId: string, comment: string) => {
+      console.log("Add incoherence error comment:", {
+        quoteCaseId,
+        errorDetailsId,
+        comment,
+      });
+      // TODO: Implémenter l'appel API
+    });
+
+  const handleDeleteIncoherenceErrorComment =
+    onDeleteIncoherenceErrorComment ||
+    ((quoteCaseId: string, errorDetailsId: string) => {
+      console.log("Delete incoherence error comment:", {
+        quoteCaseId,
+        errorDetailsId,
+      });
+      // TODO: Implémenter l'appel API
+    });
+
+  const handleUndoDeleteIncoherenceError =
+    onUndoDeleteIncoherenceError ||
+    ((quoteCaseId: string, errorDetailsId: string) => {
+      console.log("Undo delete incoherence error:", {
+        quoteCaseId,
+        errorDetailsId,
+      });
+      // TODO: Implémenter l'appel API
+    });
+
+  const handleHelpClickIncoherence =
+    onHelpClickIncoherence ||
+    ((comment: string, errorDetailsId: string) => {
+      console.log("Help click incoherence:", { comment, errorDetailsId });
+      // TODO: Implémenter l'aide contextuelle
+    });
+
   return (
-    <section className="fr-container fr-py-10w">
-      {/* Message d'alerte principal */}
-      <div className="fr-alert fr-alert--error fr-mb-6w">
-        <h2 className="fr-h4">⚠️ Votre dossier nécessite des corrections</h2>
-        <p>
-          {stats.invalid} devis sur {stats.total} contiennent des erreurs qui
-          doivent être corrigées pour que votre dossier soit conforme aux
-          exigences de la rénovation d'ampleur.
-        </p>
-        <p>
-          <strong>Total d'erreurs détectées :</strong> {totalErrors}
-        </p>
-      </div>
+    <section className="fr-container fr-gap-8">
+      <h1 className="text-left md:text-left fr-mb-4w">Résultat de l'analyse</h1>
 
-      {/* Informations du dossier */}
-      <div className="fr-card fr-mb-6w">
-        <div className="fr-card__body">
-          <div className="fr-card__content">
-            <h3 className="fr-card__title">Résumé du dossier {dossier.id}</h3>
-            <div className="fr-grid-row fr-grid-row--gutters">
-              <div className="fr-col-12 fr-col-md-6">
-                <p>
-                  <strong>Profile :</strong> {dossier.profile}
-                  <br />
-                  <strong>Type de rénovation :</strong>{" "}
-                  {dossier.renovation_type}
-                  <br />
-                  <strong>Analysé le :</strong> {analysisDate}
-                  <br />
-                  {dossier.reference && (
-                    <>
-                      <strong>Référence :</strong> {dossier.reference}
-                      <br />
-                    </>
-                  )}
-                </p>
-              </div>
-              <div className="fr-col-12 fr-col-md-6">
-                {dossier.metadata && (
-                  <>
-                    <p>
-                      <strong>Aides :</strong>
-                      <br />
-                      {dossier.metadata.aides.join(", ")}
-                    </p>
-                    <p>
-                      <strong>Gestes :</strong>
-                      <br />
-                      {dossier.metadata.gestes
-                        .flatMap((group) => group.values)
-                        .join(", ")}
-                    </p>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
+      {/* Zone des badges */}
+      <div className="fr-mb-4w">
+        <div className="flex flex-wrap gap-2 justify-left md:justify-start fr-mb-3w">
+          {analysisDate && (
+            <Badge
+              label={wording.page_upload_id.analysis_date.replace(
+                "{date}",
+                analysisDate
+              )}
+              size={BadgeSize.SMALL}
+              variant={BadgeVariant.GREY}
+            />
+          )}
+
+          <Badge
+            label={`Dossier ${dossier.id}`}
+            size={BadgeSize.SMALL}
+            variant={BadgeVariant.BLUE_DARK}
+          />
         </div>
       </div>
 
-      {/* Statistiques */}
-      <div className="fr-grid-row fr-grid-row--gutters fr-mb-6w">
-        <div className="fr-col-12 fr-col-md-3">
-          <div className="fr-card fr-card--sm">
-            <div className="fr-card__body">
-              <div className="fr-card__content text-center">
-                <h4 className="fr-card__title">Total devis</h4>
-                <p className="fr-display--sm">{stats.total}</p>
-              </div>
-            </div>
-          </div>
+      {/* Ligne Info & Conformité */}
+      <div className="flex flex-col lg:flex-row gap-4 w-full fr-mb-4w lg:items-start">
+        <div
+          className={`fr-alert fr-alert--info !py-4 ${
+            shouldShowConformityCard() ? "lg:w-3/5" : "lg:w-full"
+          }`}
+        >
+          <h3 className="fr-alert__title !mb-2">
+            {wording.page_upload_id.quoteCheck_alert_ko_title}
+          </h3>
+          <p className="!mb-0">
+            {wording.page_upload_id.quotation_alert_ko_description}
+          </p>
         </div>
-        <div className="fr-col-12 fr-col-md-3">
-          <div className="fr-card fr-card--sm">
-            <div className="fr-card__body">
-              <div className="fr-card__content text-center">
-                <h4 className="fr-card__title">À corriger</h4>
-                <p className="fr-display--sm fr-text--error">{stats.invalid}</p>
-              </div>
-            </div>
+
+        {shouldShowConformityCard() && (
+          <div className="lg:w-2/5">
+            <QuoteConformityCard
+              title="Conformité globale"
+              controlsCount={totalControls}
+              correctionsCount={totalErrors}
+            />
           </div>
-        </div>
-        <div className="fr-col-12 fr-col-md-3">
-          <div className="fr-card fr-card--sm">
-            <div className="fr-card__body">
-              <div className="fr-card__content text-center">
-                <h4 className="fr-card__title">Conformes</h4>
-                <p className="fr-display--sm fr-text--success">{stats.valid}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="fr-col-12 fr-col-md-3">
-          <div className="fr-card fr-card--sm">
-            <div className="fr-card__body">
-              <div className="fr-card__content text-center">
-                <h4 className="fr-card__title">Total erreurs</h4>
-                <p className="fr-display--sm fr-text--error">{totalErrors}</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
 
-      {/* Devis avec erreurs - priorité */}
-      {invalidQuotes.length > 0 && (
+      {/* Tableau des incohérences entre devis */}
+      {quoteCaseErrors.length > 0 && (
         <div className="fr-mb-6w">
-          <h3>🔴 Devis à corriger en priorité</h3>
+          <h3>Incohérence entre les devis ⬇️</h3>
           <div className="fr-mt-4v">
-            {invalidQuotes.map((devis) => (
-              <div key={devis.id} className="fr-card fr-mb-3v">
-                <div className="fr-card__body">
-                  <div className="fr-card__content">
-                    <div className="fr-grid-row fr-grid-row--gutters">
-                      <div className="fr-col-12 fr-col-md-8">
-                        <h4 className="fr-card__title">❌ {devis.filename}</h4>
-                        <p className="fr-card__desc">
-                          <strong>Statut :</strong>{" "}
-                          <span className="fr-badge fr-badge--error">
-                            Non conforme
-                          </span>
-                        </p>
+            <QuoteErrorTable
+              category={Category.INCOHERENCE_DEVIS}
+              errorDetails={quoteCaseErrors}
+              quoteCaseId={quoteCaseId}
+              deleteErrorReasons={deleteErrorReasons}
+              onDeleteError={handleDeleteIncoherenceError}
+              onAddErrorComment={handleAddIncoherenceErrorComment}
+              onDeleteErrorComment={handleDeleteIncoherenceErrorComment}
+              onUndoDeleteError={handleUndoDeleteIncoherenceError}
+              onHelpClick={handleHelpClickIncoherence}
+            />
+          </div>
+        </div>
+      )}
 
-                        <p>
-                          <strong>Erreurs détectées :</strong>{" "}
-                          {devis.error_details?.length || 0}
-                        </p>
+      {/* Tableau des corrections devis */}
+      {(invalidQuotes.length > 0 || validQuotes.length > 0) && (
+        <div className="fr-mb-6w">
+          <h3>Corrections par devis</h3>
+          <div className="fr-mt-4v">
+            <div className="overflow-hidden rounded-lg border-shadow">
+              <table className="w-full">
+                <tbody>
+                  {[...invalidQuotes, ...validQuotes].map(
+                    (devis, index, allQuotes) => {
+                      const errorCount =
+                        devis.error_details?.filter((error) => !error.deleted)
+                          .length || 0;
+                      const isValid = devis.status === "valid";
+                      const isLastItem = index === allQuotes.length - 1;
 
-                        {devis.error_details &&
-                          devis.error_details.length > 0 && (
-                            <div className="fr-mt-2v">
-                              <p className="fr-text--sm fr-text--bold">
-                                Principales erreurs :
-                              </p>
-                              <ul className="fr-text--sm">
-                                {devis.error_details
-                                  .slice(0, 3)
-                                  .map((error) => (
-                                    <li
-                                      key={error.id}
-                                      className="fr-text--error"
-                                    >
-                                      {error.title}
-                                    </li>
-                                  ))}
-                                {devis.error_details.length > 3 && (
-                                  <li className="fr-text--mention">
-                                    ... et {devis.error_details.length - 3}{" "}
-                                    autre(s) erreur(s)
-                                  </li>
-                                )}
-                              </ul>
+                      return (
+                        <tr
+                          key={devis.id}
+                          className={`${!isLastItem ? "border-bottom-grey" : ""}`}
+                        >
+                          <td className="flex items-center justify-between p-4">
+                            {/* Zone gauche - Tag fichier */}
+                            <div
+                              className={`fr-tag fr-tag--dismiss fr-background-contrast--blue-france fr-text-action-high--blue-france`}
+                            >
+                              <span
+                                className={`fr-icon-file-text-fill fr-icon--sm mr-2`}
+                                aria-hidden="true"
+                              ></span>
+                              <span className="fr-tag__label">
+                                {removeFileExtension(devis.filename)}
+                              </span>
                             </div>
-                          )}
 
-                        {devis.gestes && devis.gestes.length > 0 && (
-                          <p className="fr-text--sm">
-                            <strong>Gestes :</strong> {devis.gestes.length}
-                          </p>
-                        )}
-                      </div>
+                            {/* Zone droite - Badge + Bouton */}
+                            <div className="flex items-center gap-3">
+                              {/* Badge statut */}
+                              {isValid ? (
+                                <p className="fr-badge fr-badge--success mb-0">
+                                  Devis conforme
+                                </p>
+                              ) : (
+                                <p className="fr-badge fr-badge--warning mb-0">
+                                  {errorCount} correction
+                                  {errorCount > 1 ? "s" : ""}
+                                </p>
+                              )}
 
-                      <div className="fr-col-12 fr-col-md-4">
-                        <div className="fr-btns-group fr-btns-group--right">
-                          <button
-                            className="fr-btn fr-btn--sm"
-                            onClick={() => onNavigateToQuote(devis.id)}
-                          >
-                            Corriger les erreurs
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Devis conformes */}
-      {validQuotes.length > 0 && (
-        <div className="fr-mb-6w">
-          <h3>✅ Devis déjà conformes</h3>
-          <div className="fr-mt-4v">
-            {validQuotes.map((devis) => (
-              <div key={devis.id} className="fr-card fr-mb-3v">
-                <div className="fr-card__body">
-                  <div className="fr-card__content">
-                    <div className="fr-grid-row fr-grid-row--gutters">
-                      <div className="fr-col-12 fr-col-md-8">
-                        <h4 className="fr-card__title">✅ {devis.filename}</h4>
-                        <p className="fr-card__desc">
-                          <strong>Statut :</strong>{" "}
-                          <span className="fr-badge fr-badge--success">
-                            Conforme
-                          </span>
-                        </p>
-
-                        {devis.gestes && devis.gestes.length > 0 && (
-                          <p>
-                            <strong>Gestes :</strong> {devis.gestes.length}{" "}
-                            validé(s)
-                          </p>
-                        )}
-
-                        {devis.controls_count && (
-                          <p>
-                            <strong>Points de contrôle :</strong>{" "}
-                            {devis.controls_count} vérifiés
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="fr-col-12 fr-col-md-4">
-                        <div className="fr-btns-group fr-btns-group--right">
-                          <a
-                            href={`/${profile}/devis/${devis.id}`}
-                            className="fr-btn fr-btn--sm fr-btn--secondary"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Voir le détail
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Actions de correction */}
-      <div className="fr-card fr-card--no-border">
-        <div className="fr-card__body">
-          <div className="fr-card__content">
-            <h3 className="fr-card__title">Actions recommandées</h3>
-            <p className="fr-card__desc">
-              Pour que votre dossier soit conforme :
-            </p>
-            <ol>
-              <li>
-                <strong>Corrigez les erreurs</strong> dans les {stats.invalid}{" "}
-                devis non conformes en cliquant sur "Corriger les erreurs"
-              </li>
-              <li>
-                <strong>Demandez de nouveaux devis</strong> aux artisans si
-                nécessaire
-              </li>
-              <li>
-                <strong>Re-téléversez</strong> les devis corrigés
-              </li>
-            </ol>
-
-            <div className="fr-btns-group fr-mt-4w">
-              <a
-                href={`/${profile}/televersement/renovation-ampleur`}
-                className="fr-btn"
-              >
-                Ajouter des devis corrigés
-              </a>
-              <button
-                className="fr-btn fr-btn--secondary"
-                onClick={() => window.print()}
-              >
-                Imprimer le rapport
-              </button>
+                              {/* Bouton action ou espace réservé */}
+                              {!isValid ? (
+                                <Link
+                                  className="fr-btn fr-btn--tertiary fr-btn--sm shrink-0"
+                                  href={
+                                    "/dossier/" +
+                                    dossier.id +
+                                    "/devis/" +
+                                    devis.id
+                                  }
+                                >
+                                  Voir les corrections
+                                </Link>
+                              ) : (
+                                <div className="w-[140px]"></div> // Espace réservé invisible avec la même largeur approximative qu'un bouton
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    }
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Section partage & nouvelle analyse */}
+      <section className="fr-container fr-my-6w">
+        <h3>Et aprés ?</h3>
+        <div className="flex md:flex-row flex-col gap-6">
+          <QuoteErrorSharingCard
+            className="md:flex-1"
+            fileName={"test"}
+            adminErrorList={[]}
+            gestes={[]}
+          />
+          <QuoteLaunchAnalysisCard className="md:flex-1" />
+        </div>
+      </section>
     </section>
   );
 }

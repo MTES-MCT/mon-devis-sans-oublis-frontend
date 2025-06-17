@@ -253,7 +253,7 @@ export default function ResultAmpleurClient({
               href: "/",
             },
             {
-              label: `Résultats du dossier - ${currentDossier.id}`,
+              label: `Résultats de l'analyse - dossier ${currentDossier.id}`,
             },
           ]}
         />

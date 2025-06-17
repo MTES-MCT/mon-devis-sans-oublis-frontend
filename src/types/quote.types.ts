@@ -6,6 +6,7 @@ export enum Category {
   ADMIN = "admin",
   FILE = "file",
   GESTES = "gestes",
+  INCOHERENCE_DEVIS = "case_incoherence",
 }
 
 export enum Profile {
