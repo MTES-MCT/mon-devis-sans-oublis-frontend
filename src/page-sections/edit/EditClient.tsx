@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 
 import { LoadingDots } from "@/components";
-import { ResultClient } from "@/page-sections";
 import { QuoteChecksId } from "@/types";
 import wording from "@/wording";
 import { quoteService } from "@/lib/client/apiWrapper";
+import ResultGestesClient from "../result/quoteCheck/ResultGestesClient";
 
 export default function EditClient({
   deleteErrorReasons,
@@ -70,7 +70,7 @@ export default function EditClient({
   }
 
   return (
-    <ResultClient
+    <ResultGestesClient
       currentDevis={currentDevis}
       deleteErrorReasons={deleteErrorReasons}
       onDeleteErrorDetail={handleDeleteErrorDetail}

@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { Tile } from "@/components";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import { quoteService } from "@/lib/client/apiWrapper";
-import RenovationTypeSelection from "@/page-sections/upload/RenovationTypeSelection";
 import { Metadata, RenovationTypes } from "@/types";
 import { useRouter, useParams } from "next/navigation";
 import { typeRenovationStorage } from "@/lib/utils/typeRenovationStorage.utils";
+import { RenovationTypeSelection } from "@/page-sections";
 
 export default function TypeRenovation() {
   const [selectedType, setSelectedType] = useState<string>("");

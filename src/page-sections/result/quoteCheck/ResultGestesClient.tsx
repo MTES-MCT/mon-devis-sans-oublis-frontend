@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useCrisp } from "@/hooks/useCrisp";
 
-import InvalidQuote from "./InvalidQuote";
-import ValidQuote from "./ValidQuote";
-import { FILE_ERROR } from "../upload/UploadClient";
+import { FILE_ERROR } from "../../upload/UploadClient";
 import {
   GlobalCommentModal,
   GlobalErrorFeedbacksModal,
@@ -20,6 +18,8 @@ import { formatDateToFrench } from "@/utils";
 import wording from "@/wording";
 import { quoteService } from "@/lib/client/apiWrapper";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
+import ValidQuoteCheck from "./ValidQuoteCheck";
+import InvalidQuoteCheck from "./InvalidQuoteCheck";
 
 const MAX_RETRIES = 20;
 const POLLING_INTERVAL = 30000;
@@ -27,7 +27,7 @@ const CRISP_NPS_EVENT_DELAY = 20000;
 const CRISP_NPS_EVENT_NAME = "nps";
 const CRISP_NPS_LOCALSTORAGE_FLAG = "crispNpsEventTriggered";
 
-interface ResultClientProps {
+interface ResultGestesClientProps {
   currentDevis: QuoteChecksId | null;
   deleteErrorReasons?: { id: string; label: string }[];
   onDeleteErrorDetail?: (
@@ -41,7 +41,7 @@ interface ResultClientProps {
   enableCrispFeedback?: boolean;
 }
 
-export default function ResultClient({
+export default function ResultGestesClient({
   currentDevis: initialDevis,
   deleteErrorReasons,
   onDeleteErrorDetail,
@@ -49,7 +49,7 @@ export default function ResultClient({
   quoteCheckId,
   showDeletedErrors,
   enableCrispFeedback = false,
-}: ResultClientProps) {
+}: ResultGestesClientProps) {
   const pathname = usePathname();
   const router = useRouter();
   const isButtonSticky = useScrollPosition();
@@ -486,12 +486,12 @@ export default function ResultClient({
       </div>
       <div className="fr-container-fluid">
         {currentDevis?.status === Status.VALID ? (
-          <ValidQuote
+          <ValidQuoteCheck
             analysisDate={formatDateToFrench(currentDevis.finished_at)}
             uploadedFileName={currentDevis.filename}
           />
         ) : currentDevis ? (
-          <InvalidQuote
+          <InvalidQuoteCheck
             analysisDate={formatDateToFrench(currentDevis.finished_at)}
             comment={currentDevis.comment || ""}
             deleteErrorReasons={deleteErrorReasons}

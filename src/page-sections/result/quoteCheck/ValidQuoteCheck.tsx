@@ -9,15 +9,15 @@ import {
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
 import wording from "@/wording";
 
-interface ValidQuoteProps {
+interface ValidQuoteCheckProps {
   analysisDate: string | null;
   uploadedFileName: string;
 }
 
-export default function ValidQuote({
+export default function ValidQuoteCheck({
   analysisDate,
   uploadedFileName,
-}: ValidQuoteProps) {
+}: ValidQuoteCheckProps) {
   return (
     <>
       <Confetti />

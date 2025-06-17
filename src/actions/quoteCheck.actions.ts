@@ -82,7 +82,7 @@ export async function uploadMultipleQuotesCheckToCase(
   profile: Profile
 ) {
   try {
-    const uploadPromises = files.map((file, index) => {
+    const uploadPromises = files.map((file) => {
       return uploadQuoteCheckToCase(file, quoteCaseId, profile);
     });
 
@@ -90,7 +90,7 @@ export async function uploadMultipleQuotesCheckToCase(
 
     const successful = results
       .filter((result) => result.status === "fulfilled")
-      .map((result, originalIndex) => {
+      .map((result) => {
         const value = (result as PromiseFulfilledResult<QuoteUploadResult>)
           .value;
         return value;
@@ -98,7 +98,7 @@ export async function uploadMultipleQuotesCheckToCase(
 
     const failed = results
       .filter((result) => result.status === "rejected")
-      .map((result, originalIndex) => {
+      .map((result) => {
         const reason = (result as PromiseRejectedResult).reason;
         return reason;
       });

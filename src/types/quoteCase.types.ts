@@ -1,5 +1,5 @@
 import { Metadata } from "./gestes.types";
-import { Profile, RenovationTypes, Status } from "./quote.types";
+import { Profile, QuoteChecksId, RenovationTypes, Status } from "./quote.types";
 
 export interface QuoteCase {
   id: string;
@@ -8,6 +8,9 @@ export interface QuoteCase {
   profile: Profile;
   renovation_type: RenovationTypes;
   metadata?: Metadata | null;
+  started_at?: string;
+  finished_at?: string;
+  quote_checks?: QuoteChecksId[];
 }
 
 export interface QuoteCaseUpdateData {
