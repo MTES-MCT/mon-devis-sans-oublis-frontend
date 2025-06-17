@@ -5,6 +5,9 @@ import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { typeRenovationStorage } from "@/lib/utils/typeRenovationStorage.utils";
 import UploadMultiple from "@/components/Upload/UploadMultiple";
+import { createQuoteCase } from "@/actions/quoteCase.actions";
+import { uploadMultipleQuotesCheckToCase } from "@/actions/quoteCheck.actions";
+import { Profile } from "@/types";
 
 export default function UploadRenovationAmpleurPage() {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -14,7 +17,7 @@ export default function UploadRenovationAmpleurPage() {
 
   const params = useParams();
   const router = useRouter();
-  const profile = params.profile as string;
+  const profile = params.profile as Profile;
 
   useEffect(() => {
     const savedData = typeRenovationStorage.load();
@@ -25,19 +28,30 @@ export default function UploadRenovationAmpleurPage() {
   const handleNext = async () => {
     if (uploadedFiles.length === 0) return;
 
-    // TODO: Implémenter l'appel API pour multiple files
-    // const results = await quoteService.uploadMultipleQuotes(
-    //   uploadedFiles,
-    //   { aides: selectedAides, gestes: selectedGestes },
-    //   profile
-    // );
-    console.log("selectedAides :>> ", selectedAides);
-    console.log("selectedGestes :>> ", selectedGestes);
-    if (fileError) console.log("fileError :>> ", fileError);
+    try {
+      // Création du dossier
+      const quoteCase = await createQuoteCase(
+        { aides: selectedAides, gestes: selectedGestes },
+        profile
+      );
 
-    const resultId = "123";
+      // Upload de tous les fichiers
+      await uploadMultipleQuotesCheckToCase(
+        uploadedFiles,
+        quoteCase.id,
+        profile
+      );
 
-    router.push(`/${profile}/televersement/renovation-ampleur/${resultId}`);
+      // Redirection vers page résultat
+      router.push(
+        `/${profile}/televersement/renovation-ampleur/${quoteCase.id}`
+      );
+    } catch (error) {
+      console.error("Erreur lors du processus d'upload:", error);
+      setFileError(
+        "Une erreur est survenue lors du téléversement. Veuillez réessayer."
+      );
+    }
   };
 
   const handlePrevious = () => {
@@ -75,9 +89,17 @@ export default function UploadRenovationAmpleurPage() {
                 maxFileSize={50}
                 onFileUpload={(files) => {
                   setUploadedFiles(files);
+                  setFileError(null);
                 }}
                 setError={setFileError}
               />
+
+              {/* Affichage des erreurs d'upload */}
+              {fileError && (
+                <div className="fr-alert fr-alert--error fr-mt-4v">
+                  <p>{fileError}</p>
+                </div>
+              )}
             </div>
           </div>
 

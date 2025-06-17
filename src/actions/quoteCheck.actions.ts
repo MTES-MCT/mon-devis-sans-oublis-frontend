@@ -49,8 +49,8 @@ export async function uploadQuoteCheck(
   }
 }
 
-// Envoi d'un devis lié à un dossier (pour rénovation d'ampleur)
-export async function uploadQuoteCheckToCase(
+// Envoi d'un devis lié à un dossier pour rénovation d'ampleur
+async function uploadQuoteCheckToCase(
   file: File,
   quoteCaseId: string,
   profile: Profile
@@ -60,53 +60,17 @@ export async function uploadQuoteCheckToCase(
     formData.append("file", file);
     formData.append("profile", profile);
     formData.append("renovation_type", RenovationTypes.AMPLEUR);
-    formData.append("quote_case_id", quoteCaseId);
+    formData.append("case_id", quoteCaseId);
 
     const result = await apiClient.post("/api/v1/quote_checks", formData);
 
     if (!result.id) {
+      console.error("ERREUR: L'API n'a pas retourné d'ID");
       throw new Error("The API didn't return an ID.");
     }
 
     return result;
   } catch (error) {
-    console.error("Error uploading quote to case:", error);
-    throw error;
-  }
-}
-
-// Upload de plusieurs devis pour geste simple
-export async function uploadMultipleQuotesCheck(
-  files: File[],
-  metadata: { aides: string[]; gestes: string[] },
-  profile: Profile
-) {
-  try {
-    const uploadPromises = files.map((file) =>
-      uploadQuoteCheck(file, metadata, profile)
-    );
-
-    const results = await Promise.allSettled(uploadPromises);
-
-    const successful = results
-      .filter((result) => result.status === "fulfilled")
-      .map(
-        (result) => (result as PromiseFulfilledResult<QuoteUploadResult>).value
-      );
-
-    const failed = results
-      .filter((result) => result.status === "rejected")
-      .map((result) => (result as PromiseRejectedResult).reason);
-
-    return {
-      successful,
-      failed,
-      totalCount: files.length,
-      successCount: successful.length,
-      failureCount: failed.length,
-    };
-  } catch (error) {
-    console.error("Error uploading multiple quotes:", error);
     throw error;
   }
 }
@@ -118,23 +82,28 @@ export async function uploadMultipleQuotesCheckToCase(
   profile: Profile
 ) {
   try {
-    const uploadPromises = files.map((file) =>
-      uploadQuoteCheckToCase(file, quoteCaseId, profile)
-    );
+    const uploadPromises = files.map((file, index) => {
+      return uploadQuoteCheckToCase(file, quoteCaseId, profile);
+    });
 
     const results = await Promise.allSettled(uploadPromises);
 
     const successful = results
       .filter((result) => result.status === "fulfilled")
-      .map(
-        (result) => (result as PromiseFulfilledResult<QuoteUploadResult>).value
-      );
+      .map((result, originalIndex) => {
+        const value = (result as PromiseFulfilledResult<QuoteUploadResult>)
+          .value;
+        return value;
+      });
 
     const failed = results
       .filter((result) => result.status === "rejected")
-      .map((result) => (result as PromiseRejectedResult).reason);
+      .map((result, originalIndex) => {
+        const reason = (result as PromiseRejectedResult).reason;
+        return reason;
+      });
 
-    return {
+    const finalResult = {
       successful,
       failed,
       totalCount: files.length,
@@ -142,6 +111,8 @@ export async function uploadMultipleQuotesCheckToCase(
       failureCount: failed.length,
       quoteCaseId,
     };
+
+    return finalResult;
   } catch (error) {
     console.error("Error uploading multiple quotes to case:", error);
     throw error;
