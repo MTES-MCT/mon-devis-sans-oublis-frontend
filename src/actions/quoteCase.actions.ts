@@ -2,6 +2,12 @@
 
 import { apiClient } from "@/lib/server/apiClient";
 import { Profile, QuoteCase, QuoteCaseUpdateData } from "@/types";
+import {
+  isMockEnabled,
+  logMockUsage,
+  simulateApiDelay,
+} from "@/utils/mocks/config";
+import { getQuoteCaseMock } from "@/utils/mocks/mockSelector";
 
 // Création d'un dossier de rénovation d'ampleur
 export async function createQuoteCase(
@@ -32,6 +38,23 @@ export async function createQuoteCase(
 
 // Récupération d'un dossier de rénovation d'ampleur
 export async function getQuoteCase(quoteCaseId: string): Promise<QuoteCase> {
+  // Mode mock activé
+  if (isMockEnabled()) {
+    const mockData = getQuoteCaseMock(quoteCaseId);
+
+    logMockUsage("getQuoteCase", {
+      quoteCaseId,
+      mockId: mockData.id,
+      scenario: mockData.status,
+    });
+
+    // Simuler le délai d'une vraie API
+    await simulateApiDelay();
+
+    return mockData;
+  }
+
+  // Mode production - vraie API
   try {
     if (!quoteCaseId) {
       throw new Error("Quote case ID is required");

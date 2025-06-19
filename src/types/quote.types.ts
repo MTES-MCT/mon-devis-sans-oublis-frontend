@@ -1,6 +1,5 @@
-import { Metadata } from "next";
 import { ErrorDetails } from "./errorDetails.types";
-import { Gestes } from "./gestes.types";
+import { Gestes, Metadata } from "./gestes.types";
 
 export enum Category {
   ADMIN = "admin",
