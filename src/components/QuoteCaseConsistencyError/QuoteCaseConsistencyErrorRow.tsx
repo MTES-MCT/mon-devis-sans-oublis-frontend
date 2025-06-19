@@ -53,7 +53,7 @@ const QuoteCaseConsistencyErrorRow: React.FC<
       console.error("Raison de suppression manquante");
       return;
     }
-
+    // TODO en attente Backend ?
     const foundReason = deleteErrorReasons?.find((r) => r.id === reason);
     const finalReason = foundReason ? foundReason.label : reason;
     onDeleteError(quoteCaseId, errorDetailsId, finalReason);
@@ -65,6 +65,7 @@ const QuoteCaseConsistencyErrorRow: React.FC<
     errorDetailsId: string,
     comment: string
   ) => {
+    // TODO en attente Backend ?
     onAddErrorComment(quoteCaseId, errorDetailsId, comment);
     setIsCommentModalOpen(false);
   };
