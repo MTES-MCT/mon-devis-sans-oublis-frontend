@@ -4,7 +4,6 @@ import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformit
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
 import { QuoteCase, Status } from "@/types";
-import { mockQuoteCase } from "@/utils/data/testData";
 import { removeFileExtension } from "@/utils/fileUtils";
 import wording from "@/wording";
 import Link from "next/link";
@@ -28,16 +27,9 @@ interface InvalidQuoteCaseProps {
 
 export default function InvalidQuoteCase({
   analysisDate,
-  dossier, // TODO REMOVE
-  stats,
-  profile,
+  dossier,
   quoteCaseId,
-  onNavigateToQuote,
 }: InvalidQuoteCaseProps) {
-  // TODO HACK TEMPORAIRE : Utiliser les données de test si activé
-  // const dossier = mockQuoteCase;
-  // console.log("🚨 UTILISATION DES DONNÉES DE TEST :", dossier);
-
   const quoteChecks = dossier.quote_checks ?? [];
   const quoteCaseErrors = dossier.error_details ?? [];
 
@@ -124,7 +116,7 @@ export default function InvalidQuoteCase({
       {/* Tableau des corrections devis */}
       {(invalidQuotes.length > 0 || validQuotes.length > 0) && (
         <div className="fr-mb-6w">
-          <h3>Corrections par devis</h3>
+          <h3>Corrections par devis ⬇️</h3>
           <div className="fr-mt-4v">
             <div className="overflow-hidden rounded-lg border-shadow">
               <table className="w-full">

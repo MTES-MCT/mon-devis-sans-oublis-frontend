@@ -234,15 +234,6 @@ export default function ResultAmpleurClient({
     );
   }
 
-  // Fonction pour vérifier si tous les devis sont valides
-  const isAllQuotesValid = (dossier: QuoteCase | null): boolean => {
-    if (!dossier?.quote_checks || dossier.quote_checks.length === 0) {
-      return false;
-    }
-
-    return dossier.quote_checks.every((quote) => quote.status === Status.VALID);
-  };
-
   return (
     <>
       <div className="fr-container">
@@ -260,12 +251,10 @@ export default function ResultAmpleurClient({
       </div>
 
       <div className="fr-container-fluid">
-        {isAllQuotesValid(currentDossier) ? (
+        {currentDossier.status === Status.VALID ? (
           <ValidQuoteCase
             analysisDate={formatDateToFrench(currentDossier.finished_at ?? "")}
             dossier={currentDossier}
-            stats={stats}
-            profile={profile}
           />
         ) : (
           <InvalidQuoteCase
