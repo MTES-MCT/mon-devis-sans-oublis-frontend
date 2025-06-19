@@ -1,8 +1,9 @@
-import { Badge, BadgeSize, BadgeVariant, QuoteErrorTable } from "@/components";
+import { Badge, BadgeSize, BadgeVariant } from "@/components";
+import QuoteCaseConsistencyErrorTable from "@/components/QuoteCaseConsistencyError/QuoteCaseConsistencyErrorTable";
 import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
-import { Category, QuoteCase, Status } from "@/types";
+import { QuoteCase, Status } from "@/types";
 import { mockQuoteCase } from "@/utils/data/testData";
 import { removeFileExtension } from "@/utils/fileUtils";
 import wording from "@/wording";
@@ -23,26 +24,6 @@ interface InvalidQuoteCaseProps {
   profile: string;
   quoteCaseId: string;
   onNavigateToQuote: (quoteId: string) => void;
-  onDeleteIncoherenceError?: (
-    quoteCaseId: string,
-    errorDetailsId: string,
-    reason: string
-  ) => void;
-  onAddIncoherenceErrorComment?: (
-    quoteCaseId: string,
-    errorDetailsId: string,
-    comment: string
-  ) => void;
-  onDeleteIncoherenceErrorComment?: (
-    quoteCaseId: string,
-    errorDetailsId: string
-  ) => void;
-  onUndoDeleteIncoherenceError?: (
-    quoteCaseId: string,
-    errorDetailsId: string
-  ) => void;
-  onHelpClickIncoherence?: (comment: string, errorDetailsId: string) => void;
-  deleteErrorReasons?: { id: string; label: string }[];
 }
 
 export default function InvalidQuoteCase({
@@ -52,12 +33,6 @@ export default function InvalidQuoteCase({
   profile,
   quoteCaseId,
   onNavigateToQuote,
-  onDeleteIncoherenceError,
-  onAddIncoherenceErrorComment,
-  onDeleteIncoherenceErrorComment,
-  onUndoDeleteIncoherenceError,
-  onHelpClickIncoherence,
-  deleteErrorReasons = [],
 }: InvalidQuoteCaseProps) {
   // TODO HACK TEMPORAIRE : Utiliser les données de test si activé
   // const dossier = mockQuoteCase;
@@ -80,56 +55,6 @@ export default function InvalidQuoteCase({
   );
 
   const shouldShowConformityCard = () => totalControls > 0;
-
-  // Handlers par défaut pour les incohérences
-  const handleDeleteIncoherenceError =
-    onDeleteIncoherenceError ||
-    ((quoteCaseId: string, errorDetailsId: string, reason: string) => {
-      console.log("Delete incoherence error:", {
-        quoteCaseId,
-        errorDetailsId,
-        reason,
-      });
-      // TODO: Implémenter l'appel API
-    });
-
-  const handleAddIncoherenceErrorComment =
-    onAddIncoherenceErrorComment ||
-    ((quoteCaseId: string, errorDetailsId: string, comment: string) => {
-      console.log("Add incoherence error comment:", {
-        quoteCaseId,
-        errorDetailsId,
-        comment,
-      });
-      // TODO: Implémenter l'appel API
-    });
-
-  const handleDeleteIncoherenceErrorComment =
-    onDeleteIncoherenceErrorComment ||
-    ((quoteCaseId: string, errorDetailsId: string) => {
-      console.log("Delete incoherence error comment:", {
-        quoteCaseId,
-        errorDetailsId,
-      });
-      // TODO: Implémenter l'appel API
-    });
-
-  const handleUndoDeleteIncoherenceError =
-    onUndoDeleteIncoherenceError ||
-    ((quoteCaseId: string, errorDetailsId: string) => {
-      console.log("Undo delete incoherence error:", {
-        quoteCaseId,
-        errorDetailsId,
-      });
-      // TODO: Implémenter l'appel API
-    });
-
-  const handleHelpClickIncoherence =
-    onHelpClickIncoherence ||
-    ((comment: string, errorDetailsId: string) => {
-      console.log("Help click incoherence:", { comment, errorDetailsId });
-      // TODO: Implémenter l'aide contextuelle
-    });
 
   return (
     <section className="fr-container fr-gap-8">
@@ -188,16 +113,9 @@ export default function InvalidQuoteCase({
         <div className="fr-mb-6w">
           <h3>Incohérence entre les devis ⬇️</h3>
           <div className="fr-mt-4v">
-            <QuoteErrorTable
-              category={Category.INCOHERENCE_DEVIS}
+            <QuoteCaseConsistencyErrorTable
               errorDetails={quoteCaseErrors}
               quoteCaseId={quoteCaseId}
-              deleteErrorReasons={deleteErrorReasons}
-              onDeleteError={handleDeleteIncoherenceError}
-              onAddErrorComment={handleAddIncoherenceErrorComment}
-              onDeleteErrorComment={handleDeleteIncoherenceErrorComment}
-              onUndoDeleteError={handleUndoDeleteIncoherenceError}
-              onHelpClick={handleHelpClickIncoherence}
             />
           </div>
         </div>

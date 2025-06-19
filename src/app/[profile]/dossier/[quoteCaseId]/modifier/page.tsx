@@ -1,28 +1,68 @@
-import { quoteService } from "@/lib/client/apiWrapper";
-import { EditClient } from "@/page-sections";
+import InvalidQuoteCase from "@/page-sections/result/quoteCase/InvalidQuoteCase";
+import { getQuoteCase } from "@/actions/quoteCase.actions";
+import { notFound } from "next/navigation";
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
-type DeleteErrorReason = {
-  id: string;
-  label: string;
-};
+interface PageProps {
+  params: Promise<{
+    profile: string;
+    quoteCaseId: string;
+  }>;
+}
 
-export default async function Modifier({
-  params: initialParams,
-}: {
-  params: Promise<{ profile: string; quoteCheckId: string }>;
-}) {
-  const params = await initialParams;
+export default async function ModifierPage({ params }: PageProps) {
+  const { profile, quoteCaseId } = await params;
 
-  if (!params.quoteCheckId) {
-    console.error("Erreur : quoteCheckId est undefined !");
+  // Validation
+  if (!quoteCaseId || !profile) {
+    notFound();
   }
 
-  let deleteErrorReasons: DeleteErrorReason[] = [];
   try {
-    deleteErrorReasons = await quoteService.getDeleteErrorDetailReasons();
-  } catch (error) {
-    console.error("Error fetching delete error reasons:", error);
-  }
+    // Charger les données côté serveur
+    const currentQuoteCase = await getQuoteCase(quoteCaseId);
 
-  return <EditClient deleteErrorReasons={deleteErrorReasons} params={params} />;
+    // Calculer les stats
+    const quoteChecks = currentQuoteCase.quote_checks || [];
+    const stats = {
+      total: quoteChecks.length,
+      processed: quoteChecks.length,
+      valid: quoteChecks.filter((q) => q.status === "valid").length,
+      invalid: quoteChecks.filter((q) => q.status === "invalid").length,
+      pending: 0,
+    };
+
+    const analysisDate = currentQuoteCase.finished_at
+      ? new Date(currentQuoteCase.finished_at).toLocaleDateString("fr-FR")
+      : "";
+
+    return (
+      <>
+        <div className="fr-container">
+          <Breadcrumb
+            items={[
+              {
+                label: "Accueil",
+                href: "/",
+              },
+              {
+                label: `Résultats de l'analyse - dossier ${quoteCaseId}`,
+              },
+            ]}
+          />
+        </div>
+        <InvalidQuoteCase
+          analysisDate={analysisDate}
+          dossier={currentQuoteCase}
+          stats={stats}
+          profile={profile}
+          quoteCaseId={quoteCaseId}
+          onNavigateToQuote={() => {}} // TODO: Implémenter la navigation vers le devis
+        />
+      </>
+    );
+  } catch (error) {
+    console.error("Erreur lors du chargement du dossier:", error);
+    notFound();
+  }
 }
