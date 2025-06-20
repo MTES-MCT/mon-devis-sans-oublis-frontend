@@ -69,7 +69,6 @@ cp .env.example .env.docker
 | `NEXT_PUBLIC_ENABLE_MOCKS`       | Active/désactive les mocks            | `true` ou `false`                                        | Optionnel | Client |
 | `NEXT_PUBLIC_FORCE_MOCKS`        | Force les mocks même en production    | `true` ou `false`                                        | Optionnel | Client |
 | `NEXT_PUBLIC_MOCK_DELAY`         | Délai API simulé en ms                | `500`                                                    | Optionnel | Client |
-| `NEXT_PUBLIC_MOCK_SCENARIO`      | Scénario par défaut                   | `valid`, `invalid`, `empty`                              | Optionnel | Client |
 
 ### Types de variables d'environnement
 
@@ -369,80 +368,69 @@ npm run test:watch
 
 Pour faciliter le développement et les tests sans dépendre du backend, l'application dispose d'un système de mocks complet.
 
-### Configuration
-
-Les mocks sont contrôlés par des variables d'environnement :
-
-```bash
-# Activation des mocks
-NEXT_PUBLIC_ENABLE_MOCKS=true          # Active/désactive les mocks
-NEXT_PUBLIC_FORCE_MOCKS=false          # Force les mocks même en production
-NEXT_PUBLIC_MOCK_DELAY=500             # Délai API simulé (ms)
-NEXT_PUBLIC_MOCK_SCENARIO=valid        # Scénario par défaut
-```
-
-### Utilisation
-
-#### En développement (avec mocks)
-```bash
-# .env.local
-NEXT_PUBLIC_ENABLE_MOCKS=true
-NEXT_PUBLIC_MOCK_DELAY=300
-```
-
-#### En production (sans mocks)
-```bash
-# .env.production
-NEXT_PUBLIC_ENABLE_MOCKS=false
-```
-
-#### Pour démonstration (mocks forcés)
-```bash
-NEXT_PUBLIC_FORCE_MOCKS=true
-NEXT_PUBLIC_MOCK_SCENARIO=valid
-```
-
 ### URLs de test
 
-Vous pouvez tester différents scénarios en utilisant des IDs spécifiques :
+Vous pouvez tester différents scénarios en utilisant des IDs spécifiques qui activent automatiquement les mocks :
 
-- `/conseiller/dossier/valid/modifier` → Dossier parfaitement valide
-- `/conseiller/dossier/invalid/modifier` → Dossier avec erreurs de cohérence
-- `/conseiller/dossier/empty/modifier` → Dossier vide
+- `/result/test-devis-valide` → Devis parfaitement valide
+- `/result/test-devis-invalide` → Devis avec erreurs techniques
+- `/dossier/test-dossier-valide` → Dossier de rénovation d'ampleur valide
+- `/dossier/test-dossier-invalide` → Dossier avec erreurs de cohérence entre devis
+
+**Note :** Ces URLs fonctionnent même en production pour les démos et présentations.
+
+### Configuration des mocks
+
+Les mocks sont contrôlés par les variables d'environnement :
+
+```bash
+# Activation globale des mocks (développement)
+NEXT_PUBLIC_ENABLE_MOCKS=true
+
+# Délai simulé pour tester les loading states
+NEXT_PUBLIC_MOCK_DELAY=300
+```
 
 ### Structure des mocks
 
 ```
 src/utils/mocks/
 ├── config.ts                    # Configuration et helpers
-├── mockSelector.ts              # Sélection du bon mock
+├── data.ts                      # Sélection des mocks selon l'ID
 ├── quoteCase/
-│   ├── quoteCaseValid.mock.ts   # Dossier valide
-│   └── quoteCaseInvalid.mock.ts # Dossier avec erreurs
+│   ├── quoteCase.valid.mock.ts  # Dossier valide complet
+│   └── quoteCase.invalid.mock.ts# Dossier avec erreurs de cohérence
 ├── quoteCheck/
-│   └── quoteCheck.valid.mock.ts # Devis valides
+│   ├── quoteCheck.valid.mock.ts # Devis valides (isolation, chauffage, menuiseries)
+│   └── quoteCheck.invalid.mock.ts# Devis avec erreurs techniques
 ├── gestes/
 │   └── gestes.valid.mock.ts     # Gestes de rénovation
 └── shared/
     └── metadata.mock.ts         # Métadonnées réutilisables
 ```
 
-### Développement
+### Fonctionnement
 
-Les mocks sont modulaires et réutilisables. Chaque entité (QuoteCase, QuoteCheck, Gestes) a ses propres mocks qui peuvent être combinés.
+**En développement** (`NEXT_PUBLIC_ENABLE_MOCKS=true`) :
+- Tous les appels API utilisent les mocks
+- Idéal pour développer sans dépendre du backend
+
+**En production** :
+- Seuls les IDs de test (`test-*`) activent les mocks
+- Les vrais IDs utilisent l'API normale
+- Parfait pour les démos avec des données prévisibles
 
 **Logs en développement :**
-Quand les mocks sont actifs, vous verrez des logs dans la console :
 ```
-🎭 MOCK UTILISÉ: getQuoteCase
-📊 Data: { quoteCaseId: "valid", mockId: "case-valid-12345" }
+🎭 Mock utilisé: getQuoteCheck avec ID: test-devis-valide
 ```
 
 **Avantages :**
 - ✅ Développement sans dépendance backend
-- ✅ Tests de différents scénarios facilement
+- ✅ Tests de différents scénarios facilement  
+- ✅ URLs de démo en production
 - ✅ Délai simulé pour tester les loading states
-- ✅ Désactivation automatique en production
+- ✅ Structure modulaire et réutilisable
 
 ### Support
 

@@ -1,6 +1,11 @@
 import { ErrorDetails } from "./errorDetails.types";
 import { Metadata } from "./gestes.types";
-import { Profile, QuoteChecksId, RenovationTypes, Status } from "./quote.types";
+import {
+  Profile,
+  QuoteCheck,
+  RenovationTypes,
+  Status,
+} from "./quoteCheck.types";
 
 export interface QuoteCase {
   id: string;
@@ -11,7 +16,7 @@ export interface QuoteCase {
   metadata?: Metadata | null;
   started_at?: string;
   finished_at?: string;
-  quote_checks?: QuoteChecksId[];
+  quote_checks?: QuoteCheck[];
   errors?: string[];
   error_details?: ErrorDetails[];
   error_messages?: Record<string, string>;

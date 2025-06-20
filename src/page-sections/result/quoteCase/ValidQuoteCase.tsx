@@ -1,12 +1,9 @@
 import { Badge, BadgeSize, BadgeVariant } from "@/components";
-import QuoteCaseConsistencyErrorTable from "@/components/QuoteCaseConsistencyError/QuoteCaseConsistencyErrorTable";
 import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
-import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
 import { QuoteCase, Status } from "@/types";
 import { removeFileExtension } from "@/utils/fileUtils";
 import wording from "@/wording";
-import Link from "next/link";
 
 interface ValidQuoteCaseProps {
   analysisDate: string;
@@ -18,10 +15,8 @@ export default function ValidQuoteCase({
   dossier,
 }: ValidQuoteCaseProps) {
   const quoteChecks = dossier.quote_checks ?? [];
-  const quoteCaseErrors = dossier.error_details ?? [];
 
   const invalidQuotes = quoteChecks.filter((q) => q.status === Status.INVALID);
-  const validQuotes = quoteChecks.filter((q) => q.status === Status.VALID);
 
   const totalErrors = invalidQuotes.reduce(
     (total, quote) => total + (quote.error_details?.length ?? 0),

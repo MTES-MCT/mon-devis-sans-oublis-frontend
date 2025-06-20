@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { LoadingDots } from "@/components";
-import { QuoteChecksId } from "@/types";
+import { QuoteCheck } from "@/types";
 import wording from "@/wording";
 import { quoteService } from "@/lib/client/apiWrapper";
 import ResultGestesClient from "../result/quoteCheck/ResultGestesClient";
@@ -15,7 +15,7 @@ export default function EditClient({
   deleteErrorReasons?: { id: string; label: string }[];
   params: { profile: string; quoteCheckId: string };
 }) {
-  const [currentDevis, setCurrentDevis] = useState<QuoteChecksId | null>(null);
+  const [currentDevis, setCurrentDevis] = useState<QuoteCheck | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

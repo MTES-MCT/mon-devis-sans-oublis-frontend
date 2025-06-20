@@ -3,7 +3,7 @@ export * from "./auth.types";
 export * from "./crisp.types";
 export * from "./errorDetails.types";
 export * from "./feedback.types";
-export * from "./quote.types";
+export * from "./quoteCheck.types";
 export * from "./quoteCase.types";
 export * from "./statistics.types";
 export * from "./gestes.types";

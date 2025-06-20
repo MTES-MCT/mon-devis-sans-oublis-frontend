@@ -13,7 +13,7 @@ import {
   Toast,
 } from "@/components";
 import { useConseillerRoutes, useScrollPosition } from "@/hooks";
-import { Category, ErrorDetails, QuoteChecksId, Rating, Status } from "@/types";
+import { Category, ErrorDetails, QuoteCheck, Rating, Status } from "@/types";
 import { formatDateToFrench } from "@/utils";
 import wording from "@/wording";
 import { quoteService } from "@/lib/client/apiWrapper";
@@ -28,7 +28,7 @@ const CRISP_NPS_EVENT_NAME = "nps";
 const CRISP_NPS_LOCALSTORAGE_FLAG = "crispNpsEventTriggered";
 
 interface ResultGestesClientProps {
-  currentDevis: QuoteChecksId | null;
+  currentDevis: QuoteCheck | null;
   deleteErrorReasons?: { id: string; label: string }[];
   onDeleteErrorDetail?: (
     quoteCheckId: string,
@@ -55,7 +55,7 @@ export default function ResultGestesClient({
   const isButtonSticky = useScrollPosition();
   const { isLoaded, triggerEvent } = useCrisp();
 
-  const [currentDevis, setCurrentDevis] = useState<QuoteChecksId | null>(
+  const [currentDevis, setCurrentDevis] = useState<QuoteCheck | null>(
     initialDevis
   );
   const [hasFeedbackBeenSubmitted, setHasFeedbackBeenSubmitted] =
@@ -90,7 +90,7 @@ export default function ResultGestesClient({
   }, [isLoaded, enableCrispFeedback, isLoading, triggerEvent]);
 
   // Validation des données critiques
-  const isDataValid = (devis: QuoteChecksId | null): boolean => {
+  const isDataValid = (devis: QuoteCheck | null): boolean => {
     if (!devis) return false;
 
     return !!(

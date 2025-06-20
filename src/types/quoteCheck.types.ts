@@ -30,20 +30,29 @@ export enum RenovationTypes {
   AMPLEUR = "ampleur",
 }
 
-export interface QuoteChecksId {
-  controls_count: number | undefined;
+export interface QuoteCheck {
   id: string;
-  parent_id: string;
   status: Status;
-  filename: string;
-  finished_at: string;
-  comment: string | null;
-  metadata: Metadata;
   profile: Profile;
+  filename: string;
+  started_at: string;
+  finished_at: string;
+  controls_count: number;
+  comment: string | null;
+
+  // Métadonnées et gestes
+  metadata: Metadata;
   gestes: Gestes[];
+
+  // Erreurs et contrôles
   errors: string[];
   error_details: ErrorDetails[];
   error_messages: Record<string, string>;
+  control_codes: string[];
+
+  // Champs pour les devis dans un dossier
+  case_id?: string;
+  parent_id?: string;
 }
 
 export interface QuoteCheckUpdateData {

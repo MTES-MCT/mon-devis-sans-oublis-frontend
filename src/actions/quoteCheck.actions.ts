@@ -7,10 +7,20 @@ import {
   QuoteUploadResult,
   RenovationTypes,
 } from "@/types";
+import { delay, logMock, shouldUseMock } from "@/utils/mocks/mock.config";
+import { getMockQuoteCheck } from "@/utils/mocks/mock.data";
 import { revalidatePath } from "next/cache";
 
 // Récupération d'un devis
 export async function getQuoteCheck(quoteCheckId: string) {
+  // Mode mock
+  if (shouldUseMock(quoteCheckId)) {
+    logMock("getQuoteCheck", quoteCheckId);
+    await delay();
+    return getMockQuoteCheck(quoteCheckId);
+  }
+
+  // Mode normal
   try {
     if (!quoteCheckId) {
       throw new Error("Quote check ID is required");
@@ -124,6 +134,14 @@ export async function updateQuoteCheck(
   quoteCheckId: string,
   updatedData: QuoteCheckUpdateData
 ) {
+  // Mode mock
+  if (shouldUseMock(quoteCheckId)) {
+    logMock("updateQuoteCheck", quoteCheckId);
+    await delay();
+    return getMockQuoteCheck(quoteCheckId);
+  }
+
+  // Mode normal
   try {
     if (!quoteCheckId) {
       throw new Error("Quote check ID is required");
@@ -146,6 +164,15 @@ export async function updateQuoteCheckComment(
   quoteCheckId: string,
   comment: string | null
 ) {
+  // Mode mock
+  if (shouldUseMock(quoteCheckId)) {
+    logMock("updateQuoteCheckComment", quoteCheckId);
+    await delay();
+    const mock = getMockQuoteCheck(quoteCheckId);
+    return { ...mock, comment };
+  }
+
+  // Mode normal
   try {
     if (!quoteCheckId) {
       throw new Error("Quote check ID is required");
