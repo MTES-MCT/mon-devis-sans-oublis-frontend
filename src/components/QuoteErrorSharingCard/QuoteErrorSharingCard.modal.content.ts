@@ -1,21 +1,9 @@
-import { Category, ErrorDetails, Gestes } from "@/types";
+import { ErrorDetails, Gestes } from "@/types";
 import { QUOTE_ERROR_SHARING_MODAL_WORDING } from "./QuoteErrorSharingCard.modal.content.wordings";
 
-// Fonction pour filtrer les erreurs actives
-const getActiveErrors = (adminErrorList: ErrorDetails[]): ErrorDetails[] => {
-  return adminErrorList.filter((error) => !error.deleted);
-};
-
-// Fonction pour séparer les erreurs par catégorie
-const categorizeErrors = (errors: ErrorDetails[]) => {
-  const adminErrors = errors.filter(
-    (error) => error.category === Category.ADMIN
-  );
-  const technicalErrors = errors.filter(
-    (error) => error.category === Category.GESTES
-  );
-
-  return { adminErrors, technicalErrors };
+// Fonction pour filtrer les erreurs actives (non supprimées)
+const getActiveErrors = (errorList: ErrorDetails[]): ErrorDetails[] => {
+  return errorList.filter((error) => !error.deleted);
 };
 
 // Fonction pour générer l'en-tête de l'email en HTML
@@ -29,7 +17,7 @@ const generateEmailHeader = (fileName?: string): string => {
   );
 };
 
-// Fonction pour générer la section des mentions administratives en HTML
+// Fonction pour générer la section des erreurs administratives en HTML
 const generateAdminSection = (adminErrors: ErrorDetails[]): string => {
   if (adminErrors.length === 0) {
     return "";
@@ -50,9 +38,9 @@ ${errorItems}
 
 // Fonction pour grouper les erreurs techniques par geste
 const groupErrorsByGeste = (
-  technicalErrors: ErrorDetails[]
+  gestesErrors: ErrorDetails[]
 ): Record<string, ErrorDetails[]> => {
-  return technicalErrors.reduce(
+  return gestesErrors.reduce(
     (errorGroups, error) => {
       const gesteId =
         error.geste_id || QUOTE_ERROR_SHARING_MODAL_WORDING.notSpecified;
@@ -68,14 +56,14 @@ const groupErrorsByGeste = (
 
 // Fonction pour générer la section technique en HTML
 const generateTechnicalSection = (
-  technicalErrors: ErrorDetails[],
+  gestesErrors: ErrorDetails[],
   gestes: Gestes[]
 ): string => {
-  if (technicalErrors.length === 0) {
+  if (gestesErrors.length === 0) {
     return "";
   }
 
-  const errorsByGeste = groupErrorsByGeste(technicalErrors);
+  const errorsByGeste = groupErrorsByGeste(gestesErrors);
 
   const gestesSections = Object.entries(errorsByGeste)
     .map(([gesteId, errors]) => {
@@ -105,29 +93,33 @@ ${gestesSections}
 `;
 };
 
-// Génère le contenu de l'email à partir de la liste d'erreurs administratives, des gestes et du nom du fichier
+// Génère le contenu de l'email à partir des listes d'erreurs séparées
 export const generateEmailContent = (
   adminErrorList: ErrorDetails[],
+  gestesErrorList: ErrorDetails[],
   gestes: Gestes[] = [],
   fileName?: string
 ): string => {
-  const activeErrors = getActiveErrors(adminErrorList);
+  // Filtre les erreurs actives pour chaque catégorie
+  const activeAdminErrors = getActiveErrors(adminErrorList);
+  const activeGestesErrors = getActiveErrors(gestesErrorList);
 
-  if (activeErrors.length === 0) {
+  // Vérifie s'il y a des erreurs à afficher
+  if (activeAdminErrors.length === 0 && activeGestesErrors.length === 0) {
     return `<p>${QUOTE_ERROR_SHARING_MODAL_WORDING.noErrors}</p>`;
   }
 
-  const { adminErrors, technicalErrors } = categorizeErrors(activeErrors);
-
+  // Génère chaque section
   const header = generateEmailHeader(fileName);
-  const adminSection = generateAdminSection(adminErrors);
-  const technicalSection = generateTechnicalSection(technicalErrors, gestes);
+  const adminSection = generateAdminSection(activeAdminErrors);
+  const technicalSection = generateTechnicalSection(activeGestesErrors, gestes);
 
-  // Construction de la liste principale
+  // Construction de la liste principale avec les sections non vides
   const sections = [adminSection, technicalSection].filter(
     (section) => section.length > 0
   );
 
+  // Retourne le contenu final
   if (sections.length === 0) {
     return header + `<p>${QUOTE_ERROR_SHARING_MODAL_WORDING.noErrors}</p>`;
   }

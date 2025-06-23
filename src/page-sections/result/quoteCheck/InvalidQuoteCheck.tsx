@@ -57,6 +57,11 @@ export default function InvalidQuoteCheck({
   const { isConseillerAndEdit } = useConseillerRoutes();
   const shouldShowConformityCard = () => controlsCount > 0;
 
+  const adminErrors = list.filter((error) => error.category === Category.ADMIN);
+  const gestesErrors = list.filter(
+    (error) => error.category === Category.GESTES
+  );
+
   return (
     <>
       <section className="fr-container fr-gap-8">
@@ -191,7 +196,8 @@ export default function InvalidQuoteCheck({
           <QuoteErrorSharingCard
             className="md:flex-1"
             fileName={uploadedFileName}
-            adminErrorList={list}
+            adminErrorList={adminErrors}
+            gestesErrorList={gestesErrors}
             gestes={gestes}
           />
           <QuoteLaunchAnalysisCard className="md:flex-1" />

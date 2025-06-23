@@ -11,6 +11,7 @@ export interface QuoteErrorSharingModalProps {
   isOpen: boolean;
   onClose: () => void;
   adminErrorList: ErrorDetails[];
+  gestesErrorList: ErrorDetails[];
   gestes: Gestes[];
   fileName?: string;
 }
@@ -19,11 +20,12 @@ const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
   isOpen,
   onClose,
   adminErrorList,
+  gestesErrorList,
   gestes = [],
   fileName = "",
 }) => {
   const [emailContent, setEmailContent] = useState(() =>
-    generateEmailContent(adminErrorList, gestes, fileName)
+    generateEmailContent(adminErrorList, gestesErrorList, gestes, fileName)
   );
   const [isCopied, setIsCopied] = useState(false);
   const [showHTML, setShowHTML] = useState(false);

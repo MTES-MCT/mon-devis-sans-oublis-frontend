@@ -15,6 +15,7 @@ export interface QuoteErrorSharingCardProps {
   baseUrl?: string;
   className?: string;
   adminErrorList?: ErrorDetails[];
+  gestesErrorList?: ErrorDetails[];
   gestes: Gestes[];
   fileName?: string;
 }
@@ -23,6 +24,7 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
   baseUrl = typeof window !== "undefined" ? window.location.origin : "",
   className,
   adminErrorList = [],
+  gestesErrorList = [],
   gestes = [],
   fileName,
 }) => {
@@ -95,6 +97,7 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         adminErrorList={adminErrorList}
+        gestesErrorList={gestesErrorList}
         gestes={gestes}
         fileName={fileName}
       />
