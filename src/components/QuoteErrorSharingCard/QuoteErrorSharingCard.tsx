@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 import { useConseillerRoutes } from "@/hooks";
-import { ErrorDetails, Gestes } from "@/types";
+import { ErrorDetails, Gestes, QuoteCase, QuoteCheck } from "@/types";
 import QuoteErrorSharingModal from "./QuoteErrorSharingCard.modal";
 import { QUOTE_ERROR_SHARING_WORDING } from "./QuoteErrorSharingCard.wording";
 import { useMatomo } from "@/hooks/useMatomo";
@@ -14,10 +14,15 @@ import { MATOMO_EVENTS } from "@/lib/constants/matomoEvents";
 export interface QuoteErrorSharingCardProps {
   baseUrl?: string;
   className?: string;
+
+  // Props pour QuoteCheck
   adminErrorList?: ErrorDetails[];
   gestesErrorList?: ErrorDetails[];
-  gestes: Gestes[];
+  gestes?: Gestes[];
   fileName?: string;
+
+  // Props pour QuoteCase
+  quoteCase?: QuoteCase;
 }
 
 const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
@@ -27,6 +32,7 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
   gestesErrorList = [],
   gestes = [],
   fileName,
+  quoteCase,
 }) => {
   const pathname = usePathname();
   const [isUrlCopied, setIsUrlCopied] = useState<boolean>(false);
@@ -100,6 +106,7 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
         gestesErrorList={gestesErrorList}
         gestes={gestes}
         fileName={fileName}
+        quoteCase={quoteCase}
       />
     </>
   );

@@ -195,12 +195,7 @@ export default function InvalidQuoteCase({
       <section className="fr-container fr-my-6w">
         <h3>Et aprés ?</h3>
         <div className="flex md:flex-row flex-col gap-6">
-          <QuoteErrorSharingCard
-            className="md:flex-1"
-            fileName={"test"}
-            adminErrorList={[]}
-            gestes={[]}
-          />
+          <QuoteErrorSharingCard className="md:flex-1" quoteCase={dossier} />
           <QuoteLaunchAnalysisCard className="md:flex-1" />
         </div>
       </section>
