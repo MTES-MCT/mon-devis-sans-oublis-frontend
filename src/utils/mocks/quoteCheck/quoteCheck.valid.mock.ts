@@ -1,5 +1,5 @@
 import { QuoteCheck, Status, Profile } from "@/types";
-import { MOCK_GESTES_VALID } from "../gestes/gestes.valid.mock";
+import { MOCK_GESTES_VALID } from "../gestes";
 import {
   MOCK_CONTROL_CODES_ISOLATION,
   MOCK_CONTROL_CODES_CHAUFFAGE,

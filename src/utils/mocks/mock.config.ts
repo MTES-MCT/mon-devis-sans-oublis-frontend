@@ -1,4 +1,3 @@
-// utils/mocks/config.ts
 export const MOCK_CONFIG = {
   enabled: process.env.NEXT_PUBLIC_ENABLE_MOCKS === "true",
   delay: parseInt(process.env.NEXT_PUBLIC_MOCK_DELAY || "300"),

@@ -1,5 +1,5 @@
 import { QuoteCase, Status, Profile, RenovationTypes, Category } from "@/types";
-import { MOCK_QUOTE_CHECK_INVALID } from "../quoteCheck/quoteCheck.invalid.mock";
+import { MOCK_QUOTE_CHECK_INVALID } from "../quoteCheck";
 
 export const MOCK_QUOTE_CASE_INVALID: QuoteCase = {
   id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",

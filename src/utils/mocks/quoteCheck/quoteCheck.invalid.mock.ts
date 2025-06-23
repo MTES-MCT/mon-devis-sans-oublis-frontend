@@ -1,8 +1,10 @@
 import { QuoteCheck, Status, Profile } from "@/types";
-import { MOCK_ERROR_DETAILS_ADMIN } from "../errorDetails/errorDetails.admin.mock";
-import { MOCK_ERROR_DETAILS_GESTES } from "../errorDetails/errorDetails.gestes.mock";
+import {
+  MOCK_ERROR_DETAILS_ADMIN,
+  MOCK_ERROR_DETAILS_GESTES,
+} from "../errorDetails";
 import { MOCK_CONTROL_CODES_COMPLETE } from "../controlCodes/controlCodes.common.mock";
-import { MOCK_GESTES_INVALID } from "../gestes/gestes.invalid.mock";
+import { MOCK_GESTES_INVALID } from "../gestes";
 
 export const MOCK_QUOTE_CHECK_INVALID: QuoteCheck = {
   id: "a34d3051-e9ec-48a0-939d-e84293f96482",

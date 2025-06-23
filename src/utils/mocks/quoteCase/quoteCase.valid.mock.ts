@@ -1,6 +1,6 @@
 import { QuoteCase, Status, Profile, RenovationTypes } from "@/types";
-import { MOCK_QUOTE_CHECKS_VALID } from "../quoteCheck/quoteCheck.valid.mock";
 import { MOCK_METADATA_GLOBAL } from "../shared/metadata.mock";
+import { MOCK_QUOTE_CHECKS_VALID } from "../quoteCheck";
 
 export const MOCK_QUOTE_CASE_VALID: QuoteCase = {
   id: "case-valid-12345",
