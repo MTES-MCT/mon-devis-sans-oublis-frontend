@@ -1,5 +1,6 @@
 import { QuoteCheck, Status, Profile } from "@/types";
 import { MOCK_ERROR_DETAILS_ADMIN } from "../errorDetails/errorDetails.admin.mock";
+import { MOCK_ERROR_DETAILS_GESTES } from "../errorDetails/errorDetails.gestes.mock";
 import { MOCK_CONTROL_CODES_COMPLETE } from "../controlCodes/controlCodes.common.mock";
 import { MOCK_GESTES_INVALID } from "../gestes/gestes.invalid.mock";
 
@@ -18,7 +19,7 @@ export const MOCK_QUOTE_CHECK_INVALID: QuoteCheck = {
     {
       ...MOCK_GESTES_INVALID.pompeAChaleur,
       id: "a34d3051-e9ec-48a0-939d-e84293f96482-geste-1",
-      valid: true,
+      valid: false,
     },
   ],
 
@@ -33,14 +34,21 @@ export const MOCK_QUOTE_CHECK_INVALID: QuoteCheck = {
   },
 
   errors: [
+    // Erreurs admin
     MOCK_ERROR_DETAILS_ADMIN.rcsManquant.code,
     MOCK_ERROR_DETAILS_ADMIN.assuranceManquante.code,
     MOCK_ERROR_DETAILS_ADMIN.civiliteManquante.code,
     MOCK_ERROR_DETAILS_ADMIN.rgeNonCorrespondant.code,
     MOCK_ERROR_DETAILS_ADMIN.separationFourniturePose.code,
+    // Erreurs gestes
+    MOCK_ERROR_DETAILS_GESTES.chauffagePuissanceManquant.code,
+    MOCK_ERROR_DETAILS_GESTES.chauffageEtasManquant.code,
+    MOCK_ERROR_DETAILS_GESTES.poeleEmissionCOGManquant.code,
+    MOCK_ERROR_DETAILS_GESTES.poeleEmissionNoxManquant.code,
   ],
 
   error_details: [
+    // Erreurs admin
     {
       ...MOCK_ERROR_DETAILS_ADMIN.rcsManquant,
       id: "a34d3051-e9ec-48a0-939d-e84293f96482-1",
@@ -61,9 +69,31 @@ export const MOCK_QUOTE_CHECK_INVALID: QuoteCheck = {
       ...MOCK_ERROR_DETAILS_ADMIN.separationFourniturePose,
       id: "a34d3051-e9ec-48a0-939d-e84293f96482-5",
     },
+    // Erreurs gestes avec geste_id cohérent
+    {
+      ...MOCK_ERROR_DETAILS_GESTES.chauffagePuissanceManquant,
+      id: "a34d3051-e9ec-48a0-939d-e84293f96482-6",
+      geste_id: "a34d3051-e9ec-48a0-939d-e84293f96482-geste-1",
+    },
+    {
+      ...MOCK_ERROR_DETAILS_GESTES.chauffageEtasManquant,
+      id: "a34d3051-e9ec-48a0-939d-e84293f96482-7",
+      geste_id: "a34d3051-e9ec-48a0-939d-e84293f96482-geste-1",
+    },
+    {
+      ...MOCK_ERROR_DETAILS_GESTES.poeleEmissionCOGManquant,
+      id: "a34d3051-e9ec-48a0-939d-e84293f96482-8",
+      geste_id: "a34d3051-e9ec-48a0-939d-e84293f96482-geste-1",
+    },
+    {
+      ...MOCK_ERROR_DETAILS_GESTES.poeleEmissionNoxManquant,
+      id: "a34d3051-e9ec-48a0-939d-e84293f96482-9",
+      geste_id: "a34d3051-e9ec-48a0-939d-e84293f96482-geste-1",
+    },
   ],
 
   error_messages: {
+    // Messages admin
     [MOCK_ERROR_DETAILS_ADMIN.rcsManquant.code]:
       MOCK_ERROR_DETAILS_ADMIN.rcsManquant.title,
     [MOCK_ERROR_DETAILS_ADMIN.assuranceManquante.code]:
@@ -74,6 +104,15 @@ export const MOCK_QUOTE_CHECK_INVALID: QuoteCheck = {
       MOCK_ERROR_DETAILS_ADMIN.rgeNonCorrespondant.title,
     [MOCK_ERROR_DETAILS_ADMIN.separationFourniturePose.code]:
       MOCK_ERROR_DETAILS_ADMIN.separationFourniturePose.title,
+    // Messages gestes
+    [MOCK_ERROR_DETAILS_GESTES.chauffagePuissanceManquant.code]:
+      MOCK_ERROR_DETAILS_GESTES.chauffagePuissanceManquant.title,
+    [MOCK_ERROR_DETAILS_GESTES.chauffageEtasManquant.code]:
+      MOCK_ERROR_DETAILS_GESTES.chauffageEtasManquant.title,
+    [MOCK_ERROR_DETAILS_GESTES.poeleEmissionCOGManquant.code]:
+      MOCK_ERROR_DETAILS_GESTES.poeleEmissionCOGManquant.title,
+    [MOCK_ERROR_DETAILS_GESTES.poeleEmissionNoxManquant.code]:
+      MOCK_ERROR_DETAILS_GESTES.poeleEmissionNoxManquant.title,
   },
 
   control_codes: MOCK_CONTROL_CODES_COMPLETE,
