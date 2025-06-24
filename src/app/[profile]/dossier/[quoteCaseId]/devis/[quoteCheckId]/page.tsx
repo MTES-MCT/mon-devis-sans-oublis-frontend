@@ -3,7 +3,6 @@ import {
   QuoteSidemenuDesktop,
   QuoteSidemenuMobile,
 } from "@/components/QuoteSideMenu";
-import { useUserProfile } from "@/hooks";
 import { quoteService } from "@/lib/client/apiWrapper";
 import { ResultGestesClient } from "@/page-sections";
 import { QuoteCheck } from "@/types";
