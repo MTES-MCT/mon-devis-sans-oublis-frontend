@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { Notice } from "@/components";
 import { statService } from "@/lib/client/apiWrapper";
 import wording from "@/wording";

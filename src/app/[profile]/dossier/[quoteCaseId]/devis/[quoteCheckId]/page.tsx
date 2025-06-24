@@ -16,13 +16,13 @@ export default async function DevisDossierPage({
     quoteCaseId: string;
   }>;
 }) {
-  const params = await initialParams;
+  const { profile, quoteCaseId, quoteCheckId } = await initialParams;
 
-  if (!params.quoteCheckId) {
+  if (!quoteCheckId) {
     console.error("Erreur : quoteCheckId est undefined !");
   }
 
-  if (!params.quoteCaseId) {
+  if (!quoteCaseId) {
     console.error("Erreur : quoteCaseId est undefined !");
   }
 
@@ -31,8 +31,8 @@ export default async function DevisDossierPage({
   let allQuoteChecks: QuoteCheck[] = [];
 
   try {
-    currentDevis = await quoteService.getQuoteCheck(params.quoteCheckId);
-    currentDossier = await getQuoteCase(params.quoteCaseId);
+    currentDevis = await quoteService.getQuoteCheck(quoteCheckId);
+    currentDossier = await getQuoteCase(quoteCaseId);
 
     // Récupérer tous les devis du dossier
     if (currentDossier?.quote_checks) {
@@ -48,9 +48,9 @@ export default async function DevisDossierPage({
       <div className="fr-container fr-unhidden fr-hidden-md">
         <QuoteSidemenuMobile
           quoteChecks={allQuoteChecks}
-          currentQuoteCheckId={params.quoteCheckId}
-          profile={params.profile}
-          quoteCaseId={params.quoteCaseId}
+          currentQuoteCheckId={quoteCheckId}
+          profile={profile}
+          quoteCaseId={quoteCaseId}
         />
       </div>
 
@@ -60,9 +60,9 @@ export default async function DevisDossierPage({
           <div className="fr-col-md-3 fr-mt-8v fr-hidden fr-unhidden-md">
             <QuoteSidemenuDesktop
               quoteChecks={allQuoteChecks}
-              currentQuoteCheckId={params.quoteCheckId}
-              profile={params.profile}
-              quoteCaseId={params.quoteCaseId}
+              currentQuoteCheckId={quoteCheckId}
+              profile={profile}
+              quoteCaseId={quoteCaseId}
             />
           </div>
 
@@ -70,8 +70,8 @@ export default async function DevisDossierPage({
           <div className="fr-col-12 fr-col-md-9">
             <ResultGestesClient
               currentDevis={currentDevis}
-              profile={params.profile}
-              quoteCheckId={params.quoteCheckId}
+              profile={profile}
+              quoteCheckId={quoteCheckId}
               showDeletedErrors={false}
               enableCrispFeedback={true}
               dossier={currentDossier ?? undefined}
