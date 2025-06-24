@@ -122,7 +122,8 @@ export default function InvalidQuoteCase({
         <div className="fr-mb-6w">
           <h3>Corrections par devis ⬇️</h3>
           <div className="fr-mt-4v">
-            <div className="overflow-hidden rounded-lg border-shadow">
+            {/* Version desktop : tableau */}
+            <div className="hidden md:block overflow-hidden rounded-lg border-shadow">
               <table className="w-full">
                 <tbody>
                   {[...invalidQuotes, ...validQuotes].map(
@@ -142,7 +143,7 @@ export default function InvalidQuoteCase({
                             {/* Zone gauche - Tag fichier */}
                             <div className="fr-tag fr-tag--dismiss fr-background-contrast--blue-france fr-text-action-high--blue-france">
                               <span
-                                className={`fr-icon-file-text-fill fr-icon--sm mr-2`}
+                                className="fr-icon-file-text-fill fr-icon--sm mr-2"
                                 aria-hidden="true"
                               ></span>
                               <span className="fr-tag__label">
@@ -173,7 +174,7 @@ export default function InvalidQuoteCase({
                                   Voir les corrections
                                 </Link>
                               ) : (
-                                <div className="w-[140px]"></div> // Espace réservé invisible avec la même largeur approximative qu'un bouton
+                                <div className="w-[140px]"></div>
                               )}
                             </div>
                           </td>
@@ -183,6 +184,61 @@ export default function InvalidQuoteCase({
                   )}
                 </tbody>
               </table>
+            </div>
+
+            {/* Version mobile : cartes empilées */}
+            <div className="md:hidden space-y-3">
+              {[...invalidQuotes, ...validQuotes].map((devis) => {
+                const errorCount =
+                  devis.error_details?.filter((error) => !error.deleted)
+                    .length || 0;
+                const isValid = devis.status === "valid";
+
+                return (
+                  <div
+                    key={devis.id}
+                    className="border border-gray-300 bg-white fr-p-3w rounded-lg shadow-sm"
+                  >
+                    {/* Tag fichier */}
+                    <div className="fr-mb-2w">
+                      <div className="fr-tag fr-tag--dismiss fr-background-contrast--blue-france fr-text-action-high--blue-france">
+                        <span
+                          className="fr-icon-file-text-fill fr-icon--sm mr-2"
+                          aria-hidden="true"
+                        ></span>
+                        <span className="fr-tag__label">
+                          {removeFileExtension(devis.filename)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Badge et bouton empilés */}
+                    <div className="flex flex-col gap-2">
+                      {/* Badge statut */}
+                      {isValid ? (
+                        <p className="fr-badge fr-badge--success mb-0 self-start">
+                          Devis conforme
+                        </p>
+                      ) : (
+                        <p className="fr-badge fr-badge--warning mb-0 self-start">
+                          {errorCount} correction
+                          {errorCount > 1 ? "s" : ""}
+                        </p>
+                      )}
+
+                      {/* Bouton action */}
+                      {!isValid && (
+                        <Link
+                          className="fr-btn fr-btn--tertiary fr-btn--sm self-start"
+                          href={`/${profile}/dossier/${dossier.id}/devis/${devis.id}`}
+                        >
+                          Voir les corrections
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
