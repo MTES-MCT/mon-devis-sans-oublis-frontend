@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 import { useConseillerRoutes } from "@/hooks";
-import { ErrorDetails, Gestes, QuoteCase, QuoteCheck } from "@/types";
+import { ErrorDetails, Gestes, QuoteCase } from "@/types";
 import QuoteErrorSharingModal from "./QuoteErrorSharingCard.modal";
 import { QUOTE_ERROR_SHARING_WORDING } from "./QuoteErrorSharingCard.wording";
 import { useMatomo } from "@/hooks/useMatomo";
