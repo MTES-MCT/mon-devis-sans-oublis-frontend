@@ -15,11 +15,12 @@ import wording from "@/wording";
 interface QuoteCaseConsistencyErrorTableProps {
   errorDetails: ErrorDetails[];
   quoteCaseId: string;
+  showHeader?: boolean;
 }
 
 const QuoteCaseConsistencyErrorTable: React.FC<
   QuoteCaseConsistencyErrorTableProps
-> = ({ errorDetails, quoteCaseId }) => {
+> = ({ errorDetails, quoteCaseId, showHeader = true }) => {
   const { reasons: deleteErrorReasons } = useDeleteErrorReasons();
 
   // Filter uniquement les erreurs de cohérence entre devis
@@ -92,29 +93,32 @@ const QuoteCaseConsistencyErrorTable: React.FC<
   return (
     <div className="overflow-hidden rounded-lg border-shadow">
       <table className="w-full">
-        <caption className="bg-[var(--background-action-low-blue-france)] font-bold text-left p-4 flex items-center justify-between">
-          <span className="flex gap-2 items-center">
-            <p className="fr-mb-0 text-[var(--text-default-grey)]">
-              Erreurs de cohérence entre devis
-            </p>
-            <span
-              className="fr-icon-information-fill cursor-help"
-              title="Ces erreurs concernent des problèmes de cohérence détectés entre les différents devis du dossier"
+        {showHeader && (
+          <caption className="bg-[var(--background-action-low-blue-france)] font-bold text-left p-4 flex items-center justify-between">
+            <span className="flex gap-2 items-center">
+              <p className="fr-mb-0 text-[var(--text-default-grey)]">
+                Erreurs de cohérence entre devis
+              </p>
+              <span
+                className="fr-icon-information-fill cursor-help"
+                title="Ces erreurs concernent des problèmes de cohérence détectés entre les différents devis du dossier"
+              />
+            </span>
+            <Badge
+              className="self-center inline-block"
+              icon={
+                activeErrorsCount === 0 ? "fr-icon-success-fill" : undefined
+              }
+              label={getBadgeLabel()}
+              size={BadgeSize.X_SMALL}
+              variant={
+                activeErrorsCount === 0
+                  ? BadgeVariant.GREEN_LIGHT
+                  : BadgeVariant.GREY
+              }
             />
-          </span>
-          <Badge
-            className="self-center inline-block"
-            icon={activeErrorsCount === 0 ? "fr-icon-success-fill" : undefined}
-            label={getBadgeLabel()}
-            size={BadgeSize.X_SMALL}
-            variant={
-              activeErrorsCount === 0
-                ? BadgeVariant.GREEN_LIGHT
-                : BadgeVariant.GREY
-            }
-          />
-        </caption>
-
+          </caption>
+        )}
         <tbody>
           {consistencyErrors.map((error, index) => (
             <QuoteCaseConsistencyErrorRow

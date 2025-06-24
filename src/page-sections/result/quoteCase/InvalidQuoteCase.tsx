@@ -109,6 +109,7 @@ export default function InvalidQuoteCase({
           <h3>Incohérence entre les devis ⬇️</h3>
           <div className="fr-mt-4v">
             <QuoteCaseConsistencyErrorTable
+              showHeader={false}
               errorDetails={quoteCaseErrors}
               quoteCaseId={quoteCaseId}
             />
