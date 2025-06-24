@@ -13,7 +13,14 @@ import {
   Toast,
 } from "@/components";
 import { useConseillerRoutes, useScrollPosition } from "@/hooks";
-import { Category, ErrorDetails, QuoteCheck, Rating, Status } from "@/types";
+import {
+  Category,
+  ErrorDetails,
+  QuoteCase,
+  QuoteCheck,
+  Rating,
+  Status,
+} from "@/types";
 import { formatDateToFrench } from "@/utils";
 import wording from "@/wording";
 import { quoteService } from "@/lib/client/apiWrapper";
@@ -39,6 +46,7 @@ interface ResultGestesClientProps {
   quoteCheckId: string;
   showDeletedErrors: boolean;
   enableCrispFeedback?: boolean;
+  dossier?: QuoteCase;
 }
 
 export default function ResultGestesClient({
@@ -49,6 +57,7 @@ export default function ResultGestesClient({
   quoteCheckId,
   showDeletedErrors,
   enableCrispFeedback = false,
+  dossier,
 }: ResultGestesClientProps) {
   const pathname = usePathname();
   const router = useRouter();
@@ -518,6 +527,7 @@ export default function ResultGestesClient({
             onUndoDeleteError={handleUndoDeleteError}
             uploadedFileName={currentDevis.filename || ""}
             controlsCount={currentDevis.controls_count || 0}
+            dossier={dossier}
           />
         ) : null}
         <GlobalCommentModal

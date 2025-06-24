@@ -2,12 +2,13 @@
 
 import { Badge, BadgeSize, BadgeVariant, QuoteErrorTable } from "@/components";
 import { useConseillerRoutes } from "@/hooks";
-import { Category, ErrorDetails, Gestes } from "@/types";
+import { Category, ErrorDetails, Gestes, QuoteCase } from "@/types";
 import wording from "@/wording";
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
 import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
 import GlobalComment from "@/components/GlobalComment/GlobalComment";
+import QuoteCaseConsistencyErrorTable from "@/components/QuoteCaseConsistencyError";
 
 interface InvalidQuoteCheckProps {
   analysisDate: string | null;
@@ -34,6 +35,7 @@ interface InvalidQuoteCheckProps {
   onUndoDeleteError?: (quoteCheckId: string, errorDetailsId: string) => void;
   uploadedFileName: string;
   controlsCount?: number;
+  dossier?: QuoteCase;
 }
 
 export default function InvalidQuoteCheck({
@@ -53,6 +55,7 @@ export default function InvalidQuoteCheck({
   onUndoDeleteError,
   uploadedFileName,
   controlsCount = 0,
+  dossier,
 }: InvalidQuoteCheckProps) {
   const { isConseillerAndEdit } = useConseillerRoutes();
   const shouldShowConformityCard = () => controlsCount > 0;
@@ -61,6 +64,7 @@ export default function InvalidQuoteCheck({
   const gestesErrors = list.filter(
     (error) => error.category === Category.GESTES
   );
+  const quoteCaseErrors = dossier?.error_details ?? [];
 
   return (
     <>
@@ -153,6 +157,19 @@ export default function InvalidQuoteCheck({
           {wording.page_upload_id.subtitle}
         </h3>
         <div className="flex flex-col gap-8">
+          {/*  Erreurs de cohérence de dossier si applicable */}
+          {quoteCaseErrors.length > 0 && !!dossier && (
+            <div className="fr-mb-6w">
+              <div className="fr-mt-4v">
+                <QuoteCaseConsistencyErrorTable
+                  errorDetails={quoteCaseErrors}
+                  quoteCaseId={dossier.id}
+                />
+              </div>
+            </div>
+          )}
+
+          {/*  Erreurs administratives */}
           <QuoteErrorTable
             category={Category.ADMIN}
             deleteErrorReasons={deleteErrorReasons}
@@ -170,6 +187,8 @@ export default function InvalidQuoteCheck({
             onUndoDeleteError={onUndoDeleteError}
             quoteCheckId={id}
           />
+
+          {/*  Erreurs des gestes */}
           <QuoteErrorTable
             category={Category.GESTES}
             deleteErrorReasons={deleteErrorReasons}
