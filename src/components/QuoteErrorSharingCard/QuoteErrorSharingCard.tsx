@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 import { useConseillerRoutes } from "@/hooks";
-import { ErrorDetails, Gestes } from "@/types";
+import { ErrorDetails, Gestes, QuoteCase } from "@/types";
 import QuoteErrorSharingModal from "./QuoteErrorSharingCard.modal";
 import { QUOTE_ERROR_SHARING_WORDING } from "./QuoteErrorSharingCard.wording";
 import { useMatomo } from "@/hooks/useMatomo";
@@ -14,17 +14,25 @@ import { MATOMO_EVENTS } from "@/lib/constants/matomoEvents";
 export interface QuoteErrorSharingCardProps {
   baseUrl?: string;
   className?: string;
+
+  // Props pour QuoteCheck
   adminErrorList?: ErrorDetails[];
-  gestes: Gestes[];
+  gestesErrorList?: ErrorDetails[];
+  gestes?: Gestes[];
   fileName?: string;
+
+  // Props pour QuoteCase
+  quoteCase?: QuoteCase;
 }
 
 const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
   baseUrl = typeof window !== "undefined" ? window.location.origin : "",
   className,
   adminErrorList = [],
+  gestesErrorList = [],
   gestes = [],
   fileName,
+  quoteCase,
 }) => {
   const pathname = usePathname();
   const [isUrlCopied, setIsUrlCopied] = useState<boolean>(false);
@@ -95,8 +103,10 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         adminErrorList={adminErrorList}
+        gestesErrorList={gestesErrorList}
         gestes={gestes}
         fileName={fileName}
+        quoteCase={quoteCase}
       />
     </>
   );

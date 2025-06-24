@@ -9,7 +9,7 @@ import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteL
 import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
 import GlobalComment from "@/components/GlobalComment/GlobalComment";
 
-interface InvalidQuoteProps {
+interface InvalidQuoteCheckProps {
   analysisDate: string | null;
   comment: string;
   deleteErrorReasons?: { id: string; label: string }[];
@@ -36,7 +36,7 @@ interface InvalidQuoteProps {
   controlsCount?: number;
 }
 
-export default function InvalidQuote({
+export default function InvalidQuoteCheck({
   analysisDate,
   comment,
   deleteErrorReasons,
@@ -53,9 +53,14 @@ export default function InvalidQuote({
   onUndoDeleteError,
   uploadedFileName,
   controlsCount = 0,
-}: InvalidQuoteProps) {
+}: InvalidQuoteCheckProps) {
   const { isConseillerAndEdit } = useConseillerRoutes();
   const shouldShowConformityCard = () => controlsCount > 0;
+
+  const adminErrors = list.filter((error) => error.category === Category.ADMIN);
+  const gestesErrors = list.filter(
+    (error) => error.category === Category.GESTES
+  );
 
   return (
     <>
@@ -191,7 +196,8 @@ export default function InvalidQuote({
           <QuoteErrorSharingCard
             className="md:flex-1"
             fileName={uploadedFileName}
-            adminErrorList={list}
+            adminErrorList={adminErrors}
+            gestesErrorList={gestesErrors}
             gestes={gestes}
           />
           <QuoteLaunchAnalysisCard className="md:flex-1" />

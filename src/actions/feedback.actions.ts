@@ -1,20 +1,7 @@
 "use server";
 
 import { apiClient } from "@/lib/server/apiClient";
-import { Rating } from "@/types";
-
-interface FeedbackResponse {
-  id?: string;
-  comment: string;
-  created_at?: string;
-  [key: string]: unknown;
-}
-
-interface GlobalFeedbackData {
-  comment: string;
-  email: string | null;
-  rating: Rating;
-}
+import { FeedbackResponse, GlobalFeedbackData } from "@/types";
 
 // Envoi d'un feedback pour une erreur spécifique
 export async function sendErrorFeedback(

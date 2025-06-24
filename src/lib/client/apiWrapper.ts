@@ -1,12 +1,12 @@
 import {
-  getQuote,
-  uploadQuote,
-  updateQuote,
-  updateQuoteComment,
-  getQuoteMetadata,
-  addQuoteComment,
-  removeQuoteComment,
-} from "@/actions/quote.actions";
+  getQuoteCheck,
+  uploadQuoteCheck,
+  updateQuoteCheck,
+  updateQuoteCheckComment,
+  getQuoteCheckMetadata,
+  addQuoteCheckComment,
+  removeQuoteCheckComment,
+} from "@/actions/quoteCheck.actions";
 
 import {
   sendErrorFeedback,
@@ -24,13 +24,13 @@ import {
 
 // Wrapper pour maintenir la compatibilité avec l'ancien code
 export const quoteService = {
-  getQuote,
-  uploadQuote,
-  updateQuote,
-  updateQuoteComment,
-  getQuoteMetadata,
-  addQuoteComment,
-  removeQuoteComment,
+  getQuoteCheck,
+  uploadQuoteCheck,
+  updateQuoteCheck,
+  updateQuoteCheckComment,
+  getQuoteCheckMetadata,
+  addQuoteCheckComment,
+  removeQuoteCheckComment,
   deleteErrorDetail,
   undoDeleteErrorDetail,
   getDeleteErrorDetailReasons,

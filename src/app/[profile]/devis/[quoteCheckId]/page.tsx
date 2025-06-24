@@ -1,6 +1,6 @@
 import { Notice } from "@/components";
 import { quoteService } from "@/lib/client/apiWrapper";
-import { ResultClient } from "@/page-sections";
+import { ResultGestesClient } from "@/page-sections";
 import wording from "@/wording";
 
 export default async function Result({
@@ -16,7 +16,7 @@ export default async function Result({
 
   let currentDevis = null;
   try {
-    currentDevis = await quoteService.getQuote(params.quoteCheckId);
+    currentDevis = await quoteService.getQuoteCheck(params.quoteCheckId);
   } catch (error) {
     console.error("Error fetching devis:", error);
   }
@@ -28,7 +28,7 @@ export default async function Result({
         description={wording.layout.notice.description}
         title={wording.layout.notice.title}
       />
-      <ResultClient
+      <ResultGestesClient
         currentDevis={currentDevis}
         profile={params.profile}
         quoteCheckId={params.quoteCheckId}

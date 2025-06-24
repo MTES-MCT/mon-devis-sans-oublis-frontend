@@ -6,7 +6,7 @@ import Link from "next/link";
 const ALLOWED_TYPES = ["application/pdf"];
 const MAXIMUM_FILES_COUNT = 20;
 
-export interface UploadQuotesProps {
+export interface UploadMultipleProps {
   maxFileSize: number; // in MB
   onFileUpload: (files: File[]) => void;
   setError: (error: string | null) => void;
@@ -18,7 +18,7 @@ interface FileStatus {
   error?: string;
 }
 
-const UploadQuotes: React.FC<UploadQuotesProps> = ({
+const UploadMultiple: React.FC<UploadMultipleProps> = ({
   maxFileSize,
   onFileUpload,
   setError,
@@ -118,9 +118,15 @@ const UploadQuotes: React.FC<UploadQuotesProps> = ({
       .filter((status) => status.isValid)
       .map((status) => status.file);
 
-    if (validFiles.length > 0) {
-      onFileUpload(validFiles);
-    } else if (updatedFiles.length === 0) {
+    // Notification du parent dans tous les cas
+    onFileUpload(validFiles);
+
+    // Gestion erreurs
+    if (updatedFiles.length === 0) {
+      setError(null);
+    } else if (validFiles.length === 0) {
+      setError("Aucun fichier valide");
+    } else {
       setError(null);
     }
   };
@@ -376,4 +382,4 @@ const UploadQuotes: React.FC<UploadQuotesProps> = ({
   );
 };
 
-export default UploadQuotes;
+export default UploadMultiple;

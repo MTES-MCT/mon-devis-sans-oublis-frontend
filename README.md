@@ -52,20 +52,23 @@ cp .env.example .env.docker
 
 ### Variables d'environnement principales
 
-| Variable                       | Description                           | Exemple                                                  | Requis    | Type   |
-| ------------------------------ | ------------------------------------- | -------------------------------------------------------- | --------- | ------ |
-| `NODE_ENV`                     | Environnement d'exécution             | `development` ou `production`                            | Requis    | Server |
-| `NEXT_PUBLIC_APP_ENV`          | Environnement applicatif              | `local`, `docker`, `staging`, `production`               | Requis    | Shared |
-| `NEXT_TELEMETRY_DISABLED`      | Désactive la télémétrie Next.js       | `1`                                                      | Optionnel | Server |
-| `NEXT_PRIVATE_API_AUTH_TOKEN`  | Token d'authentification API          | `superAPIAuthTokenExample`                               | Requis    | Server |
-| `NEXT_PUBLIC_API_URL`          | URL de l'API backend                  | `https://api.staging.mon-devis-sans-oublis.beta.gouv.fr` | Requis    | Shared |
-| `NEXT_PUBLIC_MATOMO_SITE_ID`   | ID du site Matomo                     | `1`                                                      | Optionnel | Client |
-| `NEXT_PUBLIC_MATOMO_URL`       | URL de l'instance Matomo              | `https://stats.beta.gouv.fr`                             | Optionnel | Client |
-| `NEXT_PUBLIC_SENTRY_DSN`       | DSN Sentry pour le tracking d'erreurs | `https://xxx@sentry.io/xxx`                              | Optionnel | Client |
-| `NEXT_PUBLIC_SENTRY_ORG`       | Organisation Sentry                   | `mon-organisation`                                       | Optionnel | Client |
-| `NEXT_PUBLIC_SENTRY_PROJECT`   | Projet Sentry                         | `mon-devis-frontend`                                     | Optionnel | Client |
-| `NEXT_PUBLIC_SENTRY_URL`       | URL de l'instance Sentry              | `https://sentry.io/`                                     | Optionnel | Client |
-| `NEXT_PUBLIC_CRISP_WEBSITE_ID` | ID du Site Crisp                      | `b3f91d7a-e29c-4e12-8c76-3fd6a218b9f1`                   | Optionnel | Client |
+| Variable                         | Description                           | Exemple                                                  | Requis    | Type   |
+| -------------------------------- | ------------------------------------- | -------------------------------------------------------- | --------- | ------ |
+| `NODE_ENV`                       | Environnement d'exécution             | `development` ou `production`                            | Requis    | Server |
+| `NEXT_PUBLIC_APP_ENV`            | Environnement applicatif              | `local`, `docker`, `staging`, `production`               | Requis    | Shared |
+| `NEXT_TELEMETRY_DISABLED`        | Désactive la télémétrie Next.js       | `1`                                                      | Optionnel | Server |
+| `NEXT_PRIVATE_API_AUTH_TOKEN`    | Token d'authentification API          | `superAPIAuthTokenExample`                               | Requis    | Server |
+| `NEXT_PUBLIC_API_URL`            | URL de l'API backend                  | `https://api.staging.mon-devis-sans-oublis.beta.gouv.fr` | Requis    | Shared |
+| `NEXT_PUBLIC_MATOMO_SITE_ID`     | ID du site Matomo                     | `1`                                                      | Optionnel | Client |
+| `NEXT_PUBLIC_MATOMO_URL`         | URL de l'instance Matomo              | `https://stats.beta.gouv.fr`                             | Optionnel | Client |
+| `NEXT_PUBLIC_SENTRY_DSN`         | DSN Sentry pour le tracking d'erreurs | `https://xxx@sentry.io/xxx`                              | Optionnel | Client |
+| `NEXT_PUBLIC_SENTRY_ORG`         | Organisation Sentry                   | `mon-organisation`                                       | Optionnel | Client |
+| `NEXT_PUBLIC_SENTRY_PROJECT`     | Projet Sentry                         | `mon-devis-frontend`                                     | Optionnel | Client |
+| `NEXT_PUBLIC_SENTRY_URL`         | URL de l'instance Sentry              | `https://sentry.io/`                                     | Optionnel | Client |
+| `NEXT_PUBLIC_CRISP_WEBSITE_ID`   | ID du Site Crisp                      | `b3f91d7a-e29c-4e12-8c76-3fd6a218b9f1`                   | Optionnel | Client |
+| `NEXT_PUBLIC_ENABLE_MOCKS`       | Active/désactive les mocks            | `true` ou `false`                                        | Optionnel | Client |
+| `NEXT_PUBLIC_FORCE_MOCKS`        | Force les mocks même en production    | `true` ou `false`                                        | Optionnel | Client |
+| `NEXT_PUBLIC_MOCK_DELAY`         | Délai API simulé en ms                | `500`                                                    | Optionnel | Client |
 
 ### Types de variables d'environnement
 
@@ -360,6 +363,74 @@ npm run test:watch
 - Vérifiez que `.env.local` existe
 - Copiez `.env.example` si nécessaire
 - Ne laissez jamais de variables vides (`VARIABLE=`)
+
+## 🎭 Système de Mocks
+
+Pour faciliter le développement et les tests sans dépendre du backend, l'application dispose d'un système de mocks complet.
+
+### URLs de test
+
+Vous pouvez tester différents scénarios en utilisant des IDs spécifiques qui activent automatiquement les mocks :
+
+- `/result/test-devis-valide` → Devis parfaitement valide
+- `/result/test-devis-invalide` → Devis avec erreurs techniques
+- `/dossier/test-dossier-valide` → Dossier de rénovation d'ampleur valide
+- `/dossier/test-dossier-invalide` → Dossier avec erreurs de cohérence entre devis
+
+**Note :** Ces URLs fonctionnent même en production pour les démos et présentations.
+
+### Configuration des mocks
+
+Les mocks sont contrôlés par les variables d'environnement :
+
+```bash
+# Activation globale des mocks (développement)
+NEXT_PUBLIC_ENABLE_MOCKS=true
+
+# Délai simulé pour tester les loading states
+NEXT_PUBLIC_MOCK_DELAY=300
+```
+
+### Structure des mocks
+
+```
+src/utils/mocks/
+├── config.ts                    # Configuration et helpers
+├── data.ts                      # Sélection des mocks selon l'ID
+├── quoteCase/
+│   ├── quoteCase.valid.mock.ts  # Dossier valide complet
+│   └── quoteCase.invalid.mock.ts# Dossier avec erreurs de cohérence
+├── quoteCheck/
+│   ├── quoteCheck.valid.mock.ts # Devis valides (isolation, chauffage, menuiseries)
+│   └── quoteCheck.invalid.mock.ts# Devis avec erreurs techniques
+├── gestes/
+│   └── gestes.valid.mock.ts     # Gestes de rénovation
+└── shared/
+    └── metadata.mock.ts         # Métadonnées réutilisables
+```
+
+### Fonctionnement
+
+**En développement** (`NEXT_PUBLIC_ENABLE_MOCKS=true`) :
+- Tous les appels API utilisent les mocks
+- Idéal pour développer sans dépendre du backend
+
+**En production** :
+- Seuls les IDs de test (`test-*`) activent les mocks
+- Les vrais IDs utilisent l'API normale
+- Parfait pour les démos avec des données prévisibles
+
+**Logs en développement :**
+```
+🎭 Mock utilisé: getQuoteCheck avec ID: test-devis-valide
+```
+
+**Avantages :**
+- ✅ Développement sans dépendance backend
+- ✅ Tests de différents scénarios facilement  
+- ✅ URLs de démo en production
+- ✅ Délai simulé pour tester les loading states
+- ✅ Structure modulaire et réutilisable
 
 ### Support
 

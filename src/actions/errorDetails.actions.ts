@@ -5,20 +5,25 @@ import { revalidatePath } from "next/cache";
 
 // Suppression d'un détail d'erreur
 export async function deleteErrorDetail(
-  quoteCheckId: string,
+  id: string,
   errorDetailsId: string,
   reason: string
 ): Promise<boolean> {
   try {
-    if (!quoteCheckId || !errorDetailsId) {
-      throw new Error("Quote check ID and error details ID are required");
+    if (!id || !errorDetailsId) {
+      throw new Error("ID and error details ID are required");
     }
 
     await apiClient.delete(
-      `/api/v1/quote_checks/${quoteCheckId}/error_details/${errorDetailsId}?reason=${reason}`
+      `/api/v1/quote_checks/${id}/error_details/${errorDetailsId}?reason=${reason}`
     );
 
-    revalidatePath(`/result/${quoteCheckId}`);
+    // Revalider les routes possibles
+    revalidatePath(`/devis/${id}`); // Pour les devis
+    revalidatePath(`/artisan/dossier/${id}`); // Pour les dossiers
+    revalidatePath(`/conseiller/dossier/${id}`);
+    revalidatePath(`/particulier/dossier/${id}`);
+
     return true;
   } catch (error) {
     console.error("Error deleting error detail:", error);

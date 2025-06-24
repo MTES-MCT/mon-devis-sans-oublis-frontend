@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { Tile } from "@/components";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import { quoteService } from "@/lib/client/apiWrapper";
-import RenovationTypeSelection from "@/page-sections/upload/RenovationTypeSelection";
-import { Metadata, RenovationType } from "@/types";
+import { Metadata, RenovationTypes } from "@/types";
 import { useRouter, useParams } from "next/navigation";
 import { typeRenovationStorage } from "@/lib/utils/typeRenovationStorage.utils";
+import { RenovationTypeSelection } from "@/page-sections";
 
 export default function TypeRenovation() {
   const [selectedType, setSelectedType] = useState<string>("");
@@ -27,7 +27,7 @@ export default function TypeRenovation() {
 
     const loadMetadata = async () => {
       try {
-        const data = await quoteService.getQuoteMetadata();
+        const data = await quoteService.getQuoteCheckMetadata();
         setMetadata(data);
       } catch (error) {
         console.error("Error loading metadata:", error);
@@ -55,7 +55,7 @@ export default function TypeRenovation() {
       });
 
       const routePath =
-        selectedType === RenovationType.GESTES
+        selectedType === RenovationTypes.GESTES
           ? "renovation-par-gestes"
           : "renovation-ampleur";
 
@@ -105,9 +105,9 @@ export default function TypeRenovation() {
                     title="Rénovation par gestes"
                     horizontal={true}
                     isCheckbox={true}
-                    isChecked={selectedType === RenovationType.GESTES}
-                    onCheck={() => handleTypeSelection(RenovationType.GESTES)}
-                    value={RenovationType.GESTES}
+                    isChecked={selectedType === RenovationTypes.GESTES}
+                    onCheck={() => handleTypeSelection(RenovationTypes.GESTES)}
+                    value={RenovationTypes.GESTES}
                   />
                 </div>
                 <div className="fr-col-12 fr-col-md-6 flex">
@@ -117,9 +117,9 @@ export default function TypeRenovation() {
                     title="Rénovation d'ampleur"
                     horizontal={true}
                     isCheckbox={true}
-                    isChecked={selectedType === RenovationType.AMPLEUR}
-                    onCheck={() => handleTypeSelection(RenovationType.AMPLEUR)}
-                    value={RenovationType.AMPLEUR}
+                    isChecked={selectedType === RenovationTypes.AMPLEUR}
+                    onCheck={() => handleTypeSelection(RenovationTypes.AMPLEUR)}
+                    value={RenovationTypes.AMPLEUR}
                   />
                 </div>
               </div>

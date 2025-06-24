@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { ErrorDetails, Gestes } from "@/types";
-import { generateEmailContent } from "./QuoteErrorSharingCard.modal.content";
+import { ErrorDetails, Gestes, QuoteCase } from "@/types";
+import {
+  generateEmailContent,
+  generateCaseEmailContent,
+} from "./QuoteErrorSharingCard.modal.content";
 import { handleCopyToClipboard } from "./QuoteErrorSharingCard.modal.utils";
 import Modal, { ModalPosition } from "../Modal/Modal";
 import { QUOTE_ERROR_SHARING_WORDING_MODAL } from "./QuoteErrorSharingCard.modal.wording";
@@ -10,21 +13,35 @@ import { QUOTE_ERROR_SHARING_WORDING_MODAL } from "./QuoteErrorSharingCard.modal
 export interface QuoteErrorSharingModalProps {
   isOpen: boolean;
   onClose: () => void;
-  adminErrorList: ErrorDetails[];
-  gestes: Gestes[];
+  adminErrorList?: ErrorDetails[];
+  gestesErrorList?: ErrorDetails[];
+  gestes?: Gestes[];
   fileName?: string;
+  quoteCase?: QuoteCase;
 }
 
 const QuoteErrorSharingModal: React.FC<QuoteErrorSharingModalProps> = ({
   isOpen,
   onClose,
-  adminErrorList,
+  adminErrorList = [],
+  gestesErrorList = [],
   gestes = [],
   fileName = "",
+  quoteCase,
 }) => {
-  const [emailContent, setEmailContent] = useState(() =>
-    generateEmailContent(adminErrorList, gestes, fileName)
-  );
+  // Génère le contenu selon le type (QuoteCase ou QuoteCheck)
+  const [emailContent, setEmailContent] = useState(() => {
+    if (quoteCase) {
+      return generateCaseEmailContent(quoteCase);
+    }
+    return generateEmailContent(
+      adminErrorList,
+      gestesErrorList,
+      gestes,
+      fileName
+    );
+  });
+
   const [isCopied, setIsCopied] = useState(false);
   const [showHTML, setShowHTML] = useState(false);
 

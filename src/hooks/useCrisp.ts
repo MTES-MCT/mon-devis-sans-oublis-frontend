@@ -1,6 +1,6 @@
 "use client";
 
-import { WindowWithCrisp } from "@/types/crisp";
+import { WindowWithCrisp } from "@/types";
 import { useEffect, useState } from "react";
 
 export const useCrisp = () => {

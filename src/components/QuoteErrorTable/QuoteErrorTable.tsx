@@ -47,13 +47,35 @@ export interface QuoteErrorTablePropsGestes {
   quoteCheckId: string;
 }
 
+export interface QuoteErrorTablePropsIncoherence {
+  category: Category.INCOHERENCE_DEVIS;
+  deleteErrorReasons?: { id: string; label: string }[];
+  errorDetails: ErrorDetails[];
+  onAddErrorComment?: (
+    quoteCaseId: string,
+    errorDetailsId: string,
+    comment: string
+  ) => void;
+  onDeleteError: (
+    quoteCaseId: string,
+    errorDetailsId: string,
+    reason: string
+  ) => void;
+  onDeleteErrorComment?: (quoteCaseId: string, errorDetailsId: string) => void;
+  onHelpClick: (comment: string, errorDetailsId: string) => void;
+  onUndoDeleteError?: (quoteCaseId: string, errorDetailsId: string) => void;
+  quoteCaseId: string;
+}
+
 export type QuoteErrorTableProps =
   | QuoteErrorTablePropsAdmin
-  | QuoteErrorTablePropsGestes;
+  | QuoteErrorTablePropsGestes
+  | QuoteErrorTablePropsIncoherence;
 
 const QuoteErrorTable: React.FC<QuoteErrorTableProps> = (props) => {
   const isCategoryAdmin = props.category === Category.ADMIN;
   const isCategoryGestes = props.category === Category.GESTES;
+  const isCategoryIncoherence = props.category === Category.INCOHERENCE_DEVIS;
 
   const filteredAdminErrors = isCategoryAdmin
     ? props.errorDetails.filter((error) => error.category === Category.ADMIN)
@@ -63,8 +85,25 @@ const QuoteErrorTable: React.FC<QuoteErrorTableProps> = (props) => {
     ? props.errorDetails.filter((error) => error.category === Category.GESTES)
     : [];
 
+  const filteredIncoherenceErrors = isCategoryIncoherence
+    ? props.errorDetails.filter(
+        (error) => error.category === Category.INCOHERENCE_DEVIS
+      )
+    : [];
+
   const gestes =
     isCategoryGestes && "gestes" in props ? (props.gestes ?? []) : [];
+
+  // Fonction pour obtenir l'ID approprié selon le type
+  const getEntityId = () => {
+    if (isCategoryIncoherence && "quoteCaseId" in props) {
+      return props.quoteCaseId;
+    }
+    if ("quoteCheckId" in props) {
+      return props.quoteCheckId;
+    }
+    return "";
+  };
 
   const getErrorBadgeLabel = () => {
     const count = getErrorCount();
@@ -88,52 +127,76 @@ const QuoteErrorTable: React.FC<QuoteErrorTableProps> = (props) => {
     if (isCategoryAdmin) {
       return filteredAdminErrors.filter((error) => !error.deleted).length;
     }
+    if (isCategoryIncoherence) {
+      return filteredIncoherenceErrors.filter((error) => !error.deleted).length;
+    }
     return 0;
+  };
+
+  const getTableTitle = () => {
+    if (isCategoryGestes) {
+      return wording.components.quote_error_card.title_gestes;
+    }
+    if (isCategoryAdmin) {
+      return wording.components.quote_error_card.title_admin;
+    }
+    if (isCategoryIncoherence) {
+      return "Incohérences entre devis";
+    }
+    return "";
+  };
+
+  const getTooltipText = () => {
+    if (isCategoryGestes) {
+      return wording.components.quote_error_card.tooltip.gestes;
+    }
+    if (isCategoryAdmin) {
+      return wording.components.quote_error_card.tooltip.admin;
+    }
+    if (isCategoryIncoherence) {
+      return "Ces erreurs concernent des incohérences détectées entre les différents devis du dossier";
+    }
+    return "";
   };
 
   return (
     <div className="overflow-hidden rounded-lg border-shadow">
       <table className="w-full">
-        <caption className="bg-[var(--background-action-low-blue-france)] font-bold text-left p-4 flex items-center justify-between">
-          <span className="flex gap-2 items-center">
-            <p className="fr-mb-0 text-[var(--text-default-grey)]!">
-              {isCategoryGestes &&
-                wording.components.quote_error_card.title_gestes}
-              {isCategoryAdmin &&
-                wording.components.quote_error_card.title_admin}
-            </p>
-            {isCategoryGestes && gestes.length > 0 && (
-              <p className="fr-mb-0 font-normal! text-sm!">
-                {`${(gestes.length > 1
-                  ? wording.components.quote_error_card
-                      .title_gestes_number_plural
-                  : wording.components.quote_error_card.title_gestes_number
-                ).replace("{number}", gestes.length.toString())}`}
+        {isCategoryGestes || isCategoryAdmin ? (
+          <caption className="bg-[var(--background-action-low-blue-france)] font-bold text-left p-4 flex items-center justify-between">
+            <span className="flex gap-2 items-center">
+              <p className="fr-mb-0 text-[var(--text-default-grey)]!">
+                {getTableTitle()}
               </p>
-            )}
-            <Tooltip
-              icon={wording.components.quote_error_card.tooltip.icon}
-              text={
-                isCategoryGestes
-                  ? wording.components.quote_error_card.tooltip.gestes
-                  : isCategoryAdmin
-                    ? wording.components.quote_error_card.tooltip.admin
-                    : ""
+              {isCategoryGestes && gestes.length > 0 && (
+                <p className="fr-mb-0 font-normal! text-sm!">
+                  {`${(gestes.length > 1
+                    ? wording.components.quote_error_card
+                        .title_gestes_number_plural
+                    : wording.components.quote_error_card.title_gestes_number
+                  ).replace("{number}", gestes.length.toString())}`}
+                </p>
+              )}
+              <Tooltip
+                icon={wording.components.quote_error_card.tooltip.icon}
+                text={getTooltipText()}
+              />
+            </span>
+            <Badge
+              className="self-center inline-block"
+              icon={getErrorCount() === 0 ? "fr-icon-success-fill" : undefined}
+              label={getErrorBadgeLabel()}
+              size={BadgeSize.X_SMALL}
+              variant={
+                getErrorCount() === 0
+                  ? BadgeVariant.GREEN_LIGHT
+                  : BadgeVariant.GREY
               }
             />
-          </span>
-          <Badge
-            className="self-center inline-block"
-            icon={getErrorCount() === 0 ? "fr-icon-success-fill" : undefined}
-            label={getErrorBadgeLabel()}
-            size={BadgeSize.X_SMALL}
-            variant={
-              getErrorCount() === 0
-                ? BadgeVariant.GREEN_LIGHT
-                : BadgeVariant.GREY
-            }
-          />
-        </caption>
+          </caption>
+        ) : null}
+
+        {/* Gestion des erreurs GESTES */}
         {isCategoryGestes && gestes.length > 0
           ? gestes.map((geste, gIndex) => {
               const errorsForGeste = filteredGestesErrors.filter(
@@ -191,13 +254,15 @@ const QuoteErrorTable: React.FC<QuoteErrorTableProps> = (props) => {
                       onDeleteError={props.onDeleteError}
                       onDeleteErrorComment={props.onDeleteErrorComment}
                       onUndoDeleteError={props.onUndoDeleteError}
-                      quoteCheckId={props.quoteCheckId}
+                      quoteCheckId={getEntityId()}
                     />
                   ))}
                 </tbody>
               );
             })
           : null}
+
+        {/* Gestion des erreurs ADMIN */}
         {isCategoryAdmin ? (
           <tbody>
             {filteredAdminErrors.map((error) => (
@@ -209,7 +274,25 @@ const QuoteErrorTable: React.FC<QuoteErrorTableProps> = (props) => {
                 onDeleteError={props.onDeleteError}
                 onDeleteErrorComment={props.onDeleteErrorComment}
                 onUndoDeleteError={props.onUndoDeleteError}
-                quoteCheckId={props.quoteCheckId}
+                quoteCheckId={getEntityId()}
+              />
+            ))}
+          </tbody>
+        ) : null}
+
+        {/* Gestion des erreurs INCOHERENCE_DEVIS */}
+        {isCategoryIncoherence ? (
+          <tbody>
+            {filteredIncoherenceErrors.map((error) => (
+              <QuoteErrorLine
+                deleteErrorReasons={props.deleteErrorReasons}
+                error={error}
+                key={error.id}
+                onAddErrorComment={props.onAddErrorComment}
+                onDeleteError={props.onDeleteError}
+                onDeleteErrorComment={props.onDeleteErrorComment}
+                onUndoDeleteError={props.onUndoDeleteError}
+                quoteCheckId={getEntityId()}
               />
             ))}
           </tbody>

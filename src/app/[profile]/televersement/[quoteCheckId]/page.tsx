@@ -27,5 +27,5 @@ export default async function LegacyRedirect({ params }: PageProps) {
   }
 
   // Redirection vers la nouvelle URL
-  redirect(`/${profile}/televersement/renovation-par-gestes/${quoteCheckId}`);
+  redirect(`/${profile}/devis/${quoteCheckId}`);
 }

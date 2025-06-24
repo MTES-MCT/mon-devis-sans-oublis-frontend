@@ -3,19 +3,17 @@
 import Image from "next/image";
 
 import Link, { LinkSize, LinkVariant } from "../Link/Link";
-import { useGoBackToUpload } from "@/hooks";
 import wording from "@/wording";
+import { useUserProfile } from "@/hooks";
 
 export interface QuoteLaunchAnalysisCardProps {
-  baseUrl?: string;
   className?: string;
 }
 
 const QuoteLaunchAnalysisCard: React.FC<QuoteLaunchAnalysisCardProps> = ({
   className,
 }) => {
-  const goBackToUpload = useGoBackToUpload();
-
+  const profile = useUserProfile();
   return (
     <div
       className={`bg-[var(--background-alt-grey)] border-shadow flex items-start gap-6 px-4 py-6 rounded-lg w-fit ${className}`}
@@ -32,7 +30,7 @@ const QuoteLaunchAnalysisCard: React.FC<QuoteLaunchAnalysisCardProps> = ({
           {wording.components.quote_status_link.upload.title}
         </h6>
         <Link
-          href={goBackToUpload}
+          href={`/${profile}/type-renovation`}
           label={
             wording.components.quote_status_link.upload.button_run_analysis
           }

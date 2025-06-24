@@ -2,12 +2,14 @@ import ProgressGauge from "./ProgressGauge";
 import { QUOTE_CONFORMITY_CARD } from "./QuoteConformityCard.wording";
 
 interface QuoteConformityCardProps {
+  title?: string;
   correctionsCount: number;
   controlsCount: number;
   className?: string;
 }
 
 export default function QuoteConformityCard({
+  title,
   correctionsCount,
   controlsCount,
   className = "",
@@ -29,7 +31,9 @@ export default function QuoteConformityCard({
     <div
       className={`border border-[var(--border-plain-info)] p-4 fr-mb-4w ${className}`}
     >
-      <h6 className="text-black mb-4">{QUOTE_CONFORMITY_CARD.title}</h6>
+      <h6 className="text-black mb-4">
+        {title ?? QUOTE_CONFORMITY_CARD.title}
+      </h6>
 
       <div className="flex flex-col sm:flex-row gap-6 items-start">
         <div className="flex flex-col gap-2">
