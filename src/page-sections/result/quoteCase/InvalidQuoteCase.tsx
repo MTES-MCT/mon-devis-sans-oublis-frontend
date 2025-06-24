@@ -140,9 +140,7 @@ export default function InvalidQuoteCase({
                         >
                           <td className="flex items-center justify-between p-4">
                             {/* Zone gauche - Tag fichier */}
-                            <div
-                              className={`fr-tag fr-tag--dismiss fr-background-contrast--blue-france fr-text-action-high--blue-france`}
-                            >
+                            <div className="fr-tag fr-tag--dismiss fr-background-contrast--blue-france fr-text-action-high--blue-france">
                               <span
                                 className={`fr-icon-file-text-fill fr-icon--sm mr-2`}
                                 aria-hidden="true"
