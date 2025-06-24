@@ -3,6 +3,7 @@ import QuoteCaseConsistencyErrorTable from "@/components/QuoteCaseConsistencyErr
 import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
+import { useUserProfile } from "@/hooks";
 import { QuoteCase, Status } from "@/types";
 import { removeFileExtension } from "@/utils/fileUtils";
 import wording from "@/wording";
@@ -45,6 +46,8 @@ export default function InvalidQuoteCase({
     (sum, qc) => sum + (qc.controls_count ?? 0),
     0
   );
+
+  const profile = useUserProfile();
 
   const shouldShowConformityCard = () => totalControls > 0;
 
@@ -166,12 +169,7 @@ export default function InvalidQuoteCase({
                               {!isValid ? (
                                 <Link
                                   className="fr-btn fr-btn--tertiary fr-btn--sm shrink-0"
-                                  href={
-                                    "/dossier/" +
-                                    dossier.id +
-                                    "/devis/" +
-                                    devis.id
-                                  }
+                                  href={`/${profile}/dossier/${dossier.id}/devis/${devis.id}`}
                                 >
                                   Voir les corrections
                                 </Link>
