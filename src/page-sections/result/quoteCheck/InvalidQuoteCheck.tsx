@@ -66,6 +66,12 @@ export default function InvalidQuoteCheck({
   );
   const quoteCaseErrors = dossier?.error_details ?? [];
 
+  const devisFromDossierWithErrors = quoteCaseErrors.length > 0 && !!dossier;
+
+  const correctionsCount = devisFromDossierWithErrors
+    ? quoteCaseErrors.length + gestesErrors.length + adminErrors.length
+    : gestesErrors.length + adminErrors.length;
+
   return (
     <>
       <section className="fr-container fr-gap-8">
@@ -142,10 +148,10 @@ export default function InvalidQuoteCheck({
           </div>
 
           {shouldShowConformityCard() && (
-            <div className="lg:w-2/5">
+            <div>
               <QuoteConformityCard
                 controlsCount={controlsCount}
-                correctionsCount={list.length}
+                correctionsCount={correctionsCount}
               />
             </div>
           )}
@@ -158,7 +164,7 @@ export default function InvalidQuoteCheck({
         </h3>
         <div className="flex flex-col gap-8">
           {/*  Erreurs de cohérence de dossier si applicable */}
-          {quoteCaseErrors.length > 0 && !!dossier && (
+          {devisFromDossierWithErrors && (
             <div className="fr-mb-6w">
               <div className="fr-mt-4v">
                 <QuoteCaseConsistencyErrorTable

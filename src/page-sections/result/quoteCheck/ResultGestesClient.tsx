@@ -480,20 +480,8 @@ export default function ResultGestesClient({
           />
         </div>
       )}
-      <div className="fr-container">
-        <Breadcrumb
-          items={[
-            {
-              label: "Accueil",
-              href: "/",
-            },
-            {
-              label: `Résultats de l'analyse - ${currentDevis?.filename || "Devis"}`,
-            },
-          ]}
-        />
-      </div>
-      <div className="fr-container-fluid">
+
+      <div className="fr-container-fluid fr-mt-8v">
         {currentDevis?.status === Status.VALID ? (
           <ValidQuoteCheck
             analysisDate={formatDateToFrench(currentDevis.finished_at)}

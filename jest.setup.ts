@@ -26,9 +26,30 @@ jest.mock("next/navigation", () => ({
     refresh: jest.fn(),
   }),
   useSearchParams: () => new URLSearchParams(),
-  usePathname: () => "/",
+  usePathname: jest.fn(() => "/"),
   useParams: () => ({}),
 }));
+
+// Mock global des hooks personnalisés
+jest.mock("@/hooks", () => ({
+  useConseillerRoutes: jest.fn(() => ({ isConseillerAndEdit: false })),
+  useIsDesktop: jest.fn(() => true),
+  useUserProfile: jest.fn(() => null),
+}));
+
+// Mock global de Matomo
+jest.mock("@/hooks/useMatomo", () => ({
+  useMatomo: () => ({
+    trackEvent: jest.fn(),
+  }),
+}));
+
+// Mock global de navigator.clipboard
+Object.assign(navigator, {
+  clipboard: {
+    writeText: jest.fn().mockResolvedValue(undefined),
+  },
+});
 
 // Reset all mocks after each test
 afterEach(() => {
