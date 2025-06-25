@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-import { useConseillerRoutes } from "@/hooks";
+import { useConseillerRoutes, useUserProfile } from "@/hooks";
 import { ErrorDetails, Gestes, QuoteCase } from "@/types";
 import QuoteErrorSharingModal from "./QuoteErrorSharingCard.modal";
 import { QUOTE_ERROR_SHARING_WORDING } from "./QuoteErrorSharingCard.wording";
@@ -39,16 +39,30 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const { isConseillerAndEdit } = useConseillerRoutes();
+  const profile = useUserProfile();
 
   const nonEditionPath = pathname.replace(/\/modifier$/, "");
   const { trackEvent } = useMatomo();
 
   const copyUrlToClipboard = () => {
-    /* istanbul ignore next */
-    const fullUrl = isConseillerAndEdit
-      ? `${baseUrl}${nonEditionPath}`
-      : `${baseUrl}${pathname}`;
+    let targetUrl = pathname;
 
+    // Si on est sur un devis dans un dossier, rediriger vers le devis seul
+    const devisMatch = pathname.match(/\/devis\/([^\/]+)/);
+    if (devisMatch) {
+      const devisId = devisMatch[1];
+      // Construire l'URL avec le profil si disponible
+      targetUrl = profile
+        ? `/${profile}/devis/${devisId}`
+        : `/devis/${devisId}`;
+    }
+
+    // Gérer le mode édition conseiller
+    const finalUrl = isConseillerAndEdit
+      ? targetUrl.replace(/\/modifier$/, "")
+      : targetUrl;
+
+    const fullUrl = `${baseUrl}${finalUrl}`;
     navigator.clipboard.writeText(fullUrl);
     setIsUrlCopied(true);
   };
