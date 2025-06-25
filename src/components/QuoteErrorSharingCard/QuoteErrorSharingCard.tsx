@@ -41,7 +41,6 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
   const { isConseillerAndEdit } = useConseillerRoutes();
   const profile = useUserProfile();
 
-  const nonEditionPath = pathname.replace(/\/modifier$/, "");
   const { trackEvent } = useMatomo();
 
   const copyUrlToClipboard = () => {

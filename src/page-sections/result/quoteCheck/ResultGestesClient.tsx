@@ -24,7 +24,6 @@ import {
 import { formatDateToFrench } from "@/utils";
 import wording from "@/wording";
 import { quoteService } from "@/lib/client/apiWrapper";
-import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import ValidQuoteCheck from "./ValidQuoteCheck";
 import InvalidQuoteCheck from "./InvalidQuoteCheck";
 
