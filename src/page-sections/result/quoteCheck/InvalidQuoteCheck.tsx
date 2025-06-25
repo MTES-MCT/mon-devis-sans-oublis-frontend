@@ -142,7 +142,7 @@ export default function InvalidQuoteCheck({
           </div>
 
           {shouldShowConformityCard() && (
-            <div className="lg:w-2/5">
+            <div>
               <QuoteConformityCard
                 controlsCount={controlsCount}
                 correctionsCount={list.length}
