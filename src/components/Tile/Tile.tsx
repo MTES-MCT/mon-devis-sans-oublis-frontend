@@ -55,7 +55,7 @@ const Tile: React.FC<TileProps> = ({
   if (isCheckbox) {
     return (
       <div
-        className={`fr-tile ${horizontal ? "fr-tile--horizontal" : "fr-tile--vertical"} fr-enlarge-link w-full cursor-pointer hover:bg-[var(--background-default-grey-hover)]`}
+        className={`fr-tile ${horizontal ? "fr-tile--horizontal" : "fr-tile--vertical"} fr-enlarge-link w-full cursor-pointer transition-colors duration-200 hover:!bg-[var(--background-default-grey-hover)]`}
         style={{
           backgroundColor: isChecked
             ? "var(--background-default-grey-hover)"
