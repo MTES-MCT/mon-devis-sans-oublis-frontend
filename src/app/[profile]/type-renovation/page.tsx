@@ -79,7 +79,7 @@ export default function TypeRenovation() {
               },
               {
                 label: "Analyse des devis",
-                href: "#",
+                href: undefined,
               },
               {
                 label: `Etape 2/4`,

@@ -21,7 +21,7 @@ export default async function UploadRenovationParGestesPage({
               },
               {
                 label: "Analyse des devis",
-                href: "#",
+                href: undefined,
               },
               {
                 label: `Etape 3/4`,
