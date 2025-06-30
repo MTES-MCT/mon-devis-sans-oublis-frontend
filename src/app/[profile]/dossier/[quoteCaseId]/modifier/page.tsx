@@ -1,7 +1,6 @@
 import InvalidQuoteCase from "@/page-sections/result/quoteCase/InvalidQuoteCase";
 import { getQuoteCase } from "@/actions/quoteCase.actions";
 import { notFound } from "next/navigation";
-import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
 interface PageProps {
   params: Promise<{
@@ -37,29 +36,14 @@ export default async function ModifierPage({ params }: PageProps) {
       : "";
 
     return (
-      <>
-        <div className="fr-container">
-          <Breadcrumb
-            items={[
-              {
-                label: "Accueil",
-                href: "/",
-              },
-              {
-                label: `Résultats de l'analyse - dossier ${quoteCaseId}`,
-              },
-            ]}
-          />
-        </div>
-        <InvalidQuoteCase
-          analysisDate={analysisDate}
-          dossier={currentQuoteCase}
-          stats={stats}
-          profile={profile}
-          quoteCaseId={quoteCaseId}
-          onNavigateToQuote={() => {}} // TODO: Implémenter la navigation vers le devis
-        />
-      </>
+      <InvalidQuoteCase
+        analysisDate={analysisDate}
+        dossier={currentQuoteCase}
+        stats={stats}
+        profile={profile}
+        quoteCaseId={quoteCaseId}
+        onNavigateToQuote={() => {}} // TODO: Implémenter la navigation vers le devis
+      />
     );
   } catch (error) {
     console.error("Erreur lors du chargement du dossier:", error);

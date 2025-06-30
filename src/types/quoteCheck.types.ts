@@ -23,6 +23,11 @@ export enum Status {
 export enum Type {
   MISSING = "missing",
   WRONG = "wrong",
+  ERROR = "error",
+}
+
+export enum ErrorCodes {
+  FILE_TYPE_ERROR = "file_type_error",
 }
 
 export enum RenovationTypes {
@@ -67,3 +72,8 @@ export interface QuoteUploadResult {
   id: string;
   [key: string]: unknown;
 }
+
+// Helper pour identifier les erreurs de type fichier
+export const hasFileTypeError = (quoteCheck: QuoteCheck): boolean => {
+  return quoteCheck.errors?.includes(ErrorCodes.FILE_TYPE_ERROR) ?? false;
+};

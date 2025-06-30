@@ -235,40 +235,24 @@ export default function ResultAmpleurClient({
   }
 
   return (
-    <>
-      <div className="fr-container">
-        <Breadcrumb
-          items={[
-            {
-              label: "Accueil",
-              href: "/",
-            },
-            {
-              label: `Résultats de l'analyse - dossier ${currentDossier.id}`,
-            },
-          ]}
+    <div className="fr-container-fluid">
+      {currentDossier.status === Status.VALID ? (
+        <ValidQuoteCase
+          analysisDate={formatDateToFrench(currentDossier.finished_at ?? "")}
+          dossier={currentDossier}
         />
-      </div>
-
-      <div className="fr-container-fluid">
-        {currentDossier.status === Status.VALID ? (
-          <ValidQuoteCase
-            analysisDate={formatDateToFrench(currentDossier.finished_at ?? "")}
-            dossier={currentDossier}
-          />
-        ) : (
-          <InvalidQuoteCase
-            analysisDate={formatDateToFrench(currentDossier.finished_at ?? "")}
-            dossier={currentDossier}
-            stats={stats}
-            profile={profile}
-            quoteCaseId={quoteCaseId}
-            onNavigateToQuote={(quoteId: string) =>
-              router.push(`/${profile}/devis/${quoteId}`)
-            }
-          />
-        )}
-      </div>
-    </>
+      ) : (
+        <InvalidQuoteCase
+          analysisDate={formatDateToFrench(currentDossier.finished_at ?? "")}
+          dossier={currentDossier}
+          stats={stats}
+          profile={profile}
+          quoteCaseId={quoteCaseId}
+          onNavigateToQuote={(quoteId: string) =>
+            router.push(`/${profile}/devis/${quoteId}`)
+          }
+        />
+      )}
+    </div>
   );
 }

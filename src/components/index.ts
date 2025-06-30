@@ -96,3 +96,5 @@ export type { TooltipProps } from "./Tooltip/Tooltip";
 // Upload
 export { default as Upload } from "./Upload/Upload";
 export type { UploadProps } from "./Upload/Upload";
+// Breadcrumb
+export { default as Breadcrumb } from "./Breadcrumb/Breadcrumb";

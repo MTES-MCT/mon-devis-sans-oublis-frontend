@@ -9,6 +9,7 @@ describe("Components exports", () => {
       "BadgeVariant",
       "BadgeSize",
       "BlockNumber",
+      "Breadcrumb",
       "BlockNumberSize",
       "Card",
       "CardImage",

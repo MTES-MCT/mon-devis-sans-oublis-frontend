@@ -99,10 +99,6 @@ const QuoteCaseConsistencyErrorTable: React.FC<
               <p className="fr-mb-0 text-[var(--text-default-grey)]">
                 Erreurs de cohérence entre devis
               </p>
-              <span
-                className="fr-icon-information-fill cursor-help"
-                title="Ces erreurs concernent des problèmes de cohérence détectés entre les différents devis du dossier"
-              />
             </span>
             <Badge
               className="self-center inline-block"

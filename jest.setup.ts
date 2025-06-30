@@ -35,6 +35,21 @@ jest.mock("@/hooks", () => ({
   useConseillerRoutes: jest.fn(() => ({ isConseillerAndEdit: false })),
   useIsDesktop: jest.fn(() => true),
   useUserProfile: jest.fn(() => null),
+  useScrollPosition: jest.fn(() => true),
+  useDeleteErrorReasons: jest.fn(() => ({ reasons: [], loading: false })),
+  useCrisp: jest.fn(() => ({
+    isLoaded: false,
+    openChat: jest.fn(),
+    sendMessage: jest.fn(),
+    promptUser: jest.fn(),
+    triggerEvent: jest.fn(),
+  })),
+  useMatomo: jest.fn(() => ({
+    trackEvent: jest.fn(),
+    trackPageView: jest.fn(),
+    enableHeatmaps: jest.fn(),
+    isEnabled: false,
+  })),
 }));
 
 // Mock global de Matomo

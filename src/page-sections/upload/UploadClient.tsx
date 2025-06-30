@@ -85,7 +85,6 @@ export default function UploadClient({ profile }: { profile: string }) {
         ? decodeURIComponent(message)
         : wording.upload.error.notice.description;
       setFileUploadedError(errorMessage);
-      router.replace(`/${profile}/televersement`);
     }
   }, [router, profile, searchParams]);
 
