@@ -1,4 +1,11 @@
-import { QuoteCase, Status, Profile, RenovationTypes, Category } from "@/types";
+import {
+  QuoteCase,
+  Status,
+  Profile,
+  RenovationTypes,
+  Category,
+  ErrorCodes,
+} from "@/types";
 import { MOCK_QUOTE_CHECK_INVALID } from "../quoteCheck";
 
 export const MOCK_QUOTE_CASE_INVALID: QuoteCase = {
@@ -100,7 +107,58 @@ export const MOCK_QUOTE_CASE_INVALID: QuoteCase = {
       case_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
     },
 
-    // Deuxième devis invalide (poêle à bois)
+    // Deuxième devis invalide avec file_type_error
+    {
+      id: "file-error-quote-id",
+      parent_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
+      filename: "document-non-devis.pdf",
+      status: Status.INVALID,
+      controls_count: 1,
+      started_at: "2025-06-17T15:36:23.673Z",
+      finished_at: "2025-06-17T15:37:06Z",
+      comment: null,
+      profile: Profile.PARTICULIER,
+
+      metadata: {
+        aides: [],
+        gestes: [],
+      },
+
+      gestes: [],
+
+      // Erreur critique de type fichier
+      errors: [ErrorCodes.FILE_TYPE_ERROR],
+
+      error_details: [
+        {
+          id: "file-error-quote-id-1",
+          code: ErrorCodes.FILE_TYPE_ERROR,
+          type: "error",
+          title:
+            "Le fichier ne semble pas être un devis, veuillez nous transférer uniquement des devis de rénovation énergétique.",
+          category: Category.FILE,
+          deleted: false,
+          comment: null,
+          geste_id: null,
+          problem:
+            "Le fichier téléchargé ne correspond pas à un devis de rénovation énergétique",
+          solution:
+            "Veuillez télécharger un fichier PDF contenant un devis de rénovation énergétique valide",
+          provided_value: null,
+        },
+      ],
+
+      error_messages: {
+        [ErrorCodes.FILE_TYPE_ERROR]:
+          "Le fichier ne semble pas être un devis, veuillez nous transférer uniquement des devis de rénovation énergétique.",
+      },
+
+      control_codes: [ErrorCodes.FILE_TYPE_ERROR],
+
+      case_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
+    },
+
+    // Troisième devis invalide (poêle à bois)
     {
       id: "70ae965b-8a0a-4cd9-86f3-24405523110f",
       parent_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",

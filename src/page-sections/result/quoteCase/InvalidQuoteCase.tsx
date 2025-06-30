@@ -1,9 +1,15 @@
-import { Badge, BadgeSize, BadgeVariant } from "@/components";
+import {
+  Badge,
+  BadgeSize,
+  BadgeVariant,
+  Notice,
+  Breadcrumb,
+} from "@/components";
 import QuoteCaseConsistencyErrorTable from "@/components/QuoteCaseConsistencyError/QuoteCaseConsistencyErrorTable";
 import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
-import { QuoteCase, Status } from "@/types";
+import { hasFileTypeError, QuoteCase, Status } from "@/types";
 import { removeFileExtension } from "@/utils/fileUtils";
 import wording from "@/wording";
 import Link from "next/link";
@@ -48,88 +54,124 @@ export default function InvalidQuoteCase({
   );
 
   const shouldShowConformityCard = () => totalControls > 0;
+  const hasDossierFileTypeError = dossier.quote_checks?.some((quote) =>
+    hasFileTypeError(quote)
+  );
 
   return (
-    <section className="fr-container fr-gap-8">
-      <h1 className="text-left md:text-left fr-mb-4w">Résultat de l'analyse</h1>
+    <>
+      <div className="fr-container">
+        <Breadcrumb
+          items={[
+            {
+              label: "Accueil",
+              href: "/",
+            },
+            {
+              label: `Résultats de l'analyse - dossier ${quoteCaseId}`,
+            },
+          ]}
+        />
 
-      {/* Zone des badges */}
-      <div className="fr-mb-4w">
-        <div className="flex flex-wrap gap-2 justify-left md:justify-start fr-mb-3w">
-          {analysisDate && (
-            <Badge
-              label={wording.page_upload_id.analysis_date.replace(
-                "{date}",
-                analysisDate
-              )}
-              size={BadgeSize.SMALL}
-              variant={BadgeVariant.GREY}
-            />
-          )}
-
-          <Badge
-            label={`Dossier ${dossier.id}`}
-            size={BadgeSize.SMALL}
-            variant={BadgeVariant.BLUE_DARK}
-          />
-        </div>
-      </div>
-
-      {/* Ligne Info & Conformité */}
-      <div className="flex flex-col lg:flex-row gap-4 w-full fr-mb-4w lg:items-start">
-        <div
-          className={`fr-alert fr-alert--info !py-4 ${
-            shouldShowConformityCard() ? "lg:w-3/5" : "lg:w-full"
-          }`}
-        >
-          <h3 className="fr-alert__title !mb-2">
-            {wording.page_upload_id.quoteCheck_alert_ko_title}
-          </h3>
-          <p className="!mb-0">
-            {wording.page_upload_id.quotation_alert_ko_description}
-          </p>
-        </div>
-
-        {shouldShowConformityCard() && (
-          <div className="lg:w-2/5">
-            <QuoteConformityCard
-              title="Conformité globale"
-              controlsCount={totalControls}
-              correctionsCount={totalErrors}
+        {/* Notice en cas d'erreur FILE ERROR */}
+        {hasDossierFileTypeError && (
+          <div className="fr-my-4w">
+            <Notice
+              buttonClose={true}
+              className="fr-notice--alert"
+              description="Retrouvez le detail des erreurs dans le tableau des erreurs ci-dessous (fichiers grisés)."
+              title="Nous n'avons pas pu analyser tous vos devis"
             />
           </div>
         )}
       </div>
 
-      {/* Tableau des incohérences entre devis */}
-      {quoteCaseErrors.length > 0 && (
-        <div className="fr-mb-6w">
-          <h3>Incohérence entre les devis ⬇️</h3>
-          <div className="fr-mt-4v">
-            <QuoteCaseConsistencyErrorTable
-              showHeader={false}
-              errorDetails={quoteCaseErrors}
-              quoteCaseId={quoteCaseId}
+      <section className="fr-container fr-gap-8">
+        <h1 className="text-left md:text-left fr-mb-4w">
+          Résultat de l'analyse
+        </h1>
+
+        {/* Zone des badges */}
+        <div className="fr-mb-4w">
+          <div className="flex flex-wrap gap-2 justify-left md:justify-start fr-mb-3w">
+            {analysisDate && (
+              <Badge
+                label={wording.page_upload_id.analysis_date.replace(
+                  "{date}",
+                  analysisDate
+                )}
+                size={BadgeSize.SMALL}
+                variant={BadgeVariant.GREY}
+              />
+            )}
+
+            <Badge
+              label={`Dossier ${dossier.id}`}
+              size={BadgeSize.SMALL}
+              variant={BadgeVariant.BLUE_DARK}
             />
           </div>
         </div>
-      )}
 
-      {/* Tableau des corrections devis */}
-      {(invalidQuotes.length > 0 || validQuotes.length > 0) && (
-        <div className="fr-mb-6w">
-          <h3>Corrections par devis ⬇️</h3>
-          <div className="fr-mt-4v">
-            {/* Version desktop : tableau */}
-            <div className="hidden md:block overflow-hidden rounded-lg border-shadow">
-              <table className="w-full">
-                <tbody>
-                  {[...invalidQuotes, ...validQuotes].map(
-                    (devis, index, allQuotes) => {
+        {/* Ligne Info & Conformité */}
+        <div className="flex flex-col lg:flex-row gap-4 w-full fr-mb-4w lg:items-start">
+          <div
+            className={`fr-alert fr-alert--info !py-4 ${
+              shouldShowConformityCard() ? "lg:w-3/5" : "lg:w-full"
+            }`}
+          >
+            <h3 className="fr-alert__title !mb-2">
+              {wording.page_upload_id.quoteCheck_alert_ko_title}
+            </h3>
+            <p className="!mb-0">
+              {wording.page_upload_id.quotation_alert_ko_description}
+            </p>
+          </div>
+
+          {shouldShowConformityCard() && (
+            <div className="lg:w-2/5">
+              <QuoteConformityCard
+                title="Conformité globale"
+                controlsCount={totalControls}
+                correctionsCount={totalErrors}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Tableau des incohérences entre devis */}
+        {quoteCaseErrors.length > 0 && (
+          <div className="fr-mb-6w">
+            <h3>Incohérence entre les devis ⬇️</h3>
+            <div className="fr-mt-4v">
+              <QuoteCaseConsistencyErrorTable
+                showHeader={false}
+                errorDetails={quoteCaseErrors}
+                quoteCaseId={quoteCaseId}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Tableau des corrections devis */}
+        {(invalidQuotes.length > 0 || validQuotes.length > 0) && (
+          <div className="fr-mb-6w">
+            <h3>Corrections par devis ⬇️</h3>
+            <div className="fr-mt-4v">
+              {/* Version desktop : tableau */}
+              <div className="hidden md:block overflow-hidden rounded-lg border-shadow">
+                <table className="w-full">
+                  <tbody>
+                    {[
+                      ...invalidQuotes.filter((q) => !hasFileTypeError(q)),
+                      ...validQuotes,
+                      ...invalidQuotes.filter((q) => hasFileTypeError(q)),
+                    ].map((devis, index, allQuotes) => {
                       const errorCount =
                         devis.error_details?.filter((error) => !error.deleted)
                           .length || 0;
                       const isValid = devis.status === "valid";
+                      const isFileError = hasFileTypeError(devis);
                       const isLastItem = index === allQuotes.length - 1;
 
                       return (
@@ -139,7 +181,9 @@ export default function InvalidQuoteCase({
                         >
                           <td className="flex items-center justify-between p-4">
                             {/* Zone gauche - Tag fichier */}
-                            <div className="fr-tag fr-tag--dismiss fr-background-contrast--blue-france fr-text-action-high--blue-france">
+                            <div
+                              className={`fr-tag fr-tag--dismiss ${isFileError ? "fr-background-contrast--grey fr-text-mention--grey" : "fr-background-contrast--blue-france fr-text-action-high--blue-france"}`}
+                            >
                               <span
                                 className="fr-icon-file-text-fill fr-icon--sm mr-2"
                                 aria-hidden="true"
@@ -156,6 +200,10 @@ export default function InvalidQuoteCase({
                                 <p className="fr-badge fr-badge--success mb-0">
                                   Devis conforme
                                 </p>
+                              ) : isFileError ? (
+                                <p className="fr-badge fr-badge--warning fr-background-contrast--grey fr-text-mention--grey mb-0">
+                                  Format non supporté
+                                </p>
                               ) : (
                                 <p className="fr-badge fr-badge--warning mb-0">
                                   {errorCount} correction
@@ -164,7 +212,7 @@ export default function InvalidQuoteCase({
                               )}
 
                               {/* Bouton action ou espace réservé */}
-                              {!isValid ? (
+                              {!isValid && !isFileError ? (
                                 <Link
                                   className="fr-btn fr-btn--tertiary fr-btn--sm shrink-0"
                                   href={`/${profile}/dossier/${dossier.id}/devis/${devis.id}`}
@@ -178,78 +226,89 @@ export default function InvalidQuoteCase({
                           </td>
                         </tr>
                       );
-                    }
-                  )}
-                </tbody>
-              </table>
-            </div>
+                    })}
+                  </tbody>
+                </table>
+              </div>
 
-            {/* Version mobile : cartes empilées */}
-            <div className="md:hidden space-y-3">
-              {[...invalidQuotes, ...validQuotes].map((devis) => {
-                const errorCount =
-                  devis.error_details?.filter((error) => !error.deleted)
-                    .length || 0;
-                const isValid = devis.status === "valid";
+              {/* Version mobile : cartes empilées */}
+              <div className="md:hidden space-y-3">
+                {[
+                  ...invalidQuotes.filter((q) => !hasFileTypeError(q)),
+                  ...validQuotes,
+                  ...invalidQuotes.filter((q) => hasFileTypeError(q)),
+                ].map((devis) => {
+                  const errorCount =
+                    devis.error_details?.filter((error) => !error.deleted)
+                      .length || 0;
+                  const isValid = devis.status === "valid";
+                  const isFileError = hasFileTypeError(devis);
 
-                return (
-                  <div
-                    key={devis.id}
-                    className="border border-gray-300 bg-white fr-p-3w rounded-lg shadow-sm"
-                  >
-                    {/* Tag fichier */}
-                    <div className="fr-mb-2w">
-                      <div className="fr-tag fr-tag--dismiss fr-background-contrast--blue-france fr-text-action-high--blue-france">
-                        <span
-                          className="fr-icon-file-text-fill fr-icon--sm mr-2"
-                          aria-hidden="true"
-                        ></span>
-                        <span className="fr-tag__label">
-                          {removeFileExtension(devis.filename)}
-                        </span>
+                  return (
+                    <div
+                      key={devis.id}
+                      className="border border-gray-300 bg-white fr-p-3w rounded-lg shadow-sm"
+                    >
+                      {/* Tag fichier */}
+                      <div className="fr-mb-2w">
+                        <div
+                          className={`fr-tag fr-tag--dismiss ${isFileError ? "fr-background-contrast--grey fr-text-mention--grey" : "fr-background-contrast--blue-france fr-text-action-high--blue-france"}`}
+                        >
+                          <span
+                            className="fr-icon-file-text-fill fr-icon--sm mr-2"
+                            aria-hidden="true"
+                          ></span>
+                          <span className="fr-tag__label">
+                            {removeFileExtension(devis.filename)}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Badge et bouton empilés */}
+                      <div className="flex flex-col gap-2">
+                        {/* Badge statut */}
+                        {isValid ? (
+                          <p className="fr-badge fr-badge--success mb-0 self-start">
+                            Devis conforme
+                          </p>
+                        ) : isFileError ? (
+                          <p className="fr-badge fr-badge--warning fr-background-contrast--grey fr-text-mention--grey mb-0 self-start">
+                            Format non supporté
+                          </p>
+                        ) : (
+                          <p className="fr-badge fr-badge--warning mb-0 self-start">
+                            {errorCount} correction
+                            {errorCount > 1 ? "s" : ""}
+                          </p>
+                        )}
+
+                        {/* Bouton action */}
+                        {!isValid && !isFileError && (
+                          <Link
+                            className="fr-btn fr-btn--tertiary fr-btn--sm self-start"
+                            href={`/${profile}/dossier/${dossier.id}/devis/${devis.id}`}
+                          >
+                            Voir les corrections
+                          </Link>
+                        )}
                       </div>
                     </div>
-
-                    {/* Badge et bouton empilés */}
-                    <div className="flex flex-col gap-2">
-                      {/* Badge statut */}
-                      {isValid ? (
-                        <p className="fr-badge fr-badge--success mb-0 self-start">
-                          Devis conforme
-                        </p>
-                      ) : (
-                        <p className="fr-badge fr-badge--warning mb-0 self-start">
-                          {errorCount} correction
-                          {errorCount > 1 ? "s" : ""}
-                        </p>
-                      )}
-
-                      {/* Bouton action */}
-                      {!isValid && (
-                        <Link
-                          className="fr-btn fr-btn--tertiary fr-btn--sm self-start"
-                          href={`/${profile}/dossier/${dossier.id}/devis/${devis.id}`}
-                        >
-                          Voir les corrections
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Section partage & nouvelle analyse */}
-      <section className="fr-container fr-my-6w">
-        <h3>Et aprés ?</h3>
-        <div className="flex md:flex-row flex-col gap-6">
-          <QuoteErrorSharingCard className="md:flex-1" quoteCase={dossier} />
-          <QuoteLaunchAnalysisCard className="md:flex-1" />
-        </div>
+        {/* Section partage & nouvelle analyse */}
+        <section className="fr-container fr-my-6w">
+          <h3>Et aprés ?</h3>
+          <div className="flex md:flex-row flex-col gap-6">
+            <QuoteErrorSharingCard className="md:flex-1" quoteCase={dossier} />
+            <QuoteLaunchAnalysisCard className="md:flex-1" />
+          </div>
+        </section>
       </section>
-    </section>
+    </>
   );
 }
