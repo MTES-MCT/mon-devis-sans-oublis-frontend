@@ -199,7 +199,7 @@ export default function ResultAmpleurClient({
               },
               {
                 label: "Analyse des devis",
-                href: "/",
+                href: undefined,
               },
               {
                 label: `Etape 4/4`,

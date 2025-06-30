@@ -59,10 +59,14 @@ export default function Breadcrumb({
                   <span className="fr-breadcrumb__link" aria-current="page">
                     {item.label}
                   </span>
-                ) : (
-                  <Link className="fr-breadcrumb__link" href={item.href || "#"}>
+                ) : item.href ? (
+                  <Link className="fr-breadcrumb__link" href={item.href}>
                     {item.label}
                   </Link>
+                ) : (
+                  <span className="fr-breadcrumb__link" aria-current="page">
+                    {item.label}
+                  </span>
                 )}
               </li>
             );

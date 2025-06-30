@@ -15,7 +15,7 @@ export default function Bienvenue() {
               },
               {
                 label: "Analyse des devis",
-                href: "#",
+                href: undefined,
               },
               {
                 label: `Etape 1/4`,

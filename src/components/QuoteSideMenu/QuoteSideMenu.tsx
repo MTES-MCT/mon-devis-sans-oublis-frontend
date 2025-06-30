@@ -70,9 +70,11 @@ export function QuoteSidemenuDesktop({
                       ? "fr-background-contrast--blue-france--active"
                       : "fr-text-action-high--blue-france fr-background-contrast--blue-france"
                 }`}
-                onClick={() => handleQuoteClick(quote.id)}
+                onClick={
+                  isFileError ? undefined : () => handleQuoteClick(quote.id)
+                }
                 style={{
-                  cursor: "pointer",
+                  cursor: isFileError ? "default" : "pointer",
                   display: "block",
                   fontWeight: 400,
                 }}
@@ -167,7 +169,11 @@ export function QuoteSidemenuMobile({
                       isFileError ? "fr-text-mention--grey" : ""
                     }`}
                     aria-current={isCurrentQuote ? "page" : false}
-                    onClick={() => handleQuoteClick(quote.id)}
+                    onClick={
+                      isFileError ? undefined : () => handleQuoteClick(quote.id)
+                    }
+                    disabled={isFileError}
+                    style={isFileError ? { cursor: "default" } : undefined}
                   >
                     <span
                       className="fr-icon-file-text-fill fr-icon--sm fr-mr-2v"

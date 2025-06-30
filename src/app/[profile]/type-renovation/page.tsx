@@ -79,7 +79,7 @@ export default function TypeRenovation() {
               },
               {
                 label: "Analyse des devis",
-                href: "#",
+                href: undefined,
               },
               {
                 label: `Etape 2/4`,
@@ -131,34 +131,38 @@ export default function TypeRenovation() {
                   onSelectionChange={handleSelectionChange}
                 />
               </div>
-
-              {/* Zone de navigation */}
-              <div className="fr-grid-row fr-grid-row--center fr-mt-16v">
-                <div className="fr-col-12 fr-col-lg-8">
-                  <div className="flex justify-center items-center gap-4">
-                    <button
-                      className="fr-btn fr-btn--secondary"
-                      onClick={handlePrevious}
-                    >
-                      Précédent
-                    </button>
-
-                    <button
-                      className={`fr-btn ${
-                        !selectedType ? "fr-btn--secondary" : ""
-                      }`}
-                      disabled={!selectedType}
-                      onClick={handleNext}
-                    >
-                      Suivant
-                    </button>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Zone de navigation - sticky - sortie de la section */}
+      <div className="sticky bottom-0 bg-white border-t border-gray-200 py-12 z-10">
+        <div className="fr-container">
+          <div className="fr-grid-row fr-grid-row--center">
+            <div className="fr-col-12 fr-col-lg-8">
+              <div className="flex justify-center items-center gap-4">
+                <button
+                  className="fr-btn fr-btn--secondary"
+                  onClick={handlePrevious}
+                >
+                  Précédent
+                </button>
+
+                <button
+                  className={`fr-btn ${
+                    !selectedType ? "fr-btn--secondary" : ""
+                  }`}
+                  disabled={!selectedType}
+                  onClick={handleNext}
+                >
+                  Suivant
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

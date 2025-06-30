@@ -68,7 +68,7 @@ export default function UploadRenovationAmpleurPage() {
               },
               {
                 label: "Analyse des devis",
-                href: "#",
+                href: undefined,
               },
               {
                 label: `Etape 3/4`,
