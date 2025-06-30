@@ -3,7 +3,6 @@ import QuoteCaseConsistencyErrorTable from "@/components/QuoteCaseConsistencyErr
 import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
-import { useUserProfile } from "@/hooks";
 import { QuoteCase, Status } from "@/types";
 import { removeFileExtension } from "@/utils/fileUtils";
 import wording from "@/wording";
@@ -30,6 +29,7 @@ export default function InvalidQuoteCase({
   analysisDate,
   dossier,
   quoteCaseId,
+  profile,
 }: InvalidQuoteCaseProps) {
   const quoteChecks = dossier.quote_checks ?? [];
   const quoteCaseErrors = dossier.error_details ?? [];
@@ -46,8 +46,6 @@ export default function InvalidQuoteCase({
     (sum, qc) => sum + (qc.controls_count ?? 0),
     0
   );
-
-  const profile = useUserProfile();
 
   const shouldShowConformityCard = () => totalControls > 0;
 
