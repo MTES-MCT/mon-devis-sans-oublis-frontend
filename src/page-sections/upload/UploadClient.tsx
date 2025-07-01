@@ -3,14 +3,7 @@
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import {
-  Alert,
-  AlertType,
-  Link,
-  LinkVariant,
-  Notice,
-  Upload,
-} from "@/components";
+import { Alert, AlertType, Notice, Upload } from "@/components";
 import { Profile } from "@/types";
 import wording from "@/wording";
 import { quoteService } from "@/lib/client/apiWrapper";
@@ -18,7 +11,15 @@ import { typeRenovationStorage } from "@/lib/utils/typeRenovationStorage.utils";
 
 export const FILE_ERROR = "file_error";
 
-export default function UploadClient({ profile }: { profile: string }) {
+interface UploadClientProps {
+  profile: string;
+  onStateChange?: (canSubmit: boolean, isSubmitting: boolean) => void;
+}
+
+export default function UploadClient({
+  profile,
+  onStateChange,
+}: UploadClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -44,9 +45,7 @@ export default function UploadClient({ profile }: { profile: string }) {
     setFileError(null);
   }, []);
 
-  const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
+  const handleSubmit = useCallback(async () => {
     if (isSubmitting || isPending) return;
 
     if (!file) {
@@ -75,7 +74,23 @@ export default function UploadClient({ profile }: { profile: string }) {
       setFileError("An error occurred. Please try again.");
       setIsSubmitting(false);
     }
-  };
+  }, [
+    isSubmitting,
+    isPending,
+    file,
+    selectedAides,
+    selectedGestes,
+    profile,
+    router,
+    startTransition,
+  ]);
+
+  // Exposer la fonction handleSubmit et l'état au parent
+  useEffect(() => {
+    const canSubmit = !isSubmitting && !!file && !fileError;
+    onStateChange?.(canSubmit, isSubmitting);
+    window.uploadClientSubmit = handleSubmit;
+  }, [file, fileError, isSubmitting, onStateChange, handleSubmit]);
 
   useEffect(() => {
     const error = searchParams.get("error");
@@ -110,42 +125,18 @@ export default function UploadClient({ profile }: { profile: string }) {
           />
         </div>
       )}
-      <>
-        <Upload
-          maxFileSize={50} // TODO: get from API
-          onFileUpload={handleFileUpload}
-          setError={setFileError}
-        />
-        <Alert
-          className="fr-mb-8w fr-mt-4w"
-          description={wording.upload.alert.description}
-          moreDescription={wording.upload.alert.more_info}
-          type={AlertType.INFO}
-        />
 
-        <div className="fr-mt-8w flex justify-center">
-          <ul className="fr-btns-group fr-btns-group--inline-sm">
-            <li>
-              <Link
-                href={`/${profile}/type-renovation`}
-                label={wording.upload.link_back.label}
-                variant={LinkVariant.SECONDARY}
-              />
-            </li>
-            <li>
-              <button
-                className="fr-btn fr-text--lg"
-                disabled={isSubmitting || !file || fileError ? true : false}
-                onClick={handleSubmit}
-              >
-                {isSubmitting
-                  ? wording.upload.button_send_quote
-                  : wording.upload.button_check_quote}
-              </button>
-            </li>
-          </ul>
-        </div>
-      </>
+      <Upload
+        maxFileSize={50}
+        onFileUpload={handleFileUpload}
+        setError={setFileError}
+      />
+      <Alert
+        className="fr-mb-8w fr-mt-4w"
+        description={wording.upload.alert.description}
+        moreDescription={wording.upload.alert.more_info}
+        type={AlertType.INFO}
+      />
     </>
   );
 }

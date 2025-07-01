@@ -9,7 +9,13 @@ import QuoteCaseConsistencyErrorTable from "@/components/QuoteCaseConsistencyErr
 import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
-import { hasFileTypeError, QuoteCase, Status } from "@/types";
+import {
+  getFileErrorMessage,
+  QuoteCase,
+  Status,
+  FileErrorCodes,
+  getFileErrors,
+} from "@/types";
 import { removeFileExtension } from "@/utils/fileUtils";
 import wording from "@/wording";
 import Link from "next/link";
@@ -40,10 +46,12 @@ export default function InvalidQuoteCase({
   const quoteChecks = dossier.quote_checks ?? [];
   const quoteCaseErrors = dossier.error_details ?? [];
 
-  const invalidQuotes = quoteChecks.filter((q) => q.status === Status.INVALID);
-  const validQuotes = quoteChecks.filter((q) => q.status === Status.VALID);
+  const invalidQuotesCheck = quoteChecks.filter(
+    (q) => q.status === Status.INVALID
+  );
+  const validQuotesCheck = quoteChecks.filter((q) => q.status === Status.VALID);
 
-  const totalErrors = invalidQuotes.reduce(
+  const totalErrors = invalidQuotesCheck.reduce(
     (total, quote) => total + (quote.error_details?.length ?? 0),
     0
   );
@@ -54,8 +62,11 @@ export default function InvalidQuoteCase({
   );
 
   const shouldShowConformityCard = () => totalControls > 0;
+
   const hasDossierFileTypeError = dossier.quote_checks?.some((quote) =>
-    hasFileTypeError(quote)
+    quote.errors?.some((error) =>
+      Object.values(FileErrorCodes).includes(error as FileErrorCodes)
+    )
   );
 
   return (
@@ -75,14 +86,16 @@ export default function InvalidQuoteCase({
 
         {/* Notice en cas d'erreur FILE ERROR */}
         {hasDossierFileTypeError && (
-          <div className="fr-my-4w">
-            <Notice
-              buttonClose={true}
-              className="fr-notice--alert"
-              description="Retrouvez le detail des erreurs dans le tableau des erreurs ci-dessous (fichiers grisés)."
-              title="Nous n'avons pas pu analyser tous vos devis"
-            />
-          </div>
+          <>
+            <div className="fr-my-4w">
+              <Notice
+                buttonClose={true}
+                className="fr-notice--alert"
+                description="Retrouvez le detail des erreurs dans le tableau des erreurs ci-dessous (fichiers grisés)."
+                title="Nous n'avons pas pu analyser tous vos devis"
+              />
+            </div>
+          </>
         )}
       </div>
 
@@ -154,7 +167,7 @@ export default function InvalidQuoteCase({
         )}
 
         {/* Tableau des corrections devis */}
-        {(invalidQuotes.length > 0 || validQuotes.length > 0) && (
+        {(invalidQuotesCheck.length > 0 || validQuotesCheck.length > 0) && (
           <div className="fr-mb-6w">
             <h3>Corrections par devis ⬇️</h3>
             <div className="fr-mt-4v">
@@ -163,15 +176,20 @@ export default function InvalidQuoteCase({
                 <table className="w-full">
                   <tbody>
                     {[
-                      ...invalidQuotes.filter((q) => !hasFileTypeError(q)),
-                      ...validQuotes,
-                      ...invalidQuotes.filter((q) => hasFileTypeError(q)),
+                      // Devis valides en premier, puis les invalides (avec et sans erreurs de fichier)
+                      ...validQuotesCheck,
+                      ...invalidQuotesCheck.filter(
+                        (q) => getFileErrors(q).length === 0
+                      ),
+                      ...invalidQuotesCheck.filter(
+                        (q) => getFileErrors(q).length > 0
+                      ),
                     ].map((devis, index, allQuotes) => {
                       const errorCount =
                         devis.error_details?.filter((error) => !error.deleted)
                           .length || 0;
                       const isValid = devis.status === "valid";
-                      const isFileError = hasFileTypeError(devis);
+                      const isFileError = getFileErrors(devis).length > 0;
                       const isLastItem = index === allQuotes.length - 1;
 
                       return (
@@ -193,36 +211,40 @@ export default function InvalidQuoteCase({
                               </span>
                             </div>
 
-                            {/* Zone droite - Badge + Bouton */}
-                            <div className="flex items-center gap-3">
-                              {/* Badge statut */}
-                              {isValid ? (
-                                <p className="fr-badge fr-badge--success mb-0">
-                                  Devis conforme
+                            {/* Zone droite - Badge + Bouton ou Message d'erreur */}
+                            {isFileError ? (
+                              <div className="flex items-center justify-end flex-1 ml-3">
+                                <p className="fr-badge fr-badge--warning fr-background-contrast--grey fr-text-mention--grey mb-0 self-start">
+                                  {getFileErrorMessage(devis)}
                                 </p>
-                              ) : isFileError ? (
-                                <p className="fr-badge fr-badge--warning fr-background-contrast--grey fr-text-mention--grey mb-0">
-                                  Format non supporté
-                                </p>
-                              ) : (
-                                <p className="fr-badge fr-badge--warning mb-0">
-                                  {errorCount} correction
-                                  {errorCount > 1 ? "s" : ""}
-                                </p>
-                              )}
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-3">
+                                {/* Badge statut */}
+                                {isValid ? (
+                                  <p className="fr-badge fr-badge--success mb-0">
+                                    Devis conforme
+                                  </p>
+                                ) : (
+                                  <p className="fr-badge fr-badge--warning mb-0">
+                                    {errorCount} correction
+                                    {errorCount > 1 ? "s" : ""}
+                                  </p>
+                                )}
 
-                              {/* Bouton action ou espace réservé */}
-                              {!isValid && !isFileError ? (
-                                <Link
-                                  className="fr-btn fr-btn--tertiary fr-btn--sm shrink-0"
-                                  href={`/${profile}/dossier/${dossier.id}/devis/${devis.id}`}
-                                >
-                                  Voir les corrections
-                                </Link>
-                              ) : (
-                                <div className="w-[140px]"></div>
-                              )}
-                            </div>
+                                {/* Bouton action ou espace réservé */}
+                                {!isValid ? (
+                                  <Link
+                                    className="fr-btn fr-btn--tertiary fr-btn--sm shrink-0"
+                                    href={`/${profile}/dossier/${dossier.id}/devis/${devis.id}`}
+                                  >
+                                    Voir les corrections
+                                  </Link>
+                                ) : (
+                                  <div className="w-[140px]"></div>
+                                )}
+                              </div>
+                            )}
                           </td>
                         </tr>
                       );
@@ -234,15 +256,20 @@ export default function InvalidQuoteCase({
               {/* Version mobile : cartes empilées */}
               <div className="md:hidden space-y-3">
                 {[
-                  ...invalidQuotes.filter((q) => !hasFileTypeError(q)),
-                  ...validQuotes,
-                  ...invalidQuotes.filter((q) => hasFileTypeError(q)),
+                  // Devis valides en premier, puis les invalides
+                  ...validQuotesCheck,
+                  ...invalidQuotesCheck.filter(
+                    (q) => getFileErrors(q).length === 0
+                  ),
+                  ...invalidQuotesCheck.filter(
+                    (q) => getFileErrors(q).length > 0
+                  ),
                 ].map((devis) => {
                   const errorCount =
                     devis.error_details?.filter((error) => !error.deleted)
                       .length || 0;
                   const isValid = devis.status === "valid";
-                  const isFileError = hasFileTypeError(devis);
+                  const isFileError = getFileErrors(devis).length > 0;
 
                   return (
                     <div
@@ -264,34 +291,38 @@ export default function InvalidQuoteCase({
                         </div>
                       </div>
 
-                      {/* Badge et bouton empilés */}
-                      <div className="flex flex-col gap-2">
-                        {/* Badge statut */}
-                        {isValid ? (
-                          <p className="fr-badge fr-badge--success mb-0 self-start">
-                            Devis conforme
-                          </p>
-                        ) : isFileError ? (
+                      {/* Badge et bouton empilés ou Message d'erreur */}
+                      {isFileError ? (
+                        <div className="fr-mt-2w">
                           <p className="fr-badge fr-badge--warning fr-background-contrast--grey fr-text-mention--grey mb-0 self-start">
-                            Format non supporté
+                            {getFileErrorMessage(devis)}
                           </p>
-                        ) : (
-                          <p className="fr-badge fr-badge--warning mb-0 self-start">
-                            {errorCount} correction
-                            {errorCount > 1 ? "s" : ""}
-                          </p>
-                        )}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col gap-2">
+                          {/* Badge statut */}
+                          {isValid ? (
+                            <p className="fr-badge fr-badge--success mb-0 self-start">
+                              Devis conforme
+                            </p>
+                          ) : (
+                            <p className="fr-badge fr-badge--warning mb-0 self-start">
+                              {errorCount} correction
+                              {errorCount > 1 ? "s" : ""}
+                            </p>
+                          )}
 
-                        {/* Bouton action */}
-                        {!isValid && !isFileError && (
-                          <Link
-                            className="fr-btn fr-btn--tertiary fr-btn--sm self-start"
-                            href={`/${profile}/dossier/${dossier.id}/devis/${devis.id}`}
-                          >
-                            Voir les corrections
-                          </Link>
-                        )}
-                      </div>
+                          {/* Bouton action */}
+                          {!isValid && (
+                            <Link
+                              className="fr-btn fr-btn--tertiary fr-btn--sm self-start"
+                              href={`/${profile}/dossier/${dossier.id}/devis/${devis.id}`}
+                            >
+                              Voir les corrections
+                            </Link>
+                          )}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
