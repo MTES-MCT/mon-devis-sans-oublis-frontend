@@ -9,7 +9,16 @@ import QuoteCaseConsistencyErrorTable from "@/components/QuoteCaseConsistencyErr
 import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
-import { hasFileError, QuoteCase, Status } from "@/types";
+import {
+  hasFileError,
+  getFileErrorMessage,
+  QuoteCase,
+  Status,
+  getFileErrors,
+  FILE_ERROR_LABELS,
+  FileErrorCodes,
+  getAllFileErrorDetailedMessages,
+} from "@/types";
 import { removeFileExtension } from "@/utils/fileUtils";
 import wording from "@/wording";
 import Link from "next/link";
@@ -58,6 +67,17 @@ export default function InvalidQuoteCase({
     hasFileError(quote)
   );
 
+  const uniqueFileErrorsWithMessages = (): Array<{
+    code: FileErrorCodes;
+    message: string;
+  }> => {
+    const errorMessages = getAllFileErrorDetailedMessages(dossier);
+    return Object.entries(errorMessages).map(([code, message]) => ({
+      code: code as FileErrorCodes,
+      message,
+    }));
+  };
+
   return (
     <>
       <div className="fr-container">
@@ -75,14 +95,28 @@ export default function InvalidQuoteCase({
 
         {/* Notice en cas d'erreur FILE ERROR */}
         {hasDossierFileTypeError && (
-          <div className="fr-my-4w">
-            <Notice
-              buttonClose={true}
-              className="fr-notice--alert"
-              description="Retrouvez le detail des erreurs dans le tableau des erreurs ci-dessous (fichiers grisés)."
-              title="Nous n'avons pas pu analyser tous vos devis"
-            />
-          </div>
+          <>
+            <div className="fr-my-4w">
+              <Notice
+                buttonClose={true}
+                className="fr-notice--alert"
+                description="Retrouvez le detail des erreurs dans le tableau des erreurs ci-dessous (fichiers grisés)."
+                title="Nous n'avons pas pu analyser tous vos devis"
+              />
+            </div>
+            <div className="fr-my-4w">
+              {uniqueFileErrorsWithMessages().map(({ code, message }) => (
+                <Notice
+                  key={code}
+                  noticeKey={code}
+                  buttonClose={true}
+                  className="fr-notice--alert fr-mt-2v"
+                  description={message}
+                  title={`Erreur de fichier : ${FILE_ERROR_LABELS[code]}`}
+                />
+              ))}
+            </div>
+          </>
         )}
       </div>
 
@@ -193,36 +227,40 @@ export default function InvalidQuoteCase({
                               </span>
                             </div>
 
-                            {/* Zone droite - Badge + Bouton */}
-                            <div className="flex items-center gap-3">
-                              {/* Badge statut */}
-                              {isValid ? (
-                                <p className="fr-badge fr-badge--success mb-0">
-                                  Devis conforme
+                            {/* Zone droite - Badge + Bouton ou Message d'erreur */}
+                            {isFileError ? (
+                              <div className="flex items-center justify-end flex-1 ml-3">
+                                <p className="fr-badge fr-badge--warning fr-background-contrast--grey fr-text-mention--grey mb-0 self-start">
+                                  {getFileErrorMessage(devis)}
                                 </p>
-                              ) : isFileError ? (
-                                <p className="fr-badge fr-badge--warning fr-background-contrast--grey fr-text-mention--grey mb-0">
-                                  Format non supporté
-                                </p>
-                              ) : (
-                                <p className="fr-badge fr-badge--warning mb-0">
-                                  {errorCount} correction
-                                  {errorCount > 1 ? "s" : ""}
-                                </p>
-                              )}
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-3">
+                                {/* Badge statut */}
+                                {isValid ? (
+                                  <p className="fr-badge fr-badge--success mb-0">
+                                    Devis conforme
+                                  </p>
+                                ) : (
+                                  <p className="fr-badge fr-badge--warning mb-0">
+                                    {errorCount} correction
+                                    {errorCount > 1 ? "s" : ""}
+                                  </p>
+                                )}
 
-                              {/* Bouton action ou espace réservé */}
-                              {!isValid && !isFileError ? (
-                                <Link
-                                  className="fr-btn fr-btn--tertiary fr-btn--sm shrink-0"
-                                  href={`/${profile}/dossier/${dossier.id}/devis/${devis.id}`}
-                                >
-                                  Voir les corrections
-                                </Link>
-                              ) : (
-                                <div className="w-[140px]"></div>
-                              )}
-                            </div>
+                                {/* Bouton action ou espace réservé */}
+                                {!isValid ? (
+                                  <Link
+                                    className="fr-btn fr-btn--tertiary fr-btn--sm shrink-0"
+                                    href={`/${profile}/dossier/${dossier.id}/devis/${devis.id}`}
+                                  >
+                                    Voir les corrections
+                                  </Link>
+                                ) : (
+                                  <div className="w-[140px]"></div>
+                                )}
+                              </div>
+                            )}
                           </td>
                         </tr>
                       );
@@ -264,34 +302,38 @@ export default function InvalidQuoteCase({
                         </div>
                       </div>
 
-                      {/* Badge et bouton empilés */}
-                      <div className="flex flex-col gap-2">
-                        {/* Badge statut */}
-                        {isValid ? (
-                          <p className="fr-badge fr-badge--success mb-0 self-start">
-                            Devis conforme
-                          </p>
-                        ) : isFileError ? (
+                      {/* Badge et bouton empilés ou Message d'erreur */}
+                      {isFileError ? (
+                        <div className="fr-mt-2w">
                           <p className="fr-badge fr-badge--warning fr-background-contrast--grey fr-text-mention--grey mb-0 self-start">
-                            Format non supporté
+                            {getFileErrorMessage(devis)}
                           </p>
-                        ) : (
-                          <p className="fr-badge fr-badge--warning mb-0 self-start">
-                            {errorCount} correction
-                            {errorCount > 1 ? "s" : ""}
-                          </p>
-                        )}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col gap-2">
+                          {/* Badge statut */}
+                          {isValid ? (
+                            <p className="fr-badge fr-badge--success mb-0 self-start">
+                              Devis conforme
+                            </p>
+                          ) : (
+                            <p className="fr-badge fr-badge--warning mb-0 self-start">
+                              {errorCount} correction
+                              {errorCount > 1 ? "s" : ""}
+                            </p>
+                          )}
 
-                        {/* Bouton action */}
-                        {!isValid && !isFileError && (
-                          <Link
-                            className="fr-btn fr-btn--tertiary fr-btn--sm self-start"
-                            href={`/${profile}/dossier/${dossier.id}/devis/${devis.id}`}
-                          >
-                            Voir les corrections
-                          </Link>
-                        )}
-                      </div>
+                          {/* Bouton action */}
+                          {!isValid && (
+                            <Link
+                              className="fr-btn fr-btn--tertiary fr-btn--sm self-start"
+                              href={`/${profile}/dossier/${dossier.id}/devis/${devis.id}`}
+                            >
+                              Voir les corrections
+                            </Link>
+                          )}
+                        </div>
+                      )}
                     </div>
                   );
                 })}

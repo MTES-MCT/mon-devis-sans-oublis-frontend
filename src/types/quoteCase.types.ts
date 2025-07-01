@@ -1,6 +1,9 @@
 import { ErrorDetails } from "./errorDetails.types";
 import { Metadata } from "./gestes.types";
 import {
+  FileErrorCodes,
+  getFileErrors,
+  hasFileError,
   Profile,
   QuoteCheck,
   RenovationTypes,
@@ -27,3 +30,27 @@ export interface QuoteCase {
 export interface QuoteCaseUpdateData {
   reference?: string | null;
 }
+
+// Helper pour récupérer tous les messages détaillés d'erreurs de fichier
+export const getAllFileErrorDetailedMessages = (
+  dossier: QuoteCase
+): Record<FileErrorCodes, string> => {
+  const messages: Record<FileErrorCodes, string> = {} as Record<
+    FileErrorCodes,
+    string
+  >;
+
+  dossier.quote_checks?.forEach((quote) => {
+    if (hasFileError(quote)) {
+      const errors = getFileErrors(quote);
+      errors.forEach((errorCode) => {
+        const detailedMessage = quote.error_messages?.[errorCode];
+        if (detailedMessage && !messages[errorCode]) {
+          messages[errorCode] = detailedMessage;
+        }
+      });
+    }
+  });
+
+  return messages;
+};

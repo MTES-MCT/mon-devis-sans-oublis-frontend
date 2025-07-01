@@ -96,7 +96,7 @@ export const MOCK_QUOTE_CASE_INVALID: QuoteCase = {
     ],
   },
 
-  // Mix de devis valides et invalides
+  // Mix de devis valides et invalides avec tous les types d'erreurs de fichier
   quote_checks: [
     // Premier devis invalide (pompe à chaleur avec erreurs admin)
     {
@@ -107,9 +107,9 @@ export const MOCK_QUOTE_CASE_INVALID: QuoteCase = {
       case_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
     },
 
-    // Deuxième devis invalide avec file_type_error
+    // Devis avec FILE_TYPE_ERROR
     {
-      id: "file-error-quote-id",
+      id: "file-type-error-quote",
       parent_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
       filename: "document-non-devis.pdf",
       status: Status.INVALID,
@@ -118,47 +118,111 @@ export const MOCK_QUOTE_CASE_INVALID: QuoteCase = {
       finished_at: "2025-06-17T15:37:06Z",
       comment: null,
       profile: Profile.PARTICULIER,
-
-      metadata: {
-        aides: [],
-        gestes: [],
-      },
-
+      metadata: { aides: [], gestes: [] },
       gestes: [],
-
-      // Erreur critique de type fichier
       errors: [FileErrorCodes.FILE_TYPE_ERROR],
-
-      error_details: [
-        {
-          id: "file-error-quote-id-1",
-          code: FileErrorCodes.FILE_TYPE_ERROR,
-          type: "error",
-          title:
-            "Le fichier ne semble pas être un devis, veuillez nous transférer uniquement des devis de rénovation énergétique.",
-          category: Category.FILE,
-          deleted: false,
-          comment: null,
-          geste_id: null,
-          problem:
-            "Le fichier téléchargé ne correspond pas à un devis de rénovation énergétique",
-          solution:
-            "Veuillez télécharger un fichier PDF contenant un devis de rénovation énergétique valide",
-          provided_value: null,
-        },
-      ],
-
+      error_details: [],
       error_messages: {
         [FileErrorCodes.FILE_TYPE_ERROR]:
           "Le fichier ne semble pas être un devis, veuillez nous transférer uniquement des devis de rénovation énergétique.",
       },
-
       control_codes: [FileErrorCodes.FILE_TYPE_ERROR],
-
       case_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
     },
 
-    // Troisième devis invalide (poêle à bois)
+    // Devis avec EMPTY_FILE_ERROR
+    {
+      id: "empty-file-error-quote",
+      parent_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
+      filename: "fichier-vide.pdf",
+      status: Status.INVALID,
+      controls_count: 1,
+      started_at: "2025-06-17T15:36:23.673Z",
+      finished_at: "2025-06-17T15:37:06Z",
+      comment: null,
+      profile: Profile.PARTICULIER,
+      metadata: { aides: [], gestes: [] },
+      gestes: [],
+      errors: [FileErrorCodes.EMPTY_FILE_ERROR],
+      error_details: [],
+      error_messages: {
+        [FileErrorCodes.EMPTY_FILE_ERROR]:
+          "Le fichier fourni semble vide, nous n'avons pas pu lire son contenu.",
+      },
+      control_codes: [FileErrorCodes.EMPTY_FILE_ERROR],
+      case_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
+    },
+
+    // Devis avec FILE_READING_ERROR
+    {
+      id: "file-reading-error-quote",
+      parent_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
+      filename: "document-corrompu.pdf",
+      status: Status.INVALID,
+      controls_count: 1,
+      started_at: "2025-06-17T15:36:23.673Z",
+      finished_at: "2025-06-17T15:37:06Z",
+      comment: null,
+      profile: Profile.PARTICULIER,
+      metadata: { aides: [], gestes: [] },
+      gestes: [],
+      errors: [FileErrorCodes.FILE_READING_ERROR],
+      error_details: [],
+      error_messages: {
+        [FileErrorCodes.FILE_READING_ERROR]:
+          "Malheureusement, nous n'avons pas réussi à lire le fichier... (nous ne supportons pas encore les scans ou images pour le moment).",
+      },
+      control_codes: [FileErrorCodes.FILE_READING_ERROR],
+      case_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
+    },
+
+    // Devis avec LLM_ERROR
+    {
+      id: "llm-error-quote",
+      parent_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
+      filename: "devis-illisible.pdf",
+      status: Status.INVALID,
+      controls_count: 1,
+      started_at: "2025-06-17T15:36:23.673Z",
+      finished_at: "2025-06-17T15:37:06Z",
+      comment: null,
+      profile: Profile.PARTICULIER,
+      metadata: { aides: [], gestes: [] },
+      gestes: [],
+      errors: [FileErrorCodes.LLM_ERROR],
+      error_details: [],
+      error_messages: {
+        [FileErrorCodes.LLM_ERROR]:
+          "Malheureusement, notre intelligence artificielle est en erreur actuellement, veuillez réessayer plus tard.",
+      },
+      control_codes: [FileErrorCodes.LLM_ERROR],
+      case_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
+    },
+
+    // Devis avec UNSUPPORTED_FILE_FORMAT
+    {
+      id: "unsupported-format-quote",
+      parent_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
+      filename: "devis.docx",
+      status: Status.INVALID,
+      controls_count: 1,
+      started_at: "2025-06-17T15:36:23.673Z",
+      finished_at: "2025-06-17T15:37:06Z",
+      comment: null,
+      profile: Profile.PARTICULIER,
+      metadata: { aides: [], gestes: [] },
+      gestes: [],
+      errors: [FileErrorCodes.UNSUPPORTED_FILE_FORMAT],
+      error_details: [],
+      error_messages: {
+        [FileErrorCodes.UNSUPPORTED_FILE_FORMAT]:
+          "L'extension et le format du fichier ne sont pas supportés pour le moment.",
+      },
+      control_codes: [FileErrorCodes.UNSUPPORTED_FILE_FORMAT],
+      case_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
+    },
+
+    // Troisième devis invalide (poêle à bois) - gardé tel quel
     {
       id: "70ae965b-8a0a-4cd9-86f3-24405523110f",
       parent_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",

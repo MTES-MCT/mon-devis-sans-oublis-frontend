@@ -34,6 +34,14 @@ export enum FileErrorCodes {
   UNSUPPORTED_FILE_FORMAT = "unsupported_file_format",
 }
 
+export const FILE_ERROR_LABELS: Record<FileErrorCodes, string> = {
+  [FileErrorCodes.EMPTY_FILE_ERROR]: "Fichier vide",
+  [FileErrorCodes.FILE_READING_ERROR]: "Lecture impossible",
+  [FileErrorCodes.LLM_ERROR]: "Erreur interne",
+  [FileErrorCodes.FILE_TYPE_ERROR]: "Devis non identifié",
+  [FileErrorCodes.UNSUPPORTED_FILE_FORMAT]: "Format non supporté",
+};
+
 export enum RenovationTypes {
   GESTES = "geste",
   AMPLEUR = "ampleur",
@@ -97,11 +105,27 @@ export const getFileErrors = (quoteCheck: QuoteCheck): FileErrorCodes[] => {
   );
 };
 
-// Helper pour récupérer le premier message d'erreur de fichier
+// Helper pour récupérer le label d'une erreur de fichier
+export const getFileErrorLabel = (errorCode: FileErrorCodes): string => {
+  return FILE_ERROR_LABELS[errorCode] || "Erreur de fichier";
+};
+
+// Helper pour récupérer le premier message d'erreur de fichier avec label
 export const getFileErrorMessage = (quoteCheck: QuoteCheck): string => {
   const fileErrors = getFileErrors(quoteCheck);
   if (fileErrors.length === 0) return "Erreur de fichier";
 
   const firstError = fileErrors[0];
-  return quoteCheck.error_messages?.[firstError] || "Format non supporté";
+  return getFileErrorLabel(firstError);
 };
+
+// Helper pour récupérer le message détaillé d'erreur de fichier depuis l'API
+export const getFileErrorDetailedMessage = (quoteCheck: QuoteCheck): string => {
+  const fileErrors = getFileErrors(quoteCheck);
+  if (fileErrors.length === 0) return "Erreur de fichier";
+
+  const firstError = fileErrors[0];
+  // Récupérer le message détaillé depuis error_messages de l'API
+  return quoteCheck.error_messages?.[firstError] || getFileErrorLabel(firstError);
+};
+

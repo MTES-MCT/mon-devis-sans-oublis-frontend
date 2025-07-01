@@ -8,6 +8,7 @@ export interface NoticeProps {
   className: string;
   description: string;
   title?: string;
+  noticeKey?: string;
 }
 
 export default function Notice({
@@ -15,6 +16,7 @@ export default function Notice({
   className,
   description,
   title,
+  noticeKey,
 }: NoticeProps) {
   const [isCloseButtonVisible, setIsCloseButtonVisible] =
     useState<boolean>(true);
@@ -24,7 +26,7 @@ export default function Notice({
   const isWarning = className.includes("fr-notice--warning");
 
   return (
-    <div className={`fr-notice ${className}`}>
+    <div className={`fr-notice ${className}`} key={noticeKey}>
       <div className="fr-container">
         <div className="fr-notice__body">
           <span>
