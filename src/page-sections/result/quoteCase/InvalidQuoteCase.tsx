@@ -10,13 +10,11 @@ import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformit
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
 import {
-  hasFileError,
   getFileErrorMessage,
   QuoteCase,
   Status,
-  FILE_ERROR_LABELS,
   FileErrorCodes,
-  getAllFileErrorDetailedMessages,
+  getFileErrors,
 } from "@/types";
 import { removeFileExtension } from "@/utils/fileUtils";
 import wording from "@/wording";
@@ -48,10 +46,12 @@ export default function InvalidQuoteCase({
   const quoteChecks = dossier.quote_checks ?? [];
   const quoteCaseErrors = dossier.error_details ?? [];
 
-  const invalidQuotes = quoteChecks.filter((q) => q.status === Status.INVALID);
-  const validQuotes = quoteChecks.filter((q) => q.status === Status.VALID);
+  const invalidQuotesCheck = quoteChecks.filter(
+    (q) => q.status === Status.INVALID
+  );
+  const validQuotesCheck = quoteChecks.filter((q) => q.status === Status.VALID);
 
-  const totalErrors = invalidQuotes.reduce(
+  const totalErrors = invalidQuotesCheck.reduce(
     (total, quote) => total + (quote.error_details?.length ?? 0),
     0
   );
@@ -62,20 +62,12 @@ export default function InvalidQuoteCase({
   );
 
   const shouldShowConformityCard = () => totalControls > 0;
-  const hasDossierFileTypeError = dossier.quote_checks?.some((quote) =>
-    hasFileError(quote)
-  );
 
-  const uniqueFileErrorsWithMessages = (): Array<{
-    code: FileErrorCodes;
-    message: string;
-  }> => {
-    const errorMessages = getAllFileErrorDetailedMessages(dossier);
-    return Object.entries(errorMessages).map(([code, message]) => ({
-      code: code as FileErrorCodes,
-      message,
-    }));
-  };
+  const hasDossierFileTypeError = dossier.quote_checks?.some((quote) =>
+    quote.errors?.some((error) =>
+      Object.values(FileErrorCodes).includes(error as FileErrorCodes)
+    )
+  );
 
   return (
     <>
@@ -102,18 +94,6 @@ export default function InvalidQuoteCase({
                 description="Retrouvez le detail des erreurs dans le tableau des erreurs ci-dessous (fichiers grisés)."
                 title="Nous n'avons pas pu analyser tous vos devis"
               />
-            </div>
-            <div className="fr-my-4w">
-              {uniqueFileErrorsWithMessages().map(({ code, message }) => (
-                <Notice
-                  key={code}
-                  noticeKey={code}
-                  buttonClose={true}
-                  className="fr-notice--alert fr-mt-2v"
-                  description={message}
-                  title={`Erreur de fichier : ${FILE_ERROR_LABELS[code]}`}
-                />
-              ))}
             </div>
           </>
         )}
@@ -187,7 +167,7 @@ export default function InvalidQuoteCase({
         )}
 
         {/* Tableau des corrections devis */}
-        {(invalidQuotes.length > 0 || validQuotes.length > 0) && (
+        {(invalidQuotesCheck.length > 0 || validQuotesCheck.length > 0) && (
           <div className="fr-mb-6w">
             <h3>Corrections par devis ⬇️</h3>
             <div className="fr-mt-4v">
@@ -196,15 +176,20 @@ export default function InvalidQuoteCase({
                 <table className="w-full">
                   <tbody>
                     {[
-                      ...invalidQuotes.filter((q) => !hasFileError(q)),
-                      ...validQuotes,
-                      ...invalidQuotes.filter((q) => hasFileError(q)),
+                      // Devis valides en premier, puis les invalides (avec et sans erreurs de fichier)
+                      ...validQuotesCheck,
+                      ...invalidQuotesCheck.filter(
+                        (q) => getFileErrors(q).length === 0
+                      ),
+                      ...invalidQuotesCheck.filter(
+                        (q) => getFileErrors(q).length > 0
+                      ),
                     ].map((devis, index, allQuotes) => {
                       const errorCount =
                         devis.error_details?.filter((error) => !error.deleted)
                           .length || 0;
                       const isValid = devis.status === "valid";
-                      const isFileError = hasFileError(devis);
+                      const isFileError = getFileErrors(devis).length > 0;
                       const isLastItem = index === allQuotes.length - 1;
 
                       return (
@@ -271,15 +256,20 @@ export default function InvalidQuoteCase({
               {/* Version mobile : cartes empilées */}
               <div className="md:hidden space-y-3">
                 {[
-                  ...invalidQuotes.filter((q) => !hasFileError(q)),
-                  ...validQuotes,
-                  ...invalidQuotes.filter((q) => hasFileError(q)),
+                  // Devis valides en premier, puis les invalides
+                  ...validQuotesCheck,
+                  ...invalidQuotesCheck.filter(
+                    (q) => getFileErrors(q).length === 0
+                  ),
+                  ...invalidQuotesCheck.filter(
+                    (q) => getFileErrors(q).length > 0
+                  ),
                 ].map((devis) => {
                   const errorCount =
                     devis.error_details?.filter((error) => !error.deleted)
                       .length || 0;
                   const isValid = devis.status === "valid";
-                  const isFileError = hasFileError(devis);
+                  const isFileError = getFileErrors(devis).length > 0;
 
                   return (
                     <div

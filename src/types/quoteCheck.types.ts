@@ -85,16 +85,6 @@ export interface QuoteUploadResult {
   [key: string]: unknown;
 }
 
-// Helper pour identifier les erreurs de type fichier
-export const hasFileError = (quoteCheck: QuoteCheck): boolean => {
-  const fileErrorValues = Object.values(FileErrorCodes);
-  return (
-    quoteCheck.errors?.some((error) =>
-      fileErrorValues.includes(error as FileErrorCodes)
-    ) ?? false
-  );
-};
-
 // Helper pour récupérer les erreurs de type fichier
 export const getFileErrors = (quoteCheck: QuoteCheck): FileErrorCodes[] => {
   const fileErrorValues = Object.values(FileErrorCodes);
@@ -118,14 +108,3 @@ export const getFileErrorMessage = (quoteCheck: QuoteCheck): string => {
   const firstError = fileErrors[0];
   return getFileErrorLabel(firstError);
 };
-
-// Helper pour récupérer le message détaillé d'erreur de fichier depuis l'API
-export const getFileErrorDetailedMessage = (quoteCheck: QuoteCheck): string => {
-  const fileErrors = getFileErrors(quoteCheck);
-  if (fileErrors.length === 0) return "Erreur de fichier";
-
-  const firstError = fileErrors[0];
-  // Récupérer le message détaillé depuis error_messages de l'API
-  return quoteCheck.error_messages?.[firstError] || getFileErrorLabel(firstError);
-};
-

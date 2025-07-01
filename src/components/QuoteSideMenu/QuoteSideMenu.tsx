@@ -1,6 +1,6 @@
 "use client";
 
-import { QuoteCheck, hasFileError } from "@/types";
+import { QuoteCheck, getFileErrors } from "@/types";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -21,9 +21,11 @@ const getQuoteFilename = (quote?: QuoteCheck): string =>
 // Helper pour trier les devis selon le même ordre que dans InvalidQuoteCase
 const sortQuoteChecks = (quoteChecks: QuoteCheck[]): QuoteCheck[] => {
   return [
-    ...quoteChecks.filter((q) => q.status !== "valid" && !hasFileError(q)), // Devis invalides sans erreur de fichier
+    ...quoteChecks.filter(
+      (q) => q.status !== "valid" && getFileErrors(q).length === 0
+    ), // Devis invalides sans erreur de fichier
     ...quoteChecks.filter((q) => q.status === "valid"), // Devis valides
-    ...quoteChecks.filter((q) => hasFileError(q)), // Devis avec erreur de fichier (en dernier)
+    ...quoteChecks.filter((q) => getFileErrors(q).length > 0), // Devis avec erreur de fichier (en dernier)
   ];
 };
 
@@ -55,7 +57,7 @@ export function QuoteSidemenuDesktop({
             Résultat de l'analyse
           </Link>
           {sortedQuoteChecks.map((quote) => {
-            const isFileError = hasFileError(quote);
+            const isFileError = getFileErrors(quote).length > 0;
             const isCurrentQuote = quote.id === currentQuoteCheckId;
 
             return (
@@ -119,7 +121,7 @@ export function QuoteSidemenuMobile({
 
   const currentQuote = quoteChecks.find((q) => q.id === currentQuoteCheckId);
   const isCurrentQuoteFileError = currentQuote
-    ? hasFileError(currentQuote)
+    ? getFileErrors(currentQuote).length > 0
     : false;
 
   return (
@@ -159,7 +161,7 @@ export function QuoteSidemenuMobile({
 
             {/* Liste des devis */}
             {sortedQuoteChecks.map((quote) => {
-              const isFileError = hasFileError(quote);
+              const isFileError = getFileErrors(quote).length > 0;
               const isCurrentQuote = quote.id === currentQuoteCheckId;
 
               return (
