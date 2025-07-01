@@ -9,7 +9,7 @@ import QuoteCaseConsistencyErrorTable from "@/components/QuoteCaseConsistencyErr
 import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
-import { hasFileTypeError, QuoteCase, Status } from "@/types";
+import { hasFileError, QuoteCase, Status } from "@/types";
 import { removeFileExtension } from "@/utils/fileUtils";
 import wording from "@/wording";
 import Link from "next/link";
@@ -55,7 +55,7 @@ export default function InvalidQuoteCase({
 
   const shouldShowConformityCard = () => totalControls > 0;
   const hasDossierFileTypeError = dossier.quote_checks?.some((quote) =>
-    hasFileTypeError(quote)
+    hasFileError(quote)
   );
 
   return (
@@ -163,15 +163,15 @@ export default function InvalidQuoteCase({
                 <table className="w-full">
                   <tbody>
                     {[
-                      ...invalidQuotes.filter((q) => !hasFileTypeError(q)),
+                      ...invalidQuotes.filter((q) => !hasFileError(q)),
                       ...validQuotes,
-                      ...invalidQuotes.filter((q) => hasFileTypeError(q)),
+                      ...invalidQuotes.filter((q) => hasFileError(q)),
                     ].map((devis, index, allQuotes) => {
                       const errorCount =
                         devis.error_details?.filter((error) => !error.deleted)
                           .length || 0;
                       const isValid = devis.status === "valid";
-                      const isFileError = hasFileTypeError(devis);
+                      const isFileError = hasFileError(devis);
                       const isLastItem = index === allQuotes.length - 1;
 
                       return (
@@ -234,15 +234,15 @@ export default function InvalidQuoteCase({
               {/* Version mobile : cartes empilées */}
               <div className="md:hidden space-y-3">
                 {[
-                  ...invalidQuotes.filter((q) => !hasFileTypeError(q)),
+                  ...invalidQuotes.filter((q) => !hasFileError(q)),
                   ...validQuotes,
-                  ...invalidQuotes.filter((q) => hasFileTypeError(q)),
+                  ...invalidQuotes.filter((q) => hasFileError(q)),
                 ].map((devis) => {
                   const errorCount =
                     devis.error_details?.filter((error) => !error.deleted)
                       .length || 0;
                   const isValid = devis.status === "valid";
-                  const isFileError = hasFileTypeError(devis);
+                  const isFileError = hasFileError(devis);
 
                   return (
                     <div

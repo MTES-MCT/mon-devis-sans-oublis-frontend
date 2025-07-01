@@ -4,7 +4,7 @@ import {
   Profile,
   RenovationTypes,
   Category,
-  ErrorCodes,
+  FileErrorCodes,
 } from "@/types";
 import { MOCK_QUOTE_CHECK_INVALID } from "../quoteCheck";
 
@@ -127,12 +127,12 @@ export const MOCK_QUOTE_CASE_INVALID: QuoteCase = {
       gestes: [],
 
       // Erreur critique de type fichier
-      errors: [ErrorCodes.FILE_TYPE_ERROR],
+      errors: [FileErrorCodes.FILE_TYPE_ERROR],
 
       error_details: [
         {
           id: "file-error-quote-id-1",
-          code: ErrorCodes.FILE_TYPE_ERROR,
+          code: FileErrorCodes.FILE_TYPE_ERROR,
           type: "error",
           title:
             "Le fichier ne semble pas être un devis, veuillez nous transférer uniquement des devis de rénovation énergétique.",
@@ -149,11 +149,11 @@ export const MOCK_QUOTE_CASE_INVALID: QuoteCase = {
       ],
 
       error_messages: {
-        [ErrorCodes.FILE_TYPE_ERROR]:
+        [FileErrorCodes.FILE_TYPE_ERROR]:
           "Le fichier ne semble pas être un devis, veuillez nous transférer uniquement des devis de rénovation énergétique.",
       },
 
-      control_codes: [ErrorCodes.FILE_TYPE_ERROR],
+      control_codes: [FileErrorCodes.FILE_TYPE_ERROR],
 
       case_id: "9dc76eec-e728-46af-aba5-1f5b0625a3cd",
     },
