@@ -14,7 +14,6 @@ import {
   getFileErrorMessage,
   QuoteCase,
   Status,
-  getFileErrors,
   FILE_ERROR_LABELS,
   FileErrorCodes,
   getAllFileErrorDetailedMessages,

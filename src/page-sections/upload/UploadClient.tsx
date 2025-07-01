@@ -45,7 +45,7 @@ export default function UploadClient({
     setFileError(null);
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (isSubmitting || isPending) return;
 
     if (!file) {
@@ -74,15 +74,23 @@ export default function UploadClient({
       setFileError("An error occurred. Please try again.");
       setIsSubmitting(false);
     }
-  };
+  }, [
+    isSubmitting,
+    isPending,
+    file,
+    selectedAides,
+    selectedGestes,
+    profile,
+    router,
+    startTransition,
+  ]);
 
   // Exposer la fonction handleSubmit et l'état au parent
   useEffect(() => {
     const canSubmit = !isSubmitting && !!file && !fileError;
     onStateChange?.(canSubmit, isSubmitting);
-
-    (window as any).uploadClientSubmit = handleSubmit;
-  }, [file, fileError, isSubmitting, onStateChange]);
+    window.uploadClientSubmit = handleSubmit;
+  }, [file, fileError, isSubmitting, onStateChange, handleSubmit]);
 
   useEffect(() => {
     const error = searchParams.get("error");

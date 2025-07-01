@@ -27,8 +27,8 @@ export default function UploadRenovationParGestesPage({
   };
 
   const handleSubmit = () => {
-    if ((window as any).uploadClientSubmit) {
-      (window as any).uploadClientSubmit();
+    if (window.uploadClientSubmit) {
+      window.uploadClientSubmit();
     }
   };
 
