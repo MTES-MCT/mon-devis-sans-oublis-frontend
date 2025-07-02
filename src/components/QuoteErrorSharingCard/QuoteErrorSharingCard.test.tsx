@@ -14,9 +14,9 @@ describe("QuoteErrorSharingCard - copyUrlToClipboard", () => {
     jest.clearAllMocks();
   });
 
-  it("doit copier l'URL du dossier conseiller sans /modifier", async () => {
+  it("doit copier l'URL du dossier conseiller", async () => {
     // Arrange
-    mockUsePathname.mockReturnValue("/conseiller/dossier/123/modifier");
+    mockUsePathname.mockReturnValue("/conseiller/dossier/123");
     mockUseConseillerRoutes.mockReturnValue({ isConseillerAndEdit: true });
     mockUseUserProfile.mockReturnValue(Profile.CONSEILLER);
 
@@ -35,9 +35,7 @@ describe("QuoteErrorSharingCard - copyUrlToClipboard", () => {
 
   it("doit copier l'URL du devis seul pour un conseiller sur un devis dans un dossier", async () => {
     // Arrange
-    mockUsePathname.mockReturnValue(
-      "/conseiller/dossier/123/devis/456/modifier"
-    );
+    mockUsePathname.mockReturnValue("/conseiller/dossier/123/devis/456");
     mockUseConseillerRoutes.mockReturnValue({ isConseillerAndEdit: true });
     mockUseUserProfile.mockReturnValue(Profile.CONSEILLER);
 

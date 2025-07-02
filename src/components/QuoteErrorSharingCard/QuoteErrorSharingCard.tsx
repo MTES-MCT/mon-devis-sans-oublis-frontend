@@ -56,11 +56,6 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
         : `/devis/${devisId}`;
     }
 
-    // Gérer le mode édition conseiller
-    const finalUrl = isConseillerAndEdit
-      ? targetUrl.replace(/\/modifier$/, "")
-      : targetUrl;
-
     const fullUrl = `${baseUrl}${finalUrl}`;
     navigator.clipboard.writeText(fullUrl);
     setIsUrlCopied(true);

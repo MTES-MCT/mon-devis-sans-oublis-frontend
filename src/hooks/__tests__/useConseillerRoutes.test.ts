@@ -14,22 +14,12 @@ describe("useConseillerRoutes", () => {
     jest.clearAllMocks();
   });
 
-  it("returns isConseillerAndEdit true when path includes both conseiller and modifier", () => {
-    mockUsePathname.mockReturnValue("/conseiller/123/modifier");
-
-    const { result } = renderHook(() => useConseillerRoutes());
-
-    expect(result.current.isConseillerAndEdit).toBe(true);
-    expect(result.current.isConseillerAndNotEdit).toBe(false);
-  });
-
-  it("returns isConseillerAndNotEdit true when path includes conseiller but not modifier", () => {
+  it("returns isConseillerAndEdit true when path includes both conseiller", () => {
     mockUsePathname.mockReturnValue("/conseiller/123");
 
     const { result } = renderHook(() => useConseillerRoutes());
 
-    expect(result.current.isConseillerAndEdit).toBe(false);
-    expect(result.current.isConseillerAndNotEdit).toBe(true);
+    expect(result.current.isConseillerAndEdit).toBe(true);
   });
 
   it("returns both false when path does not include conseiller", () => {
@@ -38,7 +28,6 @@ describe("useConseillerRoutes", () => {
     const { result } = renderHook(() => useConseillerRoutes());
 
     expect(result.current.isConseillerAndEdit).toBe(false);
-    expect(result.current.isConseillerAndNotEdit).toBe(false);
   });
 
   it("handles null pathname gracefully", () => {
@@ -47,6 +36,5 @@ describe("useConseillerRoutes", () => {
     const { result } = renderHook(() => useConseillerRoutes());
 
     expect(result.current.isConseillerAndEdit).toBe(false);
-    expect(result.current.isConseillerAndNotEdit).toBe(false);
   });
 });

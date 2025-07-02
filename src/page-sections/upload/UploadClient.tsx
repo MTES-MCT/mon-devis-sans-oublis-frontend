@@ -63,11 +63,7 @@ export default function UploadClient({
       );
 
       startTransition(() => {
-        if (profile === Profile.CONSEILLER) {
-          router.push(`/${profile}/devis/${data.id}/modifier`);
-        } else {
-          router.push(`/${profile}/devis/${data.id}`);
-        }
+        router.push(`/${profile}/devis/${data.id}`);
       });
     } catch (error) {
       console.error("Error during upload:", error);
