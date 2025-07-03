@@ -1,13 +1,8 @@
 import { Notice } from "@/components";
 import { quoteService } from "@/lib/client/apiWrapper";
 import { ResultGestesClient } from "@/page-sections";
-import { Profile } from "@/types";
+import { ErrorDetailDeleteReason, Profile } from "@/types";
 import wording from "@/wording";
-
-type DeleteErrorReason = {
-  id: string;
-  label: string;
-};
 
 export default async function Result({
   params: initialParams,
@@ -24,7 +19,7 @@ export default async function Result({
   const isConseillerMode = params.profile === Profile.CONSEILLER;
 
   let currentDevis = null;
-  let deleteErrorReasons: DeleteErrorReason[] = [];
+  let deleteErrorReasons: ErrorDetailDeleteReason[] = [];
 
   try {
     // Récupérer le devis
