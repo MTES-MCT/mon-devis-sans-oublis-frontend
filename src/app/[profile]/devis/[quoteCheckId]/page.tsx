@@ -1,7 +1,13 @@
 import { Notice } from "@/components";
 import { quoteService } from "@/lib/client/apiWrapper";
 import { ResultGestesClient } from "@/page-sections";
+import { Profile } from "@/types";
 import wording from "@/wording";
+
+type DeleteErrorReason = {
+  id: string;
+  label: string;
+};
 
 export default async function Result({
   params: initialParams,
@@ -14,11 +20,22 @@ export default async function Result({
     console.error("Erreur : quoteCheckId est undefined !");
   }
 
+  // Vérifier si on est en mode conseiller (édition)
+  const isConseillerMode = params.profile === Profile.CONSEILLER;
+
   let currentDevis = null;
+  let deleteErrorReasons: DeleteErrorReason[] = [];
+
   try {
+    // Récupérer le devis
     currentDevis = await quoteService.getQuoteCheck(params.quoteCheckId);
+
+    // Récupérer les raisons de suppression seulement si on est conseiller
+    if (isConseillerMode) {
+      deleteErrorReasons = await quoteService.getDeleteErrorDetailReasons();
+    }
   } catch (error) {
-    console.error("Error fetching devis:", error);
+    console.error("Error fetching data:", error);
   }
 
   return (
@@ -30,10 +47,11 @@ export default async function Result({
       />
       <ResultGestesClient
         currentDevis={currentDevis}
+        deleteErrorReasons={isConseillerMode ? deleteErrorReasons : undefined}
         profile={params.profile}
         quoteCheckId={params.quoteCheckId}
-        showDeletedErrors={false}
-        enableCrispFeedback={true}
+        showDeletedErrors={isConseillerMode}
+        enableCrispFeedback={!isConseillerMode}
       />
     </>
   );

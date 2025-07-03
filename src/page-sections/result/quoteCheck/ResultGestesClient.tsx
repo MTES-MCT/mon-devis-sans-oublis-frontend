@@ -36,11 +36,6 @@ const CRISP_NPS_LOCALSTORAGE_FLAG = "crispNpsEventTriggered";
 interface ResultGestesClientProps {
   currentDevis: QuoteCheck | null;
   deleteErrorReasons?: { id: string; label: string }[];
-  onDeleteErrorDetail?: (
-    quoteCheckId: string,
-    errorDetailsId: string,
-    reason: string
-  ) => void;
   profile: string;
   quoteCheckId: string;
   showDeletedErrors: boolean;
@@ -51,7 +46,6 @@ interface ResultGestesClientProps {
 export default function ResultGestesClient({
   currentDevis: initialDevis,
   deleteErrorReasons,
-  onDeleteErrorDetail,
   profile,
   quoteCheckId,
   showDeletedErrors,
@@ -88,7 +82,6 @@ export default function ResultGestesClient({
     if (hasEventTriggered) return;
 
     const timer = setTimeout(() => {
-      // Déclenche l'événement Crisp NPS
       triggerEvent(CRISP_NPS_EVENT_NAME);
       localStorage.setItem(CRISP_NPS_LOCALSTORAGE_FLAG, "true");
       console.log(`Événement ${CRISP_NPS_EVENT_NAME} déclenché`);
@@ -97,7 +90,6 @@ export default function ResultGestesClient({
     return () => clearTimeout(timer);
   }, [isLoaded, enableCrispFeedback, isLoading, triggerEvent]);
 
-  // Validation des données critiques
   const isDataValid = (devis: QuoteCheck | null): boolean => {
     if (!devis) return false;
 
@@ -234,6 +226,33 @@ export default function ResultGestesClient({
     }
   };
 
+  const handleDeleteErrorDetail = async (
+    quoteCheckId: string,
+    errorDetailId: string,
+    reason: string
+  ) => {
+    if (!currentDevis) return;
+
+    const updatedDevis = {
+      ...currentDevis,
+      error_details: (currentDevis.error_details || []).map((error) => ({
+        ...error,
+        deleted: error.id === errorDetailId ? true : error.deleted,
+      })),
+    };
+
+    setCurrentDevis(updatedDevis);
+
+    try {
+      await quoteService.deleteErrorDetail(quoteCheckId, errorDetailId, reason);
+      const refreshedDevis = await quoteService.getQuoteCheck(quoteCheckId);
+      setCurrentDevis(refreshedDevis);
+    } catch (error) {
+      console.error("Erreur lors de la suppression de l'erreur:", error);
+      setCurrentDevis(currentDevis);
+    }
+  };
+
   const handleDeleteError = async (
     quoteCheckId: string,
     errorDetailsId: string,
@@ -262,8 +281,9 @@ export default function ResultGestesClient({
       };
     });
 
-    if (onDeleteErrorDetail) {
-      await onDeleteErrorDetail(quoteCheckId, errorDetailsId, finalReason);
+    // Utiliser handleDeleteErrorDetail pour l'édition conseiller
+    if (isConseillerAndEdit) {
+      await handleDeleteErrorDetail(quoteCheckId, errorDetailsId, finalReason);
     }
   };
 
@@ -403,7 +423,6 @@ export default function ResultGestesClient({
     }
   };
 
-  // État d'erreur de polling - fallback de sécurité
   if (hasPollingError) {
     return (
       <section className="fr-container-fluid fr-py-10w">
@@ -440,7 +459,6 @@ export default function ResultGestesClient({
     );
   }
 
-  // État de chargement ou données invalides
   if (isLoading || !isDataValid(currentDevis)) {
     return (
       <section className="fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center">
@@ -526,7 +544,7 @@ export default function ResultGestesClient({
           quoteCheckId={quoteCheckId}
         />
         <div className="fr-container flex flex-col relative">
-          {!hasFeedbackBeenSubmitted && (
+          {!hasFeedbackBeenSubmitted && enableCrispFeedback && (
             <div
               className={`${
                 currentDevis?.status === Status.VALID
