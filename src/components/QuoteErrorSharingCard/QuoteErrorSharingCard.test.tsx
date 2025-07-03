@@ -25,7 +25,7 @@ describe("QuoteErrorSharingCard - copyUrlToClipboard", () => {
     });
   });
 
-  it("doit copier l'URL du dossier conseiller", async () => {
+  it("doit copier l'URL du dossier sans profil", async () => {
     // Arrange
     mockUsePathname.mockReturnValue("/conseiller/dossier/123");
     mockUseIsConseiller.mockReturnValue(true);
@@ -40,11 +40,11 @@ describe("QuoteErrorSharingCard - copyUrlToClipboard", () => {
 
     // Assert
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-      `${window.location.origin}/conseiller/dossier/123`
+      `${window.location.origin}/dossier/123`
     );
   });
 
-  it("doit copier l'URL du devis seul pour un conseiller sur un devis dans un dossier", async () => {
+  it("doit copier l'URL du devis seul sans profil pour un devis dans un dossier", async () => {
     // Arrange
     mockUsePathname.mockReturnValue("/conseiller/dossier/123/devis/456");
     mockUseIsConseiller.mockReturnValue(true);
@@ -59,11 +59,11 @@ describe("QuoteErrorSharingCard - copyUrlToClipboard", () => {
 
     // Assert
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-      `${window.location.origin}/conseiller/devis/456`
+      `${window.location.origin}/devis/456`
     );
   });
 
-  it("doit copier l'URL du dossier artisan telle quelle", async () => {
+  it("doit copier l'URL du dossier artisan sans profil", async () => {
     // Arrange
     mockUsePathname.mockReturnValue("/artisan/dossier/123");
     mockUseIsConseiller.mockReturnValue(false);
@@ -78,11 +78,11 @@ describe("QuoteErrorSharingCard - copyUrlToClipboard", () => {
 
     // Assert
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-      `${window.location.origin}/artisan/dossier/123`
+      `${window.location.origin}/dossier/123`
     );
   });
 
-  it("doit copier l'URL du devis particulier", async () => {
+  it("doit copier l'URL du devis particulier sans profil", async () => {
     // Arrange
     mockUsePathname.mockReturnValue("/particulier/devis/456");
     mockUseIsConseiller.mockReturnValue(false);
@@ -97,7 +97,7 @@ describe("QuoteErrorSharingCard - copyUrlToClipboard", () => {
 
     // Assert
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-      `${window.location.origin}/particulier/devis/456`
+      `${window.location.origin}/devis/456`
     );
   });
 
@@ -117,6 +117,44 @@ describe("QuoteErrorSharingCard - copyUrlToClipboard", () => {
     // Assert
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
       `${window.location.origin}/devis/456`
+    );
+  });
+
+  it("doit rediriger vers la racine si seulement un profil", async () => {
+    // Arrange
+    mockUsePathname.mockReturnValue("/artisan");
+    mockUseIsConseiller.mockReturnValue(false);
+    mockUseUserProfile.mockReturnValue(Profile.ARTISAN);
+
+    // Act
+    render(<QuoteErrorSharingCard />);
+    const copyButton = screen.getByText(
+      QUOTE_ERROR_SHARING_WORDING.button_copy_url
+    );
+    fireEvent.click(copyButton);
+
+    // Assert
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+      `${window.location.origin}/`
+    );
+  });
+
+  it("doit garder l'URL si pas de profil détecté", async () => {
+    // Arrange
+    mockUsePathname.mockReturnValue("/page-publique");
+    mockUseIsConseiller.mockReturnValue(false);
+    mockUseUserProfile.mockReturnValue(null);
+
+    // Act
+    render(<QuoteErrorSharingCard />);
+    const copyButton = screen.getByText(
+      QUOTE_ERROR_SHARING_WORDING.button_copy_url
+    );
+    fireEvent.click(copyButton);
+
+    // Assert
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+      `${window.location.origin}/page-publique`
     );
   });
 

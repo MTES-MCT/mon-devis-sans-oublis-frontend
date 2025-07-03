@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-import { useUserProfile } from "@/hooks";
 import { ErrorDetails, Gestes, QuoteCase } from "@/types";
 import QuoteErrorSharingModal from "./QuoteErrorSharingCard.modal";
 import { QUOTE_ERROR_SHARING_WORDING } from "./QuoteErrorSharingCard.wording";
@@ -38,21 +37,39 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
   const [isUrlCopied, setIsUrlCopied] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const profile = useUserProfile();
-
   const { trackEvent } = useMatomo();
 
   const copyUrlToClipboard = () => {
     let targetUrl = pathname;
 
-    // Si on est sur un devis dans un dossier, rediriger vers le devis seul
+    // Extraire l'ID du devis s'il existe dans l'URL
     const devisMatch = pathname.match(/\/devis\/([^\/]+)/);
+
+    // Extraire l'ID du dossier s'il existe dans l'URL
+    const dossierMatch = pathname.match(/\/dossier\/([^\/]+)/);
+
     if (devisMatch) {
+      // Si on est sur un devis, rediriger vers /devis/ID (sans profil)
       const devisId = devisMatch[1];
-      // Construire l'URL avec le profil si disponible
-      targetUrl = profile
-        ? `/${profile}/devis/${devisId}`
-        : `/devis/${devisId}`;
+      targetUrl = `/devis/${devisId}`;
+    } else if (dossierMatch) {
+      // Si on est sur un dossier, rediriger vers /dossier/ID (sans profil)
+      const dossierId = dossierMatch[1];
+      targetUrl = `/dossier/${dossierId}`;
+    } else {
+      // Fallback : supprimer le profil de l'URL actuelle si présent
+      // Regex pour matcher /{profile}/quelque-chose
+      const profileMatch = pathname.match(
+        /^\/(artisan|conseiller|particulier)(\/.*)?$/
+      );
+      if (profileMatch && profileMatch[2]) {
+        // Si on a un profil suivi d'un chemin, prendre seulement le chemin
+        targetUrl = profileMatch[2];
+      } else if (profileMatch && !profileMatch[2]) {
+        // Si on a seulement un profil (ex: /artisan), rediriger vers /
+        targetUrl = "/";
+      }
+      // Sinon, garder l'URL actuelle
     }
 
     const fullUrl = `${baseUrl}${targetUrl}`;

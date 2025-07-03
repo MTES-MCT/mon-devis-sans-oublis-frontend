@@ -21,7 +21,11 @@ import {
   Rating,
   Status,
 } from "@/types";
-import { formatDateToFrench } from "@/utils";
+import {
+  formatDateToFrench,
+  getRedirectUrl,
+  getRedirectUrlWithParams,
+} from "@/utils";
 import wording from "@/wording";
 import { quoteService } from "@/lib/client/apiWrapper";
 import ValidQuoteCheck from "./ValidQuoteCheck";
@@ -36,7 +40,7 @@ const CRISP_NPS_LOCALSTORAGE_FLAG = "crispNpsEventTriggered";
 interface ResultGestesClientProps {
   currentDevis: QuoteCheck | null;
   deleteErrorReasons?: { id: string; label: string }[];
-  profile: string;
+  profile: string | null | undefined;
   quoteCheckId: string;
   showDeletedErrors: boolean;
   enableCrispFeedback?: boolean;
@@ -194,9 +198,19 @@ export default function ResultGestesClient({
       const fileErrorMessage =
         sessionStorage.getItem("fileErrorMessage") ||
         wording.upload.error.notice.description;
-      const url = fileErrorMessage
-        ? `/${profile}/televersement/renovation-par-gestes?error=${FILE_ERROR}&message=${fileErrorMessage}`
-        : `/${profile}/televersement/renovation-par-gestes?error=${FILE_ERROR}`;
+
+      // Utiliser la fonction utilitaire pour construire l'URL
+      const queryParams: Record<string, string> = { error: FILE_ERROR };
+      if (fileErrorMessage) {
+        queryParams.message = fileErrorMessage;
+      }
+
+      const url = getRedirectUrlWithParams(
+        "/televersement/renovation-par-gestes",
+        profile,
+        queryParams
+      );
+
       router.push(url);
       sessionStorage.removeItem("fileErrorMessage");
     }
@@ -447,7 +461,12 @@ export default function ResultGestesClient({
               <button
                 className="fr-btn fr-btn--tertiary"
                 onClick={() =>
-                  router.push(`/${profile}/televersement/renovation-par-gestes`)
+                  router.push(
+                    getRedirectUrl(
+                      "/televersement/renovation-par-gestes",
+                      profile
+                    )
+                  )
                 }
               >
                 Nouvelle analyse

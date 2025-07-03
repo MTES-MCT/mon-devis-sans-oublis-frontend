@@ -7,7 +7,12 @@ export const useUserProfile = (): Profile | null => {
   const params = useParams();
 
   // Récupérer le profil depuis l'URL
-  const profile = params?.profile as string;
+  const profile = params?.profile as string | undefined;
+
+  // Si pas de profil dans l'URL, retourner null
+  if (!profile) {
+    return null;
+  }
 
   // Validation et conversion vers le type Profile
   if (
@@ -18,10 +23,10 @@ export const useUserProfile = (): Profile | null => {
     return profile as Profile;
   }
 
-  // Retourner null si le profil n'est pas valide
   return null;
 };
 
+// Fonction utilitaire pour vérifier si on est conseiller
 export const useIsConseiller = (): boolean => {
   const profile = useUserProfile();
   return profile === Profile.CONSEILLER;
