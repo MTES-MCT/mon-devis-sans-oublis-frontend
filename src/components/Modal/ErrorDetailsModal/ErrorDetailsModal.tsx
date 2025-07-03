@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 import Modal, { ModalPosition } from "../Modal";
-import { useConseillerRoutes } from "@/hooks";
+import { useIsConseiller } from "@/hooks";
 import wording from "@/wording";
 
 export interface ErrorDetailsModalProps {
@@ -31,7 +31,7 @@ const ErrorDetailsModal: React.FC<ErrorDetailsModalProps> = ({
   const [comment, setComment] = useState<string>(initialComment);
   const [isCommentModified, setIsCommentModified] = useState(false);
 
-  const { isConseillerAndEdit } = useConseillerRoutes();
+  const isConseillerAndEdit = useIsConseiller();
 
   useEffect(() => {
     if (isOpen) {

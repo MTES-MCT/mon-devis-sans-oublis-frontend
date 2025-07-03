@@ -4,6 +4,12 @@ import { TextEncoder, TextDecoder } from "util";
 // Fix pour l'erreur TextEncoder avec Next.js 15
 Object.assign(global, { TextDecoder, TextEncoder });
 
+// Mock des variables d'environnement
+process.env.NEXT_PUBLIC_API_URL = "https://api.test.example.com";
+process.env.NEXT_PUBLIC_MATOMO_SITE_ID = "1";
+process.env.NEXT_PUBLIC_MATOMO_URL = "https://matomo.test.example.com";
+process.env.NEXT_PUBLIC_SENTRY_DSN = "https://test@sentry.io/123";
+
 // Mock global des server actions
 jest.mock("@/actions/errorDetails.actions", () => ({
   deleteErrorDetail: jest.fn().mockResolvedValue(true),
@@ -32,9 +38,9 @@ jest.mock("next/navigation", () => ({
 
 // Mock global des hooks personnalisés
 jest.mock("@/hooks", () => ({
-  useConseillerRoutes: jest.fn(() => ({ isConseillerAndEdit: false })),
   useIsDesktop: jest.fn(() => true),
   useUserProfile: jest.fn(() => null),
+  useIsConseiller: jest.fn(() => null),
   useScrollPosition: jest.fn(() => true),
   useDeleteErrorReasons: jest.fn(() => ({ reasons: [], loading: false })),
   useCrisp: jest.fn(() => ({
@@ -50,13 +56,6 @@ jest.mock("@/hooks", () => ({
     enableHeatmaps: jest.fn(),
     isEnabled: false,
   })),
-}));
-
-// Mock global de Matomo
-jest.mock("@/hooks/useMatomo", () => ({
-  useMatomo: () => ({
-    trackEvent: jest.fn(),
-  }),
 }));
 
 // Mock global de navigator.clipboard

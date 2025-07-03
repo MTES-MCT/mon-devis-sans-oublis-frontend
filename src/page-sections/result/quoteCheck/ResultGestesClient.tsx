@@ -12,7 +12,7 @@ import {
   Notice,
   Toast,
 } from "@/components";
-import { useConseillerRoutes, useScrollPosition } from "@/hooks";
+import { useIsConseiller, useScrollPosition } from "@/hooks";
 import {
   Category,
   ErrorDetails,
@@ -73,7 +73,7 @@ export default function ResultGestesClient({
     useState<boolean>(false);
   const [hasPollingError, setHasPollingError] = useState<boolean>(false);
 
-  const { isConseillerAndEdit } = useConseillerRoutes();
+  const isConseillerAndEdit = useIsConseiller();
 
   // Gestion de l'événement Crisp automatique
   useEffect(() => {

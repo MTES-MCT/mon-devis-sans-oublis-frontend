@@ -10,11 +10,6 @@ jest.mock("react-dom", () => ({
   createPortal: jest.fn((element) => element),
 }));
 
-jest.mock("@/hooks", () => ({
-  ...jest.requireActual("@/hooks"),
-  useIsDesktop: jest.fn(() => true),
-}));
-
 jest.mock("@/wording", () => ({
   components: {
     global_error_feedbacks_modal: {

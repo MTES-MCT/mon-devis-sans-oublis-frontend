@@ -4,7 +4,7 @@ import { useState } from "react";
 import CommentErrorModal from "../Modal/CommentErrorModal/CommentErrorModal";
 import DeleteErrorModal from "../Modal/DeleteErrorModal/DeleteErrorModal";
 import ErrorDetailsModal from "../Modal/ErrorDetailsModal/ErrorDetailsModal";
-import { useConseillerRoutes } from "@/hooks";
+import { useIsConseiller } from "@/hooks";
 import { ErrorDetails } from "@/types";
 
 interface QuoteCaseConsistencyErrorRowProps {
@@ -42,7 +42,7 @@ const QuoteCaseConsistencyErrorRow: React.FC<
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
-  const { isConseillerAndEdit } = useConseillerRoutes();
+  const isConseillerAndEdit = useIsConseiller();
 
   const handleDeleteConfirm = (
     quoteCaseId: string,

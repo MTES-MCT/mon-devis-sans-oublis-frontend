@@ -1,5 +1,3 @@
-// Edit
-export { default as EditClient } from "./edit/EditClient";
 // Home
 export { default as AboutUs } from "./home/AboutUs";
 export { default as ExplanationCards } from "./home/ExplanationCards";

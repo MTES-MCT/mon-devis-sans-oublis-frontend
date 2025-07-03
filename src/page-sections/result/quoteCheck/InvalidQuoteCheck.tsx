@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge, BadgeSize, BadgeVariant, QuoteErrorTable } from "@/components";
-import { useConseillerRoutes } from "@/hooks";
+import { useIsConseiller } from "@/hooks";
 import { Category, ErrorDetails, Gestes, QuoteCase } from "@/types";
 import wording from "@/wording";
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
@@ -57,7 +57,7 @@ export default function InvalidQuoteCheck({
   controlsCount = 0,
   dossier,
 }: InvalidQuoteCheckProps) {
-  const { isConseillerAndEdit } = useConseillerRoutes();
+  const isConseillerAndEdit = useIsConseiller();
   const shouldShowConformityCard = () => controlsCount > 0;
 
   const adminErrors = list.filter((error) => error.category === Category.ADMIN);

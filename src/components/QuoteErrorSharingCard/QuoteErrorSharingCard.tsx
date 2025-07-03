@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-import { useConseillerRoutes, useUserProfile } from "@/hooks";
+import { useUserProfile } from "@/hooks";
 import { ErrorDetails, Gestes, QuoteCase } from "@/types";
 import QuoteErrorSharingModal from "./QuoteErrorSharingCard.modal";
 import { QUOTE_ERROR_SHARING_WORDING } from "./QuoteErrorSharingCard.wording";
@@ -38,7 +38,6 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
   const [isUrlCopied, setIsUrlCopied] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const { isConseillerAndEdit } = useConseillerRoutes();
   const profile = useUserProfile();
 
   const { trackEvent } = useMatomo();
@@ -56,7 +55,7 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
         : `/devis/${devisId}`;
     }
 
-    const fullUrl = `${baseUrl}${finalUrl}`;
+    const fullUrl = `${baseUrl}${targetUrl}`;
     navigator.clipboard.writeText(fullUrl);
     setIsUrlCopied(true);
   };

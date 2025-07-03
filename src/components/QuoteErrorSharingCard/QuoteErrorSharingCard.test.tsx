@@ -1,23 +1,34 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { usePathname } from "next/navigation";
-import { useConseillerRoutes, useUserProfile } from "@/hooks";
+import { useIsConseiller, useUserProfile } from "@/hooks";
 import { Profile } from "@/types";
 import QuoteErrorSharingCard from "./QuoteErrorSharingCard";
 import { QUOTE_ERROR_SHARING_WORDING } from "./QuoteErrorSharingCard.wording";
 
+// Mock Next.js navigation
+jest.mock("next/navigation", () => ({
+  usePathname: jest.fn(),
+}));
+
 const mockUsePathname = usePathname as jest.Mock;
-const mockUseConseillerRoutes = useConseillerRoutes as jest.Mock;
+const mockUseIsConseiller = useIsConseiller as jest.Mock;
 const mockUseUserProfile = useUserProfile as jest.Mock;
 
 describe("QuoteErrorSharingCard - copyUrlToClipboard", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Mock navigator.clipboard
+    Object.assign(navigator, {
+      clipboard: {
+        writeText: jest.fn(),
+      },
+    });
   });
 
   it("doit copier l'URL du dossier conseiller", async () => {
     // Arrange
     mockUsePathname.mockReturnValue("/conseiller/dossier/123");
-    mockUseConseillerRoutes.mockReturnValue({ isConseillerAndEdit: true });
+    mockUseIsConseiller.mockReturnValue(true);
     mockUseUserProfile.mockReturnValue(Profile.CONSEILLER);
 
     // Act
@@ -36,7 +47,7 @@ describe("QuoteErrorSharingCard - copyUrlToClipboard", () => {
   it("doit copier l'URL du devis seul pour un conseiller sur un devis dans un dossier", async () => {
     // Arrange
     mockUsePathname.mockReturnValue("/conseiller/dossier/123/devis/456");
-    mockUseConseillerRoutes.mockReturnValue({ isConseillerAndEdit: true });
+    mockUseIsConseiller.mockReturnValue(true);
     mockUseUserProfile.mockReturnValue(Profile.CONSEILLER);
 
     // Act
@@ -55,7 +66,7 @@ describe("QuoteErrorSharingCard - copyUrlToClipboard", () => {
   it("doit copier l'URL du dossier artisan telle quelle", async () => {
     // Arrange
     mockUsePathname.mockReturnValue("/artisan/dossier/123");
-    mockUseConseillerRoutes.mockReturnValue({ isConseillerAndEdit: false });
+    mockUseIsConseiller.mockReturnValue(false);
     mockUseUserProfile.mockReturnValue(Profile.ARTISAN);
 
     // Act
@@ -74,7 +85,7 @@ describe("QuoteErrorSharingCard - copyUrlToClipboard", () => {
   it("doit copier l'URL du devis particulier", async () => {
     // Arrange
     mockUsePathname.mockReturnValue("/particulier/devis/456");
-    mockUseConseillerRoutes.mockReturnValue({ isConseillerAndEdit: false });
+    mockUseIsConseiller.mockReturnValue(false);
     mockUseUserProfile.mockReturnValue(Profile.PARTICULIER);
 
     // Act
@@ -93,7 +104,7 @@ describe("QuoteErrorSharingCard - copyUrlToClipboard", () => {
   it("doit gérer le cas sans profil (fallback)", async () => {
     // Arrange
     mockUsePathname.mockReturnValue("/dossier/123/devis/456");
-    mockUseConseillerRoutes.mockReturnValue({ isConseillerAndEdit: false });
+    mockUseIsConseiller.mockReturnValue(false);
     mockUseUserProfile.mockReturnValue(null);
 
     // Act
@@ -112,7 +123,7 @@ describe("QuoteErrorSharingCard - copyUrlToClipboard", () => {
   it("doit changer le texte du bouton après copie", async () => {
     // Arrange
     mockUsePathname.mockReturnValue("/conseiller/dossier/123");
-    mockUseConseillerRoutes.mockReturnValue({ isConseillerAndEdit: false });
+    mockUseIsConseiller.mockReturnValue(true);
     mockUseUserProfile.mockReturnValue(Profile.CONSEILLER);
 
     // Act

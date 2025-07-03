@@ -21,3 +21,8 @@ export const useUserProfile = (): Profile | null => {
   // Retourner null si le profil n'est pas valide
   return null;
 };
+
+export const useIsConseiller = (): boolean => {
+  const profile = useUserProfile();
+  return profile === Profile.CONSEILLER;
+};
