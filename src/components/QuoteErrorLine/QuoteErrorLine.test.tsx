@@ -3,11 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 
 import QuoteErrorLine from "./QuoteErrorLine";
 import { Category, ErrorDetails } from "@/types";
-import { useConseillerRoutes } from "@/hooks";
-
-jest.mock("@/hooks", () => ({
-  useConseillerRoutes: jest.fn(),
-}));
+import { useIsConseiller } from "@/hooks";
 
 jest.mock("../Modal/CommentErrorModal/CommentErrorModal", () => {
   return function MockCommentErrorModal({
@@ -130,9 +126,7 @@ describe("QuoteErrorLine", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (useConseillerRoutes as jest.Mock).mockReturnValue({
-      isConseillerAndEdit: false,
-    });
+    (useIsConseiller as jest.Mock).mockReturnValue(false);
   });
 
   it("renders error title correctly", () => {
@@ -169,9 +163,7 @@ describe("QuoteErrorLine", () => {
   });
 
   it('shows "Annuler la suppression" button for conseiller when error is deleted', () => {
-    (useConseillerRoutes as jest.Mock).mockReturnValue({
-      isConseillerAndEdit: true,
-    });
+    (useIsConseiller as jest.Mock).mockReturnValue(true);
     render(
       <QuoteErrorLine
         {...defaultProps}
@@ -182,9 +174,8 @@ describe("QuoteErrorLine", () => {
   });
 
   it('calls onUndoDeleteError when "Annuler la suppression" button is clicked', () => {
-    (useConseillerRoutes as jest.Mock).mockReturnValue({
-      isConseillerAndEdit: true,
-    });
+    (useIsConseiller as jest.Mock).mockReturnValue(true);
+
     render(
       <QuoteErrorLine
         {...defaultProps}
@@ -200,9 +191,7 @@ describe("QuoteErrorLine", () => {
 
   describe("For conseiller users", () => {
     beforeEach(() => {
-      (useConseillerRoutes as jest.Mock).mockReturnValue({
-        isConseillerAndEdit: true,
-      });
+      (useIsConseiller as jest.Mock).mockReturnValue(true);
     });
 
     it("shows delete button when error is not deleted", () => {
@@ -277,9 +266,8 @@ describe("QuoteErrorLine", () => {
     });
 
     it("opens comment modal when comment button is clicked (for conseiller)", () => {
-      (useConseillerRoutes as jest.Mock).mockReturnValue({
-        isConseillerAndEdit: true,
-      });
+      (useIsConseiller as jest.Mock).mockReturnValue(true);
+
       render(
         <QuoteErrorLine
           {...defaultProps}
@@ -292,9 +280,8 @@ describe("QuoteErrorLine", () => {
     });
 
     it("closes comment modal when close button is clicked", () => {
-      (useConseillerRoutes as jest.Mock).mockReturnValue({
-        isConseillerAndEdit: true,
-      });
+      (useIsConseiller as jest.Mock).mockReturnValue(true);
+
       render(
         <QuoteErrorLine
           {...defaultProps}
@@ -310,9 +297,8 @@ describe("QuoteErrorLine", () => {
     });
 
     it("opens delete modal when delete button is clicked (for conseiller)", () => {
-      (useConseillerRoutes as jest.Mock).mockReturnValue({
-        isConseillerAndEdit: true,
-      });
+      (useIsConseiller as jest.Mock).mockReturnValue(true);
+
       render(<QuoteErrorLine {...defaultProps} />);
       const deleteButton = document.querySelector(".fr-icon-delete-line");
       fireEvent.click(deleteButton as Element);
@@ -320,9 +306,8 @@ describe("QuoteErrorLine", () => {
     });
 
     it("closes delete modal when close button is clicked", () => {
-      (useConseillerRoutes as jest.Mock).mockReturnValue({
-        isConseillerAndEdit: true,
-      });
+      (useIsConseiller as jest.Mock).mockReturnValue(true);
+
       render(<QuoteErrorLine {...defaultProps} />);
       const deleteButton = document.querySelector(".fr-icon-delete-line");
       fireEvent.click(deleteButton as Element);
@@ -333,9 +318,8 @@ describe("QuoteErrorLine", () => {
 
   describe("Callback functions", () => {
     it("calls onAddErrorComment when comment is submitted from comment modal", () => {
-      (useConseillerRoutes as jest.Mock).mockReturnValue({
-        isConseillerAndEdit: true,
-      });
+      (useIsConseiller as jest.Mock).mockReturnValue(true);
+
       render(
         <QuoteErrorLine
           {...defaultProps}
@@ -353,9 +337,8 @@ describe("QuoteErrorLine", () => {
     });
 
     it("calls onDeleteError with correct reason when delete is confirmed", () => {
-      (useConseillerRoutes as jest.Mock).mockReturnValue({
-        isConseillerAndEdit: true,
-      });
+      (useIsConseiller as jest.Mock).mockReturnValue(true);
+
       render(<QuoteErrorLine {...defaultProps} />);
       const deleteButton = document.querySelector(".fr-icon-delete-line");
       fireEvent.click(deleteButton as Element);
@@ -453,9 +436,7 @@ describe("QuoteErrorLine", () => {
 
   describe("Branch coverage tests", () => {
     it("handles case when deleteErrorReasons is undefined", () => {
-      (useConseillerRoutes as jest.Mock).mockReturnValue({
-        isConseillerAndEdit: true,
-      });
+      (useIsConseiller as jest.Mock).mockReturnValue(true);
 
       render(
         <QuoteErrorLine {...defaultProps} deleteErrorReasons={undefined} />
@@ -473,9 +454,7 @@ describe("QuoteErrorLine", () => {
     });
 
     it("handles case when reason is not found in deleteErrorReasons", () => {
-      (useConseillerRoutes as jest.Mock).mockReturnValue({
-        isConseillerAndEdit: true,
-      });
+      (useIsConseiller as jest.Mock).mockReturnValue(true);
 
       const TestComponent = () => {
         const handleDeleteConfirm = (

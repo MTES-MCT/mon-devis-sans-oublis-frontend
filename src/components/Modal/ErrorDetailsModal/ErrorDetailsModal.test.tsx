@@ -3,12 +3,7 @@ import { ImageProps } from "next/image";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 import ErrorDetailsModal from "./ErrorDetailsModal";
-import { useConseillerRoutes } from "@/hooks";
-
-jest.mock("@/hooks", () => ({
-  useConseillerRoutes: jest.fn(),
-  useIsDesktop: jest.fn().mockReturnValue(true),
-}));
+import { useIsConseiller } from "@/hooks";
 
 jest.mock("next/image", () => ({
   __esModule: true,
@@ -63,9 +58,7 @@ describe("ErrorDetailsModal", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (useConseillerRoutes as jest.Mock).mockReturnValue({
-      isConseillerAndEdit: true,
-    });
+    (useIsConseiller as jest.Mock).mockReturnValue(true);
   });
 
   it("renders correctly with all props", () => {
@@ -178,9 +171,7 @@ describe("ErrorDetailsModal", () => {
   });
 
   it("renders in read-only mode for non-conseiller users", () => {
-    (useConseillerRoutes as jest.Mock).mockReturnValue({
-      isConseillerAndEdit: false,
-    });
+    (useIsConseiller as jest.Mock).mockReturnValue(false);
 
     render(<ErrorDetailsModal {...defaultProps} />);
 

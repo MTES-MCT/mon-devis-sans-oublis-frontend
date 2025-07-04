@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge, BadgeSize, BadgeVariant, QuoteErrorTable } from "@/components";
-import { useConseillerRoutes } from "@/hooks";
+import { useIsConseiller } from "@/hooks";
 import { Category, ErrorDetails, Gestes, QuoteCase } from "@/types";
 import wording from "@/wording";
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
@@ -57,7 +57,7 @@ export default function InvalidQuoteCheck({
   controlsCount = 0,
   dossier,
 }: InvalidQuoteCheckProps) {
-  const { isConseillerAndEdit } = useConseillerRoutes();
+  const isConseillerAndEdit = useIsConseiller();
   const shouldShowConformityCard = () => controlsCount > 0;
 
   const adminErrors = list.filter((error) => error.category === Category.ADMIN);
@@ -133,7 +133,8 @@ export default function InvalidQuoteCheck({
         />
 
         {/* Ligne Info & Conformité */}
-        <div className="flex flex-col lg:flex-row gap-4 w-full fr-mb-4w lg:items-start">
+        <div className="flex flex-col lg:flex-row gap-4 w-full fr-mb-4w lg:items-stretch">
+          {/* Zone Info */}
           <div
             className={`fr-alert fr-alert--info !py-4 ${
               shouldShowConformityCard() ? "lg:w-3/5" : "lg:w-full"
@@ -147,13 +148,13 @@ export default function InvalidQuoteCheck({
             </p>
           </div>
 
+          {/* Zone Conformité devis */}
           {shouldShowConformityCard() && (
-            <div>
-              <QuoteConformityCard
-                controlsCount={controlsCount}
-                correctionsCount={correctionsCount}
-              />
-            </div>
+            <QuoteConformityCard
+              controlsCount={controlsCount}
+              correctionsCount={correctionsCount}
+              className="lg:w-2/5"
+            />
           )}
         </div>
       </section>
@@ -217,6 +218,7 @@ export default function InvalidQuoteCheck({
       </section>
 
       <section className="fr-container fr-my-6w">
+        <h3>Et après ?</h3>
         <div className="flex md:flex-row flex-col gap-6">
           <QuoteErrorSharingCard
             className="md:flex-1"

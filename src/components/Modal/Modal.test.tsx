@@ -5,11 +5,6 @@ import userEvent from "@testing-library/user-event";
 
 import Modal, { ModalPosition } from "./Modal";
 
-jest.mock("@/hooks", () => ({
-  ...jest.requireActual("@/hooks"),
-  useIsDesktop: jest.fn(() => false),
-}));
-
 jest.mock("react-dom", () => ({
   ...jest.requireActual("react-dom"),
   createPortal: jest.fn((element) => element),

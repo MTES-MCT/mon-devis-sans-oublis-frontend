@@ -25,7 +25,7 @@ const QuoteLaunchAnalysisCard: React.FC<QuoteLaunchAnalysisCardProps> = ({
         src={wording.components.quote_status_link.upload.image_src}
         width={32}
       />
-      <div className="flex flex-col">
+      <div className="flex flex-col h-full justify-between min-h-[80px]">
         <h6 className="fr-mb-2w">
           {wording.components.quote_status_link.upload.title}
         </h6>
@@ -38,6 +38,7 @@ const QuoteLaunchAnalysisCard: React.FC<QuoteLaunchAnalysisCardProps> = ({
           legacyBehavior
           size={LinkSize.SMALL}
           variant={LinkVariant.SECONDARY}
+          className="mt-auto"
         />
       </div>
     </div>

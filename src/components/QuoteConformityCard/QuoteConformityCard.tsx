@@ -29,7 +29,7 @@ export default function QuoteConformityCard({
 
   return (
     <div
-      className={`border border-[var(--border-plain-info)] p-4 fr-mb-4w ${className}`}
+      className={`border border-[var(--border-plain-info)] p-4 ${className}`}
     >
       <h6 className="text-black mb-4">
         {title ?? QUOTE_CONFORMITY_CARD.title}

@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-import { useConseillerRoutes, useUserProfile } from "@/hooks";
 import { ErrorDetails, Gestes, QuoteCase } from "@/types";
 import QuoteErrorSharingModal from "./QuoteErrorSharingCard.modal";
 import { QUOTE_ERROR_SHARING_WORDING } from "./QuoteErrorSharingCard.wording";
@@ -38,30 +37,42 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
   const [isUrlCopied, setIsUrlCopied] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const { isConseillerAndEdit } = useConseillerRoutes();
-  const profile = useUserProfile();
-
   const { trackEvent } = useMatomo();
 
   const copyUrlToClipboard = () => {
     let targetUrl = pathname;
 
-    // Si on est sur un devis dans un dossier, rediriger vers le devis seul
+    // Extraire l'ID du devis s'il existe dans l'URL
     const devisMatch = pathname.match(/\/devis\/([^\/]+)/);
+
+    // Extraire l'ID du dossier s'il existe dans l'URL
+    const dossierMatch = pathname.match(/\/dossier\/([^\/]+)/);
+
     if (devisMatch) {
+      // Si on est sur un devis, rediriger vers /devis/ID (sans profil)
       const devisId = devisMatch[1];
-      // Construire l'URL avec le profil si disponible
-      targetUrl = profile
-        ? `/${profile}/devis/${devisId}`
-        : `/devis/${devisId}`;
+      targetUrl = `/devis/${devisId}`;
+    } else if (dossierMatch) {
+      // Si on est sur un dossier, rediriger vers /dossier/ID (sans profil)
+      const dossierId = dossierMatch[1];
+      targetUrl = `/dossier/${dossierId}`;
+    } else {
+      // Fallback : supprimer le profil de l'URL actuelle si présent
+      // Regex pour matcher /{profile}/quelque-chose
+      const profileMatch = pathname.match(
+        /^\/(artisan|conseiller|particulier)(\/.*)?$/
+      );
+      if (profileMatch && profileMatch[2]) {
+        // Si on a un profil suivi d'un chemin, prendre seulement le chemin
+        targetUrl = profileMatch[2];
+      } else if (profileMatch && !profileMatch[2]) {
+        // Si on a seulement un profil (ex: /artisan), rediriger vers /
+        targetUrl = "/";
+      }
+      // Sinon, garder l'URL actuelle
     }
 
-    // Gérer le mode édition conseiller
-    const finalUrl = isConseillerAndEdit
-      ? targetUrl.replace(/\/modifier$/, "")
-      : targetUrl;
-
-    const fullUrl = `${baseUrl}${finalUrl}`;
+    const fullUrl = `${baseUrl}${targetUrl}`;
     navigator.clipboard.writeText(fullUrl);
     setIsUrlCopied(true);
   };
@@ -87,9 +98,9 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
           src={QUOTE_ERROR_SHARING_WORDING.image_src}
           width={32}
         />
-        <div className="flex flex-col">
+        <div className="flex flex-col h-full justify-between min-h-[80px]">
           <h5 className="fr-mb-2w">{QUOTE_ERROR_SHARING_WORDING.title}</h5>
-          <span className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+          <span className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-auto">
             <button
               className="fr-btn fr-btn--sm fr-btn--icon-right fr-icon-align-left"
               onClick={handleOpenModal}

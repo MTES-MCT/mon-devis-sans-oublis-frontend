@@ -5,7 +5,7 @@ import { useState } from "react";
 import CommentErrorModal from "../Modal/CommentErrorModal/CommentErrorModal";
 import DeleteErrorModal from "../Modal/DeleteErrorModal/DeleteErrorModal";
 import ErrorDetailsModal from "../Modal/ErrorDetailsModal/ErrorDetailsModal";
-import { useConseillerRoutes } from "@/hooks";
+import { useIsConseiller } from "@/hooks";
 import { ErrorDetails } from "@/types";
 import wording from "@/wording";
 
@@ -42,7 +42,7 @@ const QuoteErrorLine: React.FC<QuoteErrorLineProps> = ({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { isConseillerAndEdit } = useConseillerRoutes();
+  const isConseillerAndEdit = useIsConseiller();
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
