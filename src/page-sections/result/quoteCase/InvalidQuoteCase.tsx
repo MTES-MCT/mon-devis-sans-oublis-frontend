@@ -332,7 +332,7 @@ export default function InvalidQuoteCase({
         )}
 
         {/* Section partage & nouvelle analyse */}
-        <section className="fr-container fr-my-6w">
+        <section className="fr-my-6w">
           <h3>Et aprés ?</h3>
           <div className="flex md:flex-row flex-col gap-6">
             <QuoteErrorSharingCard className="md:flex-1" quoteCase={dossier} />
