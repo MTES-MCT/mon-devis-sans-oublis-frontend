@@ -208,7 +208,7 @@ export default function ResultAmpleurClient({
           />
         </div>
         <section className="fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center">
-          <LoadingDots title="Analyse en cours..." />
+          <LoadingDots title="Analyse en cours" />
           <p>
             Quelques secondes à tenir, nous vous ferons signe lorsque ce sera
             terminé.
