@@ -218,6 +218,7 @@ export default function InvalidQuoteCheck({
       </section>
 
       <section className="fr-container fr-my-6w">
+        <h3>Et après ?</h3>
         <div className="flex md:flex-row flex-col gap-6">
           <QuoteErrorSharingCard
             className="md:flex-1"
