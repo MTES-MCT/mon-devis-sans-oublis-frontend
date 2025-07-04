@@ -133,7 +133,8 @@ export default function InvalidQuoteCheck({
         />
 
         {/* Ligne Info & Conformité */}
-        <div className="flex flex-col lg:flex-row gap-4 w-full fr-mb-4w lg:items-start">
+        <div className="flex flex-col lg:flex-row gap-4 w-full fr-mb-4w lg:items-stretch">
+          {/* Zone Info */}
           <div
             className={`fr-alert fr-alert--info !py-4 ${
               shouldShowConformityCard() ? "lg:w-3/5" : "lg:w-full"
@@ -147,13 +148,13 @@ export default function InvalidQuoteCheck({
             </p>
           </div>
 
+          {/* Zone Conformité devis */}
           {shouldShowConformityCard() && (
-            <div>
-              <QuoteConformityCard
-                controlsCount={controlsCount}
-                correctionsCount={correctionsCount}
-              />
-            </div>
+            <QuoteConformityCard
+              controlsCount={controlsCount}
+              correctionsCount={correctionsCount}
+              className="lg:w-2/5"
+            />
           )}
         </div>
       </section>
