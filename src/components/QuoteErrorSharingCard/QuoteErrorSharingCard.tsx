@@ -98,9 +98,9 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
           src={QUOTE_ERROR_SHARING_WORDING.image_src}
           width={32}
         />
-        <div className="flex flex-col">
+        <div className="flex flex-col h-full justify-between min-h-[80px]">
           <h5 className="fr-mb-2w">{QUOTE_ERROR_SHARING_WORDING.title}</h5>
-          <span className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+          <span className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-auto">
             <button
               className="fr-btn fr-btn--sm fr-btn--icon-right fr-icon-align-left"
               onClick={handleOpenModal}
