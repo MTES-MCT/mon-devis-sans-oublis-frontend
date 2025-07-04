@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCrisp } from "@/hooks/useCrisp";
-import { LoadingDots } from "@/components";
-import { QuoteCase, Status } from "@/types";
+import { LoadingDots, Notice } from "@/components";
+import { FileErrorCodes, QuoteCase, Status } from "@/types";
 import { getQuoteCase } from "@/actions/quoteCase.actions";
 import { formatDateToFrench } from "@/utils";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
@@ -234,6 +234,12 @@ export default function ResultAmpleurClient({
     );
   }
 
+  const hasDossierFileTypeError = currentDossier.quote_checks?.some((quote) =>
+    quote.errors?.some((error) =>
+      Object.values(FileErrorCodes).includes(error as FileErrorCodes)
+    )
+  );
+
   return (
     <div className="fr-container-fluid">
       {currentDossier.status === Status.VALID ? (
@@ -242,16 +248,27 @@ export default function ResultAmpleurClient({
           dossier={currentDossier}
         />
       ) : (
-        <InvalidQuoteCase
-          analysisDate={formatDateToFrench(currentDossier.finished_at ?? "")}
-          dossier={currentDossier}
-          stats={stats}
-          profile={profile}
-          quoteCaseId={quoteCaseId}
-          onNavigateToQuote={(quoteId: string) =>
-            router.push(`/${profile}/devis/${quoteId}`)
-          }
-        />
+        <>
+          {/* Notice en cas d'erreur FILE ERROR */}
+          {hasDossierFileTypeError && (
+            <Notice
+              buttonClose={true}
+              className="fr-notice--alert"
+              description="Retrouvez le detail des erreurs dans le tableau des erreurs ci-dessous (fichiers grisés)."
+              title="Nous n'avons pas pu analyser tous vos devis."
+            />
+          )}
+          <InvalidQuoteCase
+            analysisDate={formatDateToFrench(currentDossier.finished_at ?? "")}
+            dossier={currentDossier}
+            stats={stats}
+            profile={profile}
+            quoteCaseId={quoteCaseId}
+            onNavigateToQuote={(quoteId: string) =>
+              router.push(`/${profile}/devis/${quoteId}`)
+            }
+          />
+        </>
       )}
     </div>
   );

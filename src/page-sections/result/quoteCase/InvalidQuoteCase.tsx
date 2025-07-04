@@ -1,21 +1,9 @@
-import {
-  Badge,
-  BadgeSize,
-  BadgeVariant,
-  Notice,
-  Breadcrumb,
-} from "@/components";
+import { Badge, BadgeSize, BadgeVariant, Breadcrumb } from "@/components";
 import QuoteCaseConsistencyErrorTable from "@/components/QuoteCaseConsistencyError/QuoteCaseConsistencyErrorTable";
 import QuoteConformityCard from "@/components/QuoteConformityCard/QuoteConformityCard";
 import QuoteErrorSharingCard from "@/components/QuoteErrorSharingCard/QuoteErrorSharingCard";
 import QuoteLaunchAnalysisCard from "@/components/QuoteLaunchAnalysisCard/QuoteLaunchAnalysisCard";
-import {
-  getFileErrorMessage,
-  QuoteCase,
-  Status,
-  FileErrorCodes,
-  getFileErrors,
-} from "@/types";
+import { getFileErrorMessage, QuoteCase, Status, getFileErrors } from "@/types";
 import { removeFileExtension } from "@/utils/fileUtils";
 import wording from "@/wording";
 import Link from "next/link";
@@ -63,12 +51,6 @@ export default function InvalidQuoteCase({
 
   const shouldShowConformityCard = () => totalControls > 0;
 
-  const hasDossierFileTypeError = dossier.quote_checks?.some((quote) =>
-    quote.errors?.some((error) =>
-      Object.values(FileErrorCodes).includes(error as FileErrorCodes)
-    )
-  );
-
   return (
     <>
       <div className="fr-container">
@@ -83,22 +65,7 @@ export default function InvalidQuoteCase({
             },
           ]}
         />
-
-        {/* Notice en cas d'erreur FILE ERROR */}
-        {hasDossierFileTypeError && (
-          <>
-            <div className="fr-my-4w">
-              <Notice
-                buttonClose={true}
-                className="fr-notice--alert"
-                description="Retrouvez le detail des erreurs dans le tableau des erreurs ci-dessous (fichiers grisés)."
-                title="Nous n'avons pas pu analyser tous vos devis"
-              />
-            </div>
-          </>
-        )}
       </div>
-
       <section className="fr-container fr-gap-8">
         <h1 className="text-left md:text-left fr-mb-4w">
           Résultat de l'analyse
