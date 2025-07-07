@@ -39,6 +39,8 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
 
   const { trackEvent } = useMatomo();
 
+  const isQuoteCase = !!quoteCase;
+
   const copyUrlToClipboard = () => {
     let targetUrl = pathname;
 
@@ -89,7 +91,7 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
   return (
     <>
       <div
-        className={`bg-[var(--background-alt-grey)] border-shadow flex items-start gap-6 px-4 py-6 rounded-lg w-fit ${className}`}
+        className={`bg-[var(--background-alt-grey)] border-shadow flex items-start gap-6 px-4 py-6 rounded-lg w-full max-w-fit ${className}`}
       >
         <Image
           alt={QUOTE_ERROR_SHARING_WORDING.image_alt}
@@ -98,9 +100,11 @@ const QuoteErrorSharingCard: React.FC<QuoteErrorSharingCardProps> = ({
           src={QUOTE_ERROR_SHARING_WORDING.image_src}
           width={32}
         />
-        <div className="flex flex-col h-full justify-between min-h-[80px]">
-          <h5 className="fr-mb-2w">{QUOTE_ERROR_SHARING_WORDING.title}</h5>
-          <span className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-auto">
+        <div className="flex flex-col h-full justify-between min-h-[80px] min-w-0 flex-1">
+          <h5 className="fr-mb-2w">
+            {QUOTE_ERROR_SHARING_WORDING.getTitle(isQuoteCase)}
+          </h5>
+          <span className="flex flex-col lg:flex-row gap-2 lg:gap-4 mt-auto">
             <button
               className="fr-btn fr-btn--sm fr-btn--icon-right fr-icon-align-left"
               onClick={handleOpenModal}

@@ -205,7 +205,7 @@ const QuoteErrorTable: React.FC<QuoteErrorTableProps> = (props) => {
               const isLastGeste = gIndex === gestes.length - 1;
 
               return (
-                <tbody key={geste.id}>
+                <tbody key={`geste-tbody-${geste.id}-${gIndex}`}>
                   <tr
                     className={`bg-[var(--background-default-grey-hover)] ${
                       isLastGeste && errorsForGeste.length === 0
@@ -242,14 +242,14 @@ const QuoteErrorTable: React.FC<QuoteErrorTableProps> = (props) => {
                       )}
                     </th>
                   </tr>
-                  {errorsForGeste.map((error, index) => (
+                  {errorsForGeste.map((error, errorIndex) => (
                     <QuoteErrorLine
                       deleteErrorReasons={props.deleteErrorReasons}
                       error={error}
                       isLastErrorInTable={
-                        isLastGeste && index === errorsForGeste.length - 1
+                        isLastGeste && errorIndex === errorsForGeste.length - 1
                       }
-                      key={error.id}
+                      key={`error-${error.id}-geste-${geste.id}-${errorIndex}`}
                       onAddErrorComment={props.onAddErrorComment}
                       onDeleteError={props.onDeleteError}
                       onDeleteErrorComment={props.onDeleteErrorComment}
@@ -264,12 +264,12 @@ const QuoteErrorTable: React.FC<QuoteErrorTableProps> = (props) => {
 
         {/* Gestion des erreurs ADMIN */}
         {isCategoryAdmin ? (
-          <tbody>
-            {filteredAdminErrors.map((error) => (
+          <tbody key="admin-tbody">
+            {filteredAdminErrors.map((error, index) => (
               <QuoteErrorLine
                 deleteErrorReasons={props.deleteErrorReasons}
                 error={error}
-                key={error.id}
+                key={`admin-error-${error.id}-${index}`}
                 onAddErrorComment={props.onAddErrorComment}
                 onDeleteError={props.onDeleteError}
                 onDeleteErrorComment={props.onDeleteErrorComment}
@@ -282,12 +282,12 @@ const QuoteErrorTable: React.FC<QuoteErrorTableProps> = (props) => {
 
         {/* Gestion des erreurs INCOHERENCE_DEVIS */}
         {isCategoryIncoherence ? (
-          <tbody>
-            {filteredIncoherenceErrors.map((error) => (
+          <tbody key="incoherence-tbody">
+            {filteredIncoherenceErrors.map((error, index) => (
               <QuoteErrorLine
                 deleteErrorReasons={props.deleteErrorReasons}
                 error={error}
-                key={error.id}
+                key={`incoherence-error-${error.id}-${index}`}
                 onAddErrorComment={props.onAddErrorComment}
                 onDeleteError={props.onDeleteError}
                 onDeleteErrorComment={props.onDeleteErrorComment}

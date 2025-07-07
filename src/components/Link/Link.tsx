@@ -67,24 +67,35 @@ const Link: React.FC<LinkProps> = ({
     .filter(Boolean)
     .join(" ");
 
+  if (legacyBehavior) {
+    return (
+      <NextLink
+        href={variant === LinkVariant.DISABLED ? "" : href}
+        legacyBehavior={legacyBehavior}
+      >
+        <a
+          className={classNames}
+          onClick={handleClick}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <span>{label}</span>
+          {icon && <span className={`fr-btn--icon-right ${icon}`} />}
+        </a>
+      </NextLink>
+    );
+  }
+
   return (
     <NextLink
       className={classNames}
       href={variant === LinkVariant.DISABLED ? "" : href}
-      legacyBehavior={legacyBehavior}
       onClick={handleClick}
     >
-      {legacyBehavior ? (
-        <a className={classNames} rel="noopener noreferrer" target="_blank">
-          <span>{label}</span>
-          {icon && <span className={`fr-btn--icon-right ${icon}`} />}
-        </a>
-      ) : (
-        <span>
-          <span>{label}</span>
-          {icon && <span className={`fr-btn--icon-right ${icon}`} />}
-        </span>
-      )}
+      <span>
+        <span>{label}</span>
+        {icon && <span className={`fr-btn--icon-right ${icon}`} />}
+      </span>
     </NextLink>
   );
 };
