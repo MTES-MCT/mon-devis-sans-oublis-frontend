@@ -14,6 +14,7 @@ export default function UploadRenovationAmpleurPage() {
   const [fileError, setFileError] = useState<string | null>(null);
   const [selectedAides, setSelectedAides] = useState<string[]>([]);
   const [selectedGestes, setSelectedGestes] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const params = useParams();
   const router = useRouter();
@@ -26,7 +27,10 @@ export default function UploadRenovationAmpleurPage() {
   }, []);
 
   const handleNext = async () => {
-    if (uploadedFiles.length === 0) return;
+    if (uploadedFiles.length === 0 || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setFileError(null);
 
     try {
       // Création du dossier
@@ -35,24 +39,34 @@ export default function UploadRenovationAmpleurPage() {
         profile
       );
 
-      // Upload de tous les fichiers
-      await uploadMultipleQuotesCheckToCase(
+      // Sauvegarder le nombre de fichiers en localStorage
+      localStorage.setItem(
+        `upload_files_count_${quoteCase.id}`,
+        uploadedFiles.length.toString()
+      );
+
+      // Navigation immédiate vers la page d'analyse
+      router.push(`/${profile}/dossier/${quoteCase.id}`);
+
+      // Upload en arrière-plan (non bloquant)
+      uploadMultipleQuotesCheckToCase(
         uploadedFiles,
         quoteCase.id,
         profile
-      );
-
-      // Redirection vers page résultat
-      router.push(`/${profile}/dossier/${quoteCase.id}`);
+      ).catch((error) => {
+        console.error("Erreur lors de l'upload en arrière-plan:", error);
+      });
     } catch (error) {
-      console.error("Erreur lors du processus d'upload:", error);
+      console.error("Erreur lors de la création du dossier:", error);
       setFileError(
-        "Une erreur est survenue lors du téléversement. Veuillez réessayer."
+        "Une erreur est survenue lors de la création du dossier. Veuillez réessayer."
       );
+      setIsSubmitting(false);
     }
   };
 
   const handlePrevious = () => {
+    if (isSubmitting) return;
     router.back();
   };
 
@@ -112,18 +126,31 @@ export default function UploadRenovationAmpleurPage() {
                 <button
                   className="fr-btn fr-btn--secondary"
                   onClick={handlePrevious}
+                  disabled={isSubmitting}
                 >
                   Précédent
                 </button>
 
                 <button
                   className={`fr-btn ${
-                    uploadedFiles.length === 0 ? "fr-btn--secondary" : ""
+                    uploadedFiles.length === 0 || isSubmitting
+                      ? "fr-btn--secondary"
+                      : ""
                   }`}
-                  disabled={uploadedFiles.length === 0}
+                  disabled={uploadedFiles.length === 0 || isSubmitting}
                   onClick={handleNext}
                 >
-                  Vérifiez les devis
+                  {isSubmitting ? (
+                    <>
+                      <span
+                        className="fr-icon-refresh-line fr-icon--sm mr-2 animate-spin"
+                        aria-hidden="true"
+                      ></span>
+                      Envoi des devis...
+                    </>
+                  ) : (
+                    "Vérifiez les devis"
+                  )}
                 </button>
               </div>
             </div>
