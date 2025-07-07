@@ -154,6 +154,7 @@ export default function InvalidQuoteCheck({
               controlsCount={controlsCount}
               correctionsCount={correctionsCount}
               className="lg:w-2/5"
+              mode={dossier ? "compact" : "normal"}
             />
           )}
         </div>

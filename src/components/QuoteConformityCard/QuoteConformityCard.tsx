@@ -6,6 +6,7 @@ interface QuoteConformityCardProps {
   correctionsCount: number;
   controlsCount: number;
   className?: string;
+  mode?: "compact" | "normal";
 }
 
 export default function QuoteConformityCard({
@@ -13,6 +14,7 @@ export default function QuoteConformityCard({
   correctionsCount,
   controlsCount,
   className = "",
+  mode = "normal",
 }: QuoteConformityCardProps) {
   const percentage =
     controlsCount > 0
@@ -27,35 +29,42 @@ export default function QuoteConformityCard({
       .replace(/\{plural\}/g, count !== 1 ? "s" : "");
   };
 
+  const isCompact = mode === "compact";
+
   return (
-    <div
-      className={`border border-[var(--border-plain-info)] p-4 ${className}`}
-    >
-      <h6 className="text-black mb-4">
-        {title ?? QUOTE_CONFORMITY_CARD.title}
-      </h6>
+    <>
+      <div
+        className={`border border-[var(--border-plain-info)] p-4 overflow-visible ${className}`}
+      >
+        <h6 className="text-black mb-4">
+          {title ?? QUOTE_CONFORMITY_CARD.title}
+        </h6>
 
-      <div className="flex flex-col sm:flex-row gap-6 items-start">
-        <div className="flex flex-col gap-2">
-          {/* Badge corrections */}
-          <p className="fr-badge fr-badge--warning mb-2">
-            {formatText(QUOTE_CONFORMITY_CARD.corrections, correctionsCount)}
-          </p>
+        <div
+          className={
+            isCompact
+              ? "flex flex-col gap-4"
+              : "flex flex-col sm:flex-row gap-6 items-end"
+          }
+        >
+          <div className="flex flex-col gap-2">
+            <p className="fr-badge fr-badge--warning mb-2">
+              {formatText(QUOTE_CONFORMITY_CARD.corrections, correctionsCount)}
+            </p>
 
-          {/* Badge points conformes */}
-          <p className="fr-badge fr-badge--success">
-            {formatText(
-              QUOTE_CONFORMITY_CARD.conformPoints,
-              conformePointsCount
-            )}
-          </p>
-        </div>
+            <p className="fr-badge fr-badge--success">
+              {formatText(
+                QUOTE_CONFORMITY_CARD.conformPoints,
+                conformePointsCount
+              )}
+            </p>
+          </div>
 
-        {/* Jauge */}
-        <div className="flex-shrink-0 sm:mt-2">
-          <ProgressGauge percentage={percentage} />
+          <div className="relative z-10" style={{ minWidth: "128px" }}>
+            <ProgressGauge percentage={percentage} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
