@@ -34,6 +34,26 @@ export default function ResultAmpleurClient({
   const router = useRouter();
   const { isLoaded, triggerEvent } = useCrisp();
 
+  // États pour la gestion des fichiers
+  const [expectedFilesCount, setExpectedFilesCount] = useState<number>(0);
+  const [isUploadPhase, setIsUploadPhase] = useState<boolean>(false);
+
+  // Récupérer le nombre de fichiers depuis localStorage
+  useEffect(() => {
+    const savedCount = localStorage.getItem(
+      `upload_files_count_${quoteCaseId}`
+    );
+
+    if (savedCount) {
+      const count = parseInt(savedCount);
+      setExpectedFilesCount(count);
+      setIsUploadPhase(count > 0);
+
+      // Clean localStorage après récupération
+      localStorage.removeItem(`upload_files_count_${quoteCaseId}`);
+    }
+  }, [quoteCaseId]);
+
   const [currentDossier, setCurrentDossier] = useState<QuoteCase | null>(
     initialDossier
   );
@@ -62,7 +82,7 @@ export default function ResultAmpleurClient({
   // Fonction pour vérifier si tous les devis sont traités
   const areAllQuotesProcessed = (dossier: QuoteCase): boolean => {
     if (!dossier.quote_checks || dossier.quote_checks.length === 0) {
-      return false; // Pas encore de devis, on continue le polling
+      return false;
     }
 
     return dossier.quote_checks.every(
@@ -82,6 +102,15 @@ export default function ResultAmpleurClient({
         const dossierData = await getQuoteCase(quoteCaseId);
 
         setCurrentDossier(dossierData);
+
+        // Si on a des devis qui arrivent et qu'on était en phase d'upload
+        if (
+          isUploadPhase &&
+          dossierData.quote_checks &&
+          dossierData.quote_checks.length > 0
+        ) {
+          setIsUploadPhase(false);
+        }
 
         // Vérifier si tous les devis sont traités
         const allProcessed = areAllQuotesProcessed(dossierData);
@@ -122,7 +151,7 @@ export default function ResultAmpleurClient({
     return () => {
       isPollingActive = false;
     };
-  }, [quoteCaseId, currentDossier]);
+  }, [quoteCaseId, currentDossier, isUploadPhase]);
 
   // Calculer les statistiques des devis
   const getQuoteStats = () => {
@@ -209,18 +238,36 @@ export default function ResultAmpleurClient({
         </div>
         <section className="fr-container-fluid fr-py-10w h-[500px] flex flex-col items-center justify-center">
           <LoadingDots title="Analyse en cours" />
-          <p>
-            Quelques secondes à tenir, nous vous ferons signe lorsque ce sera
-            terminé.
-          </p>
 
-          {stats.total > 0 && (
+          {isUploadPhase ? (
+            <p>Envoi des devis en cours...</p>
+          ) : (
+            <p>
+              Quelques secondes à tenir, nous vous ferons signe lorsque ce sera
+              terminé.
+            </p>
+          )}
+
+          {/* Affichage de la progression */}
+          {isUploadPhase && expectedFilesCount > 0 ? (
+            <div className="fr-mt-4v text-center">
+              <p className="fr-text--sm">
+                Envoi: {stats.total}/{expectedFilesCount} devis téléversés
+              </p>
+            </div>
+          ) : stats.total > 0 ? (
             <div className="fr-mt-4v text-center">
               <p className="fr-text--sm">
                 Progression: {stats.processed}/{stats.total} devis traités
               </p>
             </div>
-          )}
+          ) : expectedFilesCount > 0 ? (
+            <div className="fr-mt-4v text-center">
+              <p className="fr-text--sm">
+                En attente: 0/{expectedFilesCount} devis à traiter
+              </p>
+            </div>
+          ) : null}
 
           <Image
             alt="Image vérifier plusieurs devis"
