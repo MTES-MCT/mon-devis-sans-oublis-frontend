@@ -1,6 +1,7 @@
 "use server";
 
 import { apiClient } from "@/lib/server/apiClient";
+import { isApiError } from "@/types";
 import {
   DataCheckResult,
   DataCheckRgeResult,
@@ -15,7 +16,7 @@ export async function checkSIRET(siret: string): Promise<DataCheckResult> {
 
     const cleanSiret = siret.trim();
     const response = await apiClient.get(
-      `/data_checks/siret?siret=${encodeURIComponent(cleanSiret)}`
+      `/api/v1/data_checks/siret?siret=${encodeURIComponent(cleanSiret)}`
     );
 
     return response.data;
@@ -41,12 +42,33 @@ export async function checkRGE(
     if (rge && rge.trim().length > 0) queryParams.append("rge", rge.trim());
     if (date && date.trim().length > 0) queryParams.append("date", date.trim());
 
-    const url = `/data_checks/rge?${queryParams.toString()}`;
+    const url = `/api/v1/data_checks/rge?${queryParams.toString()}`;
     const response = await apiClient.get(url);
 
-    return response.data;
+    return response.data || response;
   } catch (error) {
     console.error("Erreur lors de la vérification RGE:", error);
+
+    if (isApiError(error)) {
+      // Gestion spécifique de l'erreur 404
+      if (error.message.includes("404")) {
+        return {
+          valid: false,
+          error_details: [{ code: "siret_not_found" }],
+          results: null,
+        };
+      }
+
+      // Gestion spécifique de l'erreur 400
+      if (error.message.includes("400")) {
+        return {
+          valid: false,
+          error_details: [{ code: "invalid_parameters" }],
+          results: null,
+        };
+      }
+    }
+
     throw error;
   }
 }

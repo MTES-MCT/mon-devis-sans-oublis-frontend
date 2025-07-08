@@ -29,7 +29,7 @@ describe("DataChecks Server Actions", () => {
       const result = await checkSIRET("12345678901234");
 
       expect(mockApiClient.get).toHaveBeenCalledWith(
-        "/data_checks/siret?siret=12345678901234"
+        "/api/v1/data_checks/siret?siret=12345678901234"
       );
       expect(result).toEqual(mockResponse.data);
     });
@@ -78,7 +78,7 @@ describe("DataChecks Server Actions", () => {
       await checkSIRET("  12345678901234  ");
 
       expect(mockApiClient.get).toHaveBeenCalledWith(
-        "/data_checks/siret?siret=12345678901234"
+        "/api/v1/data_checks/siret?siret=12345678901234"
       );
     });
   });
@@ -120,7 +120,7 @@ describe("DataChecks Server Actions", () => {
       const result = await checkRGE({ siret: validSiret });
 
       expect(mockApiClient.get).toHaveBeenCalledWith(
-        "/data_checks/rge?siret=12345678901234"
+        "/api/v1/data_checks/rge?siret=12345678901234"
       );
       expect(result.valid).toBe(true);
       expect(result.results).toHaveLength(1);
@@ -141,7 +141,7 @@ describe("DataChecks Server Actions", () => {
       await checkRGE({ siret: validSiret, rge: rgeNumber });
 
       expect(mockApiClient.get).toHaveBeenCalledWith(
-        "/data_checks/rge?siret=12345678901234&rge=RGE123456"
+        "/api/v1/data_checks/rge?siret=12345678901234&rge=RGE123456"
       );
     });
 
@@ -161,7 +161,7 @@ describe("DataChecks Server Actions", () => {
       await checkRGE({ siret: validSiret, rge: rgeNumber, date });
 
       expect(mockApiClient.get).toHaveBeenCalledWith(
-        "/data_checks/rge?siret=12345678901234&rge=RGE123456&date=2024-06-15"
+        "/api/v1/data_checks/rge?siret=12345678901234&rge=RGE123456&date=2024-06-15"
       );
     });
 
@@ -182,7 +182,7 @@ describe("DataChecks Server Actions", () => {
       await checkRGE({ siret: validSiret, rge: "", date: "   " });
 
       expect(mockApiClient.get).toHaveBeenCalledWith(
-        "/data_checks/rge?siret=12345678901234"
+        "/api/v1/data_checks/rge?siret=12345678901234"
       );
     });
 
@@ -227,7 +227,7 @@ describe("DataChecks Server Actions", () => {
       });
 
       expect(mockApiClient.get).toHaveBeenCalledWith(
-        "/data_checks/rge?siret=12345678901234&rge=RGE123&date=2024-06-15"
+        "/api/v1/data_checks/rge?siret=12345678901234&rge=RGE123&date=2024-06-15"
       );
     });
   });
