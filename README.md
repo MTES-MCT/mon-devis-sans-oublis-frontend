@@ -234,6 +234,9 @@ npm run test:watch
 
 # Tests avec rapport de couverture
 npm run test:coverage
+
+# Test sur un fichier unique
+npm run test -- fichier.test.ts
 ```
 
 ### Conventions de tests

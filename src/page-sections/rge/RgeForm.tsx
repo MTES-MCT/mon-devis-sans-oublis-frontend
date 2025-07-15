@@ -47,7 +47,7 @@ export default function RgeForm({
     try {
       const results = await checkRGE({
         siret: siret.trim(),
-        // TODO ajouter les gestes,
+        gestes: selectedGestes,
         rge: rge.trim() || undefined,
         date: date.trim() || undefined,
       });
