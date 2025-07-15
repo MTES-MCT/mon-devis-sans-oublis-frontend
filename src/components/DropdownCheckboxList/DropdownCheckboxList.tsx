@@ -23,6 +23,7 @@ export interface DropdownCheckboxListProps {
     onChange: (value: string) => void;
   };
   label: string;
+  hintLabel?: string;
   multiple: boolean;
   onChange: (values: string[]) => void;
   optionnal?: boolean;
@@ -44,6 +45,7 @@ interface GroupedOptions {
 export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
   customInput,
   label,
+  hintLabel,
   multiple,
   onChange,
   optionnal,
@@ -234,6 +236,7 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
     <div className="fr-select-group relative fr-mb-4w" ref={containerRef}>
       <label className="fr-label" htmlFor="multiselect">
         {label}
+        {hintLabel && <span className="fr-hint-text">{hintLabel}</span>}
         {optionnal && <span className="fr-hint-text">Optionnel</span>}
       </label>
       <button

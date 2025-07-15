@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataCheckRgeResult } from "@/types/dataChecks.types";
 import RgeForm from "./RgeForm";
 import RgeResults from "./RgeResult";
+import { quoteService } from "@/lib/client/apiWrapper";
+import { Metadata } from "@/types";
 
 export default function RgePageClient() {
   const [results, setResults] = useState<DataCheckRgeResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [metadata, setMetadata] = useState<Metadata>({ aides: [], gestes: [] });
 
   const handleResults = (newResults: DataCheckRgeResult) => {
     setResults(newResults);
@@ -16,6 +19,19 @@ export default function RgePageClient() {
   const handleLoading = (loading: boolean) => {
     setIsLoading(loading);
   };
+
+  // Chargement des métadonnées au montage du composant
+  useEffect(() => {
+    const loadMetadata = async () => {
+      try {
+        const data = await quoteService.getQuoteCheckMetadata();
+        setMetadata(data);
+      } catch (error) {
+        console.error("Error loading metadata:", error);
+      }
+    };
+    loadMetadata();
+  }, []);
 
   return (
     <section className="fr-container-fluid fr-py-10w">
@@ -32,8 +48,8 @@ export default function RgePageClient() {
             l'Environnement) d'une entreprise.
           </p>
           <p className="fr-callout__text">
-            Renseignez le SIRET de l'entreprise pour obtenir ses qualifications
-            RGE en cours de validité.
+            Renseignez le SIRET de l'entreprise ainsi qu'un ou plusieurs gestes
+            de travaux pour obtenir ses qualifications RGE en cours de validité.
           </p>
           <p className="fr-callout__text">
             Vous pouvez également préciser un numéro RGE spécifique à valider et
@@ -43,7 +59,11 @@ export default function RgePageClient() {
 
         {/* Formulaire de recherche */}
         <div className="fr-mb-6w">
-          <RgeForm onResults={handleResults} onLoading={handleLoading} />
+          <RgeForm
+            metadata={metadata}
+            onResults={handleResults}
+            onLoading={handleLoading}
+          />
         </div>
 
         {/* Affichage des résultats */}

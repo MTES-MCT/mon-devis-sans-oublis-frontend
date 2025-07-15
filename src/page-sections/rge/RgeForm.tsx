@@ -3,14 +3,22 @@
 import { useState, useEffect } from "react";
 import { checkRGE } from "@/actions/dataChecks.actions";
 import { DataCheckRgeResult } from "@/types/dataChecks.types";
+import { Metadata } from "@/types";
+import { DropdownCheckboxList } from "@/components";
 
 interface RgeFormProps {
   onResults: (results: DataCheckRgeResult) => void;
   onLoading: (loading: boolean) => void;
+  metadata: Metadata;
 }
 
-export default function RgeForm({ onResults, onLoading }: RgeFormProps) {
+export default function RgeForm({
+  onResults,
+  onLoading,
+  metadata,
+}: RgeFormProps) {
   const [siret, setSiret] = useState("");
+  const [selectedGestes, setSelectedGestes] = useState<string[]>([]);
   const [rge, setRge] = useState("");
   const [date, setDate] = useState("");
   const [error, setError] = useState("");
@@ -29,11 +37,17 @@ export default function RgeForm({ onResults, onLoading }: RgeFormProps) {
       return;
     }
 
+    if (selectedGestes.length == 0) {
+      setError("Au moins un geste doit être sélectionné");
+      return;
+    }
+
     onLoading(true);
 
     try {
       const results = await checkRGE({
         siret: siret.trim(),
+        // TODO ajouter les gestes,
         rge: rge.trim() || undefined,
         date: date.trim() || undefined,
       });
@@ -44,6 +58,10 @@ export default function RgeForm({ onResults, onLoading }: RgeFormProps) {
     } finally {
       onLoading(false);
     }
+  };
+
+  const handleGestesChange = (values: string[]) => {
+    setSelectedGestes(values);
   };
 
   if (!mounted) {
@@ -60,13 +78,16 @@ export default function RgeForm({ onResults, onLoading }: RgeFormProps) {
         className="fr-fieldset"
         aria-labelledby="rge-legend rge-messages"
       >
+        {/* Titre vérification RGE */}
         <legend className="fr-fieldset__legend" id="rge-legend">
           Vérification du statut RGE
           <span className="fr-hint-text">
-            Renseignez au minimum le SIRET de l'entreprise
+            Renseignez au minimum le SIRET de l'entreprise ainsi qu'un geste de
+            travaux.
           </span>
         </legend>
 
+        {/* Choix du SIRET */}
         <div className="fr-fieldset__element">
           <div className="fr-input-group">
             <label className="fr-label" htmlFor="siret-input">
@@ -88,6 +109,29 @@ export default function RgeForm({ onResults, onLoading }: RgeFormProps) {
           </div>
         </div>
 
+        {/* Choix des gestes */}
+        {metadata.gestes && (
+          <div className="fr-fieldset__element">
+            <div className="fr-input-group">
+              <DropdownCheckboxList
+                label=" Gestes pour lesquels vérifier le RGE"
+                hintLabel="Pour valider un ou plusieurs gestes"
+                multiple={true}
+                onChange={handleGestesChange}
+                optionnal={false}
+                options={metadata.gestes.flatMap((group) =>
+                  group.values.map((value) => ({
+                    id: value,
+                    label: value,
+                    group: group.group,
+                  }))
+                )}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Choix du numéro RGE */}
         <div className="fr-fieldset__element">
           <div className="fr-input-group">
             <label className="fr-label" htmlFor="rge-input">
@@ -109,6 +153,7 @@ export default function RgeForm({ onResults, onLoading }: RgeFormProps) {
           </div>
         </div>
 
+        {/* Choix de la date de vérification */}
         <div className="fr-fieldset__element">
           <div className="fr-input-group">
             <label className="fr-label" htmlFor="date-input">
@@ -127,11 +172,13 @@ export default function RgeForm({ onResults, onLoading }: RgeFormProps) {
           </div>
         </div>
 
+        {/* Affichage des erreurs éventuelles */}
         <div className="fr-messages-group" id="rge-messages" aria-live="polite">
           {error && <p className="fr-message fr-message--error">{error}</p>}
         </div>
       </fieldset>
 
+      {/* Bouton valider */}
       <div className="fr-btns-group">
         <button className="fr-btn" type="submit" suppressHydrationWarning>
           Vérifier le statut RGE
