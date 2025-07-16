@@ -12,7 +12,33 @@ initDsfr();
 
 export const metadata: Metadata = {
   title: "Mon Devis Sans Oublis",
-  description: "Vérifiez vos devis de rénovation énergétique",
+  description:
+    "Plateforme de pré-instruction automatique des devis de rénovation énergétique",
+  metadataBase: new URL("https://mon-devis-sans-oublis.beta.gouv.fr"),
+  openGraph: {
+    title: "Mon Devis Sans Oublis",
+    description:
+      "Plateforme de pré-instruction automatique des devis de rénovation énergétique",
+    url: "https://mon-devis-sans-oublis.beta.gouv.fr",
+    siteName: "Mon Devis Sans Oublis",
+    images: [
+      {
+        url: "/images/steps_analyze_quote/quote_control.webp",
+        width: 1200,
+        height: 630,
+        alt: "Mon Devis Sans Oublis - Plateforme de pré-instruction automatique des devis de rénovation énergétique",
+      },
+    ],
+    locale: "fr_FR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Mon Devis Sans Oublis",
+    description:
+      "Plateforme de pré-instruction automatique des devis de rénovation énergétique",
+    images: ["/images/steps_analyze_quote/quote_control.webp"],
+  },
 };
 
 export default function RootLayout({
