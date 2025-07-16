@@ -7,7 +7,7 @@ import { Metadata } from "@/types";
 import { DropdownCheckboxList } from "@/components";
 
 interface RgeFormProps {
-  onResults: (results: DataCheckRgeResult) => void;
+  onResults: (results: DataCheckRgeResult, selectedGestes: string[]) => void;
   onLoading: (loading: boolean) => void;
   metadata: Metadata;
 }
@@ -52,7 +52,7 @@ export default function RgeForm({
         date: date.trim() || undefined,
       });
 
-      onResults(results);
+      onResults(results, selectedGestes);
     } catch {
       setError("Erreur de connexion. Vérifiez votre connexion internet.");
     } finally {

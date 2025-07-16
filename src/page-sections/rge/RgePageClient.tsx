@@ -11,9 +11,11 @@ export default function RgePageClient() {
   const [results, setResults] = useState<DataCheckRgeResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [metadata, setMetadata] = useState<Metadata>({ aides: [], gestes: [] });
+  const [selectedGestes, setSelectedGestes] = useState<string[]>([]);
 
-  const handleResults = (newResults: DataCheckRgeResult) => {
+  const handleResults = (newResults: DataCheckRgeResult, gestes: string[]) => {
     setResults(newResults);
+    setSelectedGestes(gestes);
   };
 
   const handleLoading = (loading: boolean) => {
@@ -72,7 +74,12 @@ export default function RgePageClient() {
             <h2 className="fr-mb-4w text-[var(--text-title-grey)]">
               Résultats de la vérification
             </h2>
-            <RgeResults results={results} isLoading={isLoading} />
+            <RgeResults
+              results={results}
+              isLoading={isLoading}
+              selectedGestes={selectedGestes}
+              metadata={metadata}
+            />
           </div>
         )}
       </div>
