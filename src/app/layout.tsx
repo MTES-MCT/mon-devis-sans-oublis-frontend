@@ -13,12 +13,12 @@ initDsfr();
 export const metadata: Metadata = {
   title: "Mon Devis Sans Oublis",
   description:
-    "Plateforme de pré-instruction automatique des devis de rénovation énergétique",
+    "Plateforme publique et gratuite de pré-instruction automatique des devis de rénovation énergétique pour MaPrimeRenov' et les CEE.",
   metadataBase: new URL("https://mon-devis-sans-oublis.beta.gouv.fr"),
   openGraph: {
     title: "Mon Devis Sans Oublis",
     description:
-      "Plateforme de pré-instruction automatique des devis de rénovation énergétique",
+      "Plateforme publique et gratuite de pré-instruction automatique des devis de rénovation énergétique pour MaPrimeRenov' et les CEE.",
     url: "https://mon-devis-sans-oublis.beta.gouv.fr",
     siteName: "Mon Devis Sans Oublis",
     images: [
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Mon Devis Sans Oublis",
     description:
-      "Plateforme de pré-instruction automatique des devis de rénovation énergétique",
+      "Plateforme publique et gratuite de pré-instruction automatique des devis de rénovation énergétique pour MaPrimeRenov' et les CEE.",
     images: ["/images/steps_analyze_quote/quote_control.webp"],
   },
 };
