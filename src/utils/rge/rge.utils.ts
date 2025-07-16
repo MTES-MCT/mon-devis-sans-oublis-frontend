@@ -1,6 +1,7 @@
 // src/lib/utils/rge.utils.ts
 
 import { Metadata } from "@/types";
+import { AdemeResult } from "@/types/dataChecks.types";
 
 /**
  * Mapping direct entre les gestes utilisateur et les domaines API RGE
@@ -90,7 +91,10 @@ export const getGesteGroup = (geste: string, metadata: Metadata): string => {
 /**
  * Vérifie si un geste est qualifié selon les résultats RGE
  */
-export const isGesteQualified = (geste: string, rgeResults: any[]): boolean => {
+export const isGesteQualified = (
+  geste: string,
+  rgeResults: AdemeResult[]
+): boolean => {
   const apiDomains = GESTE_TO_API_DOMAIN_MAPPING[geste];
 
   if (!apiDomains) {
