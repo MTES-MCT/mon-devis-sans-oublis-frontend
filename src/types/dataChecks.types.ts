@@ -35,6 +35,6 @@ export interface DataCheckRgeResult extends DataCheckResult {
 export interface CheckRGEParams {
   siret: string;
   rge?: string;
+  gestes: string[];
   date?: string;
 }
-

@@ -1,44 +1,24 @@
 import { DataCheckRgeResult } from "@/types/dataChecks.types";
+import { Metadata } from "@/types";
+import {
+  getRgeErrorMessage,
+  groupGestesByCategory,
+  isGesteQualified,
+} from "@/utils/rge/rge.utils";
 
 interface RgeResultsProps {
   results: DataCheckRgeResult | null;
   isLoading: boolean;
+  selectedGestes: string[];
+  metadata: Metadata;
 }
 
-// Mapping des codes d'erreur vers des messages utilisateur
-const getErrorMessage = (code: string) => {
-  const errorMessages: Record<string, { title: string; message: string }> = {
-    siret_not_found: {
-      title: "SIRET non trouvé",
-      message:
-        "Aucune entreprise RGE n'a été trouvée avec ce numéro SIRET. Vérifiez que le SIRET est correct.",
-    },
-    rge_manquant: {
-      title: "Qualification RGE manquante",
-      message:
-        "Cette entreprise n'a pas de qualification RGE active pour les critères demandés.",
-    },
-    invalid_parameters: {
-      title: "Paramètres invalides",
-      message:
-        "Les paramètres fournis ne sont pas valides. Vérifiez le format du SIRET, du numéro RGE ou de la date.",
-    },
-    endpoint_not_found: {
-      title: "Service temporairement indisponible",
-      message:
-        "Le service de vérification RGE est temporairement indisponible. Veuillez réessayer plus tard.",
-    },
-  };
-
-  return (
-    errorMessages[code] || {
-      title: "Erreur de vérification",
-      message: "Une erreur inattendue s'est produite lors de la vérification.",
-    }
-  );
-};
-
-export default function RgeResults({ results, isLoading }: RgeResultsProps) {
+export default function RgeResults({
+  results,
+  isLoading,
+  selectedGestes,
+  metadata,
+}: RgeResultsProps) {
   if (isLoading) {
     return (
       <div className="fr-callout">
@@ -57,7 +37,7 @@ export default function RgeResults({ results, isLoading }: RgeResultsProps) {
   // Résultat invalide avec erreurs
   if (results.valid === false && results.error_details?.length) {
     const firstError = results.error_details[0];
-    const errorInfo = getErrorMessage(firstError.code);
+    const errorInfo = getRgeErrorMessage(firstError.code);
 
     return (
       <div className="fr-alert fr-alert--error">
@@ -79,148 +59,118 @@ export default function RgeResults({ results, isLoading }: RgeResultsProps) {
     );
   }
 
-  // Succès avec résultats
-  if (results.valid === true && results.results && results.results.length > 0) {
+  // Succès - Analyse des résultats par geste
+  if (results.valid === true) {
+    const gestesByGroup = groupGestesByCategory(selectedGestes, metadata);
+
     return (
       <div className="fr-grid-row fr-grid-row--gutters">
+        {/* Résumé par geste */}
         <div className="fr-col-12">
-          <div className="fr-callout fr-callout--green-emeraude">
-            <h3 className="fr-callout__title">
-              {results.results.length === 1
-                ? "Qualification RGE trouvée"
-                : `${results.results.length} qualifications RGE trouvées`}
-            </h3>
-            <p className="fr-callout__text">
-              L'entreprise dispose des qualifications RGE suivantes :
-            </p>
+          <h3 className="fr-callout__title">
+            Résumé des qualifications RGE par geste
+          </h3>
+
+          <div className="fr-mt-3w">
+            {Object.entries(gestesByGroup).map(([group, gestes]) => (
+              <div key={group} className="fr-mb-6w">
+                {/* Titre du groupe */}
+                <div className="fr-mb-3w">
+                  <h4 className="fr-text--lg fr-text--bold fr-mb-1v">
+                    {group}
+                  </h4>
+                  <div
+                    className="fr-hr"
+                    style={{
+                      borderColor: "var(--border-default-grey)",
+                      marginTop: "0.5rem",
+                    }}
+                  />
+                </div>
+
+                {/* Liste des gestes */}
+                <div className="fr-grid-row fr-grid-row--gutters">
+                  {gestes.map((geste) => {
+                    const isQualified = results.results
+                      ? isGesteQualified(geste, results.results)
+                      : false;
+
+                    return (
+                      <div key={geste} className="fr-col-12 fr-col-md-6">
+                        <div
+                          className={`fr-card fr-card--sm fr-card--border ${
+                            isQualified
+                              ? "fr-card--border-success"
+                              : "fr-card--border-error"
+                          }`}
+                          style={{
+                            borderLeft: `4px solid ${
+                              isQualified
+                                ? "var(--background-default-success)"
+                                : "var(--background-default-error)"
+                            }`,
+                          }}
+                        >
+                          <div className="fr-card__body">
+                            <div className="fr-card__content">
+                              <div className="fr-grid-row fr-grid-row--middle">
+                                {/* Badge statut */}
+                                <div className="fr-col-auto">
+                                  <div
+                                    className={`fr-badge fr-badge--lg ${
+                                      isQualified
+                                        ? "fr-badge--success"
+                                        : "fr-badge--error"
+                                    }`}
+                                  >
+                                    {isQualified ? "✓ OUI" : "✗ NON"}
+                                  </div>
+                                </div>
+
+                                {/* Nom du geste */}
+                                <div className="fr-col fr-ml-2w">
+                                  <p className="fr-text--md fr-mb-0">{geste}</p>
+                                </div>
+                              </div>
+
+                              {/* Message d'explication */}
+                              <div className="fr-mt-2w">
+                                <p className="fr-text--xs fr-text--mention-grey fr-mb-0">
+                                  {isQualified
+                                    ? "Cette entreprise est qualifiée RGE pour ce geste"
+                                    : "Cette entreprise n'a pas de qualification RGE pour ce geste"}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {results.results.map((result, index) => (
-          <div key={index} className="fr-col-12 fr-col-md-6 fr-col-lg-4">
-            <div className="fr-card fr-card--sm">
-              <div className="fr-card__body">
-                <div className="fr-card__content">
-                  <h4 className="fr-card__title">{result.nom_entreprise}</h4>
-                  <p className="fr-card__desc">
-                    {result.adresse}, {result.code_postal} {result.commune}
-                  </p>
-
-                  <div className="fr-card__start">
-                    <div className="fr-badges-group">
-                      <p className="fr-badge fr-badge--green-emeraude">
-                        {result.organisme.toUpperCase()}
-                      </p>
-                      {result.particulier && (
-                        <p className="fr-badge fr-badge--blue-france">
-                          Particuliers
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="fr-card__end">
-                    <div className="fr-mt-2w">
-                      <p className="fr-text--sm fr-mb-1v">
-                        <strong>SIRET :</strong> {result.siret}
-                      </p>
-
-                      {result.nom_certificat && (
-                        <p className="fr-text--sm fr-mb-1v">
-                          <strong>Certificat :</strong> {result.nom_certificat}
-                        </p>
-                      )}
-
-                      {result.nom_qualification && (
-                        <p className="fr-text--sm fr-mb-1v">
-                          <strong>Qualification :</strong>{" "}
-                          {result.nom_qualification}
-                        </p>
-                      )}
-
-                      {result.domaine && (
-                        <p className="fr-text--sm fr-mb-1v">
-                          <strong>Domaine :</strong> {result.domaine}
-                        </p>
-                      )}
-
-                      {result.meta_domaine && (
-                        <p className="fr-text--sm fr-mb-1v">
-                          <strong>Méta-domaine :</strong> {result.meta_domaine}
-                        </p>
-                      )}
-
-                      <div className="fr-mt-2w">
-                        <p className="fr-text--xs">
-                          <strong>Validité :</strong>
-                          {result.lien_date_debut && result.lien_date_fin ? (
-                            <span>
-                              {" "}
-                              du{" "}
-                              {new Date(
-                                result.lien_date_debut
-                              ).toLocaleDateString("fr-FR")}{" "}
-                              au{" "}
-                              {new Date(
-                                result.lien_date_fin
-                              ).toLocaleDateString("fr-FR")}
-                            </span>
-                          ) : (
-                            " Non renseignée"
-                          )}
-                        </p>
-                      </div>
-
-                      {(result.telephone ||
-                        result.email ||
-                        result.site_internet) && (
-                        <div
-                          className="fr-mt-2w fr-pt-2w"
-                          style={{
-                            borderTop: "1px solid var(--border-default-grey)",
-                          }}
-                        >
-                          {result.telephone && (
-                            <p className="fr-text--xs fr-mb-1v">
-                              📞 {result.telephone}
-                            </p>
-                          )}
-                          {result.email && (
-                            <p className="fr-text--xs fr-mb-1v">
-                              ✉️ {result.email}
-                            </p>
-                          )}
-                          {result.site_internet && (
-                            <p className="fr-text--xs">
-                              🌐 {result.site_internet}
-                            </p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+        {/* Aucun résultat trouvé */}
+        {(!results.results || results.results.length === 0) && (
+          <div className="fr-col-12 fr-mt-4w">
+            <div className="fr-alert fr-alert--info">
+              <h3 className="fr-alert__title">
+                Aucune qualification détaillée trouvée
+              </h3>
+              <p>
+                Bien que la vérification soit valide, aucune qualification RGE
+                détaillée n'a été trouvée dans nos données pour cette
+                entreprise.
+              </p>
             </div>
           </div>
-        ))}
+        )}
       </div>
     );
   }
 
-  // Succès mais aucun résultat
-  if (
-    results.valid === true &&
-    (!results.results || results.results.length === 0)
-  ) {
-    return (
-      <div className="fr-alert fr-alert--error">
-        <h3 className="fr-alert__title">Aucun résultat trouvé</h3>
-        <p>
-          Aucune qualification RGE n'a été trouvée pour les critères de
-          recherche spécifiés.
-        </p>
-      </div>
-    );
-  }
+  return null;
 }

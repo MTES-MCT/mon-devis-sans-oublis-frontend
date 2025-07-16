@@ -85,8 +85,9 @@ describe("DataChecks Server Actions", () => {
 
   describe("checkRGE", () => {
     const validSiret = "12345678901234";
+    const validGestes = ["isolation_comble_perdu", "pac_air_eau"];
 
-    it("doit vérifier un RGE avec seulement le SIRET", async () => {
+    it("doit vérifier un RGE avec SIRET et gestes", async () => {
       const mockResponse = {
         data: {
           valid: true,
@@ -117,16 +118,16 @@ describe("DataChecks Server Actions", () => {
 
       mockApiClient.get.mockResolvedValue(mockResponse);
 
-      const result = await checkRGE({ siret: validSiret });
+      const result = await checkRGE({ siret: validSiret, gestes: validGestes });
 
       expect(mockApiClient.get).toHaveBeenCalledWith(
-        "/api/v1/data_checks/rge?siret=12345678901234"
+        "/api/v1/data_checks/rge?siret=12345678901234&geste_types=isolation_comble_perdu%2Cpac_air_eau"
       );
       expect(result.valid).toBe(true);
       expect(result.results).toHaveLength(1);
     });
 
-    it("doit vérifier un RGE avec SIRET et numéro RGE", async () => {
+    it("doit vérifier un RGE avec SIRET, gestes et numéro RGE", async () => {
       const rgeNumber = "RGE123456";
       const mockResponse = {
         data: {
@@ -138,14 +139,18 @@ describe("DataChecks Server Actions", () => {
 
       mockApiClient.get.mockResolvedValue(mockResponse);
 
-      await checkRGE({ siret: validSiret, rge: rgeNumber });
+      await checkRGE({
+        siret: validSiret,
+        gestes: validGestes,
+        rge: rgeNumber,
+      });
 
       expect(mockApiClient.get).toHaveBeenCalledWith(
-        "/api/v1/data_checks/rge?siret=12345678901234&rge=RGE123456"
+        "/api/v1/data_checks/rge?siret=12345678901234&geste_types=isolation_comble_perdu%2Cpac_air_eau&rge=RGE123456"
       );
     });
 
-    it("doit vérifier un RGE avec SIRET, RGE et date", async () => {
+    it("doit vérifier un RGE avec SIRET, gestes, RGE et date", async () => {
       const rgeNumber = "RGE123456";
       const date = "2024-06-15";
       const mockResponse = {
@@ -158,16 +163,36 @@ describe("DataChecks Server Actions", () => {
 
       mockApiClient.get.mockResolvedValue(mockResponse);
 
-      await checkRGE({ siret: validSiret, rge: rgeNumber, date });
+      await checkRGE({
+        siret: validSiret,
+        gestes: validGestes,
+        rge: rgeNumber,
+        date,
+      });
 
       expect(mockApiClient.get).toHaveBeenCalledWith(
-        "/api/v1/data_checks/rge?siret=12345678901234&rge=RGE123456&date=2024-06-15"
+        "/api/v1/data_checks/rge?siret=12345678901234&geste_types=isolation_comble_perdu%2Cpac_air_eau&rge=RGE123456&date=2024-06-15"
       );
     });
 
     it("doit lever une erreur si le SIRET est vide", async () => {
-      await expect(checkRGE({ siret: "" })).rejects.toThrow(
-        "Le SIRET est requis pour la vérification RGE"
+      await expect(
+        checkRGE({ siret: "", gestes: validGestes })
+      ).rejects.toThrow("Le SIRET est requis pour la vérification RGE");
+      expect(mockApiClient.get).not.toHaveBeenCalled();
+    });
+
+    it("doit lever une erreur si les gestes sont vides", async () => {
+      await expect(checkRGE({ siret: validSiret, gestes: [] })).rejects.toThrow(
+        "Au moins un geste est requis pour la vérification RGE"
+      );
+      expect(mockApiClient.get).not.toHaveBeenCalled();
+    });
+
+    it("doit lever une erreur si les gestes ne sont pas fournis", async () => {
+      // @ts-expect-error - Test intentionnel sans gestes
+      await expect(checkRGE({ siret: validSiret })).rejects.toThrow(
+        "Au moins un geste est requis pour la vérification RGE"
       );
       expect(mockApiClient.get).not.toHaveBeenCalled();
     });
@@ -179,10 +204,15 @@ describe("DataChecks Server Actions", () => {
 
       mockApiClient.get.mockResolvedValue(mockResponse);
 
-      await checkRGE({ siret: validSiret, rge: "", date: "   " });
+      await checkRGE({
+        siret: validSiret,
+        gestes: validGestes,
+        rge: "",
+        date: "   ",
+      });
 
       expect(mockApiClient.get).toHaveBeenCalledWith(
-        "/api/v1/data_checks/rge?siret=12345678901234"
+        "/api/v1/data_checks/rge?siret=12345678901234&geste_types=isolation_comble_perdu%2Cpac_air_eau"
       );
     });
 
@@ -197,7 +227,11 @@ describe("DataChecks Server Actions", () => {
 
       mockApiClient.get.mockResolvedValue(mockResponse);
 
-      const result = await checkRGE({ siret: validSiret, rge: "INEXISTANT" });
+      const result = await checkRGE({
+        siret: validSiret,
+        gestes: validGestes,
+        rge: "INEXISTANT",
+      });
 
       expect(result.valid).toBe(false);
       expect(result.error_details).toHaveLength(1);
@@ -208,9 +242,9 @@ describe("DataChecks Server Actions", () => {
       const mockError = new Error("Erreur API RGE");
       mockApiClient.get.mockRejectedValue(mockError);
 
-      await expect(checkRGE({ siret: validSiret })).rejects.toThrow(
-        "Erreur API RGE"
-      );
+      await expect(
+        checkRGE({ siret: validSiret, gestes: validGestes })
+      ).rejects.toThrow("Erreur API RGE");
     });
 
     it("doit trimmer les espaces des paramètres", async () => {
@@ -222,12 +256,64 @@ describe("DataChecks Server Actions", () => {
 
       await checkRGE({
         siret: "  " + validSiret + "  ",
+        gestes: validGestes,
         rge: "  RGE123  ",
         date: "  2024-06-15  ",
       });
 
       expect(mockApiClient.get).toHaveBeenCalledWith(
-        "/api/v1/data_checks/rge?siret=12345678901234&rge=RGE123&date=2024-06-15"
+        "/api/v1/data_checks/rge?siret=12345678901234&geste_types=isolation_comble_perdu%2Cpac_air_eau&rge=RGE123&date=2024-06-15"
+      );
+    });
+
+    it("doit accepter un seul geste", async () => {
+      const mockResponse = {
+        data: { valid: true, error_details: null, results: [] },
+      };
+
+      mockApiClient.get.mockResolvedValue(mockResponse);
+
+      await checkRGE({ siret: validSiret, gestes: ["isolation_comble_perdu"] });
+
+      expect(mockApiClient.get).toHaveBeenCalledWith(
+        "/api/v1/data_checks/rge?siret=12345678901234&geste_types=isolation_comble_perdu"
+      );
+    });
+
+    it("doit accepter plusieurs gestes", async () => {
+      const mockResponse = {
+        data: { valid: true, error_details: null, results: [] },
+      };
+
+      mockApiClient.get.mockResolvedValue(mockResponse);
+
+      const multipleGestes = [
+        "isolation_comble_perdu",
+        "pac_air_eau",
+        "chaudiere_biomasse",
+      ];
+      await checkRGE({ siret: validSiret, gestes: multipleGestes });
+
+      expect(mockApiClient.get).toHaveBeenCalledWith(
+        "/api/v1/data_checks/rge?siret=12345678901234&geste_types=isolation_comble_perdu%2Cpac_air_eau%2Cchaudiere_biomasse"
+      );
+    });
+
+    it("doit gérer les gestes avec caractères spéciaux dans l'URL", async () => {
+      const mockResponse = {
+        data: { valid: true, error_details: null, results: [] },
+      };
+
+      mockApiClient.get.mockResolvedValue(mockResponse);
+
+      const gestesSpeciaux = [
+        "vmc_simple_flux",
+        "isolation_thermique_par_exterieur_ITE",
+      ];
+      await checkRGE({ siret: validSiret, gestes: gestesSpeciaux });
+
+      expect(mockApiClient.get).toHaveBeenCalledWith(
+        "/api/v1/data_checks/rge?siret=12345678901234&geste_types=vmc_simple_flux%2Cisolation_thermique_par_exterieur_ITE"
       );
     });
   });

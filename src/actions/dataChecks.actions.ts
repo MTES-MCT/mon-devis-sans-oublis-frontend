@@ -30,19 +30,26 @@ export async function checkRGE(
   params: CheckRGEParams
 ): Promise<DataCheckRgeResult> {
   try {
-    const { siret, rge, date } = params;
+    const { siret, gestes, rge, date } = params;
 
     if (!siret || siret.trim().length === 0) {
       throw new Error("Le SIRET est requis pour la vérification RGE");
     }
 
+    if (!gestes || gestes.length === 0) {
+      throw new Error("Au moins un geste est requis pour la vérification RGE");
+    }
+
     const queryParams = new URLSearchParams();
+
     queryParams.append("siret", siret.trim());
+    queryParams.append("geste_types", gestes.join(","));
 
     if (rge && rge.trim().length > 0) queryParams.append("rge", rge.trim());
     if (date && date.trim().length > 0) queryParams.append("date", date.trim());
 
     const url = `/api/v1/data_checks/rge?${queryParams.toString()}`;
+
     const response = await apiClient.get(url);
 
     return response.data || response;
