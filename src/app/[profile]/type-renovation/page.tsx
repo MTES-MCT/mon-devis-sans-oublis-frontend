@@ -102,7 +102,7 @@ export default function TypeRenovation() {
                   <Tile
                     description="1 seul poste de travaux."
                     image="/images/who_are_you/card_artisan.webp"
-                    title="Rénovation par gestes"
+                    title="Rénovation par geste"
                     horizontal={true}
                     isCheckbox={true}
                     isChecked={selectedType === RenovationTypes.GESTES}
