@@ -5,7 +5,7 @@ import wording from "@/wording";
 
 export default async function Statistics() {
   const metabasePublicUrl =
-    "http://stats.mon-devis-sans-oublis.beta.gouv.fr/public/dashboard/09cc4737-0787-4f38-ad64-bee424965869";
+    "https://stats.mon-devis-sans-oublis.beta.gouv.fr/public/dashboard/09cc4737-0787-4f38-ad64-bee424965869";
 
   return (
     <>
