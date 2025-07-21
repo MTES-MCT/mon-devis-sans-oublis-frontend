@@ -79,3 +79,15 @@ export async function checkRGE(
     throw error;
   }
 }
+
+export async function getDataChecksGestesTypes() {
+  try {
+    return await apiClient.get("/api/v1/data_checks/geste_types");
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des types de gestes pour data check :",
+      error
+    );
+    throw error;
+  }
+}

@@ -1,50 +1,48 @@
-// src/lib/utils/rge.utils.ts
-
-import { Metadata } from "@/types";
+import { CheckRGEGesteTypes } from "@/types";
 import { AdemeResult } from "@/types/dataChecks.types";
 
 /**
- * Mapping direct entre les gestes utilisateur et les domaines API RGE
- * Permet de vérifier si une entreprise a une qualification pour un geste donné
+ * Mapping entre les valeurs des gestes et les domaines API RGE
  */
 export const GESTE_TO_API_DOMAIN_MAPPING: Record<string, string[]> = {
   // Chauffage
-  "Chaudière biomasse": ["Chaudière bois"],
-  "Chauffage solaire combiné": ["Chauffage et/ou eau chaude solaire"],
-  "Poêle/insert à bois/granulés": ["Poêle ou insert bois"],
-  "Pompe à chaleur air / air": ["Pompe à chaleur : chauffage"],
-  "Pompe à chaleur air / eau": ["Pompe à chaleur : chauffage"],
-  "Pompe à chaleur géothermique": ["Pompe à chaleur : chauffage"],
+  chaudiere_biomasse: ["Chaudière bois"],
+  systeme_solaire_combine: ["Chauffage et/ou eau chaude solaire"],
+  poele_insert: ["Poêle ou insert bois"],
+  pac_air_air: ["Pompe à chaleur : chauffage"],
+  pac_air_eau: ["Pompe à chaleur : chauffage"],
+  pac_hybride: ["Pompe à chaleur : chauffage"],
+  pac_eau_eau: ["Pompe à chaleur : chauffage"],
 
   // Eau chaude sanitaire
-  "Chauffe-eau solaire individuel": ["Chauffage et/ou eau chaude solaire"],
-  "Chauffe-eau thermodynamique (CET)": ["Chauffe-Eau Thermodynamique"],
+  chauffe_eau_solaire_individuel: ["Chauffage et/ou eau chaude solaire"],
+  chauffe_eau_thermo: ["Chauffe-Eau Thermodynamique"],
 
   // Isolation
-  "Isolation des murs par l'extérieur (ITE)": [
-    "Isolation des murs par l'extérieur",
-  ],
-  "Isolation des murs par l'intérieur (ITI)": [
+  isolation_thermique_par_exterieur_ITE: ["Isolation des murs par l'extérieur"],
+  isolation_thermique_par_interieur_ITI: [
     "Isolation par l'intérieur des murs ou rampants de toitures  ou plafonds",
   ],
-  "Isolation des planchers de combles perdus": ["Isolation des combles perdus"],
-  "Isolation de la toiture en pente - plafond de combles": [
+  isolation_comble_perdu: ["Isolation des combles perdus"],
+  isolation_rampants_toiture: [
     "Isolation par l'intérieur des murs ou rampants de toitures  ou plafonds",
   ],
-  "Isolation de la toiture-terrasse": [
+  isolation_toiture_terrasse: [
     "Isolation des toitures terrasses ou des toitures par l'extérieur",
   ],
-  "Isolation des planchers bas": ["Isolation des planchers bas"],
+  isolation_plancher_bas: ["Isolation des planchers bas"],
 
   // Menuiserie
-  "Remplacement des fenêtres ou porte-fenêtres": [
+  menuiserie_fenetre: ["Fenêtres, volets, portes donnant sur l'extérieur"],
+  menuiserie_volet_isolant: [
     "Fenêtres, volets, portes donnant sur l'extérieur",
   ],
-  "Volet isolant": ["Fenêtres, volets, portes donnant sur l'extérieur"],
+  menuiserie_fenetre_toit: ["Fenêtres, volets, portes donnant sur l'extérieur"],
+  menuiserie_porte: ["Fenêtres, volets, portes donnant sur l'extérieur"],
 
   // Ventilation
-  "Ventilation Mécanique Double-Flux": ["Ventilation mécanique"],
-  "Ventilation Mécanique Simple-Flux": ["Ventilation mécanique"],
+  vmc_double_flux: ["Ventilation mécanique"],
+  vmc_simple_flux: ["Ventilation mécanique"],
 };
 
 /**
@@ -79,26 +77,25 @@ export const RGE_ERROR_MESSAGES: Record<
 /**
  * Trouve le groupe d'un geste dans les métadonnées
  */
-export const getGesteGroup = (geste: string, metadata: Metadata): string => {
-  for (const group of metadata.gestes) {
-    if (group.values.includes(geste)) {
-      return group.group;
-    }
-  }
-  return "Inconnu";
+export const getGesteGroup = (
+  gesteValue: string,
+  metadata: CheckRGEGesteTypes
+): string => {
+  const option = metadata.options.find((opt) => opt.value === gesteValue);
+  return option?.group || "Inconnu";
 };
 
 /**
  * Vérifie si un geste est qualifié selon les résultats RGE
  */
 export const isGesteQualified = (
-  geste: string,
+  gesteValue: string,
   rgeResults: AdemeResult[]
 ): boolean => {
-  const apiDomains = GESTE_TO_API_DOMAIN_MAPPING[geste];
+  const apiDomains = GESTE_TO_API_DOMAIN_MAPPING[gesteValue];
 
   if (!apiDomains) {
-    console.warn(`Geste non mappé dans le système RGE: ${geste}`);
+    console.warn(`Geste non mappé dans le système RGE: ${gesteValue}`);
     return false;
   }
 
@@ -111,20 +108,31 @@ export const isGesteQualified = (
  * Regroupe les gestes sélectionnés par groupe de métadonnées
  */
 export const groupGestesByCategory = (
-  gestes: string[],
-  metadata: Metadata
+  gestesValues: string[],
+  gesteTypesMetadata: CheckRGEGesteTypes
 ): Record<string, string[]> => {
-  return gestes.reduce(
-    (acc, geste) => {
-      const group = getGesteGroup(geste, metadata);
+  return gestesValues.reduce(
+    (acc, gesteValue) => {
+      const group = getGesteGroup(gesteValue, gesteTypesMetadata);
       if (!acc[group]) {
         acc[group] = [];
       }
-      acc[group].push(geste);
+      acc[group].push(gesteValue);
       return acc;
     },
     {} as Record<string, string[]>
   );
+};
+
+/**
+ * Obtient le label lisible d'un geste à partir de sa valeur
+ */
+export const getGesteLabel = (
+  gesteValue: string,
+  metadata: CheckRGEGesteTypes
+): string => {
+  const option = metadata.options.find((opt) => opt.value === gesteValue);
+  return option?.label || gesteValue;
 };
 
 /**
