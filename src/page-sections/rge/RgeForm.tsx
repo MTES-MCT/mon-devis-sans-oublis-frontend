@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { checkRGE } from "@/actions/dataChecks.actions";
 import { DataCheckRgeResult } from "@/types/dataChecks.types";
-import { Metadata } from "@/types";
+import { hasErrorDetails, isApiError, Metadata } from "@/types";
 import { DropdownCheckboxList } from "@/components";
 
 interface RgeFormProps {
@@ -53,8 +53,19 @@ export default function RgeForm({
       });
 
       onResults(results, selectedGestes);
-    } catch {
-      setError("Erreur de connexion. Vérifiez votre connexion internet.");
+    } catch (error: unknown) {
+      if (hasErrorDetails(error)) {
+        const messages = error.error_details.map((d) => d.message || d.code);
+        setError(messages.join(" / "));
+      } else if (isApiError(error)) {
+        if (error.status === 422) {
+          setError("Erreur 422 : Données invalides. Vérifiez les champs.");
+        } else {
+          setError(`Erreur API : ${error.message}`);
+        }
+      } else {
+        setError("Erreur inattendue. Veuillez réessayer.");
+      }
     } finally {
       onLoading(false);
     }
