@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import { DataCheckRgeResult } from "@/types/dataChecks.types";
 import RgeForm from "./RgeForm";
 import RgeResults from "./RgeResult";
-import { quoteService } from "@/lib/client/apiWrapper";
-import { Metadata } from "@/types";
+import { CheckRGEGesteTypes } from "@/types";
+import { getDataChecksGestesTypes } from "@/actions/dataChecks.actions";
 
 export default function RgePageClient() {
   const [results, setResults] = useState<DataCheckRgeResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [metadata, setMetadata] = useState<Metadata>({ aides: [], gestes: [] });
+  const [typeGesteMetadata, setTypeGesteMetadata] =
+    useState<CheckRGEGesteTypes>({ options: [] });
   const [selectedGestes, setSelectedGestes] = useState<string[]>([]);
 
   const handleResults = (newResults: DataCheckRgeResult, gestes: string[]) => {
@@ -22,17 +23,17 @@ export default function RgePageClient() {
     setIsLoading(loading);
   };
 
-  // Chargement des métadonnées au montage du composant
+  // Chargement des gestes types au montage du composant
   useEffect(() => {
-    const loadMetadata = async () => {
+    const loadGestesTypesMetadata = async () => {
       try {
-        const data = await quoteService.getQuoteCheckMetadata();
-        setMetadata(data);
+        const gesteTypesData = await getDataChecksGestesTypes();
+        setTypeGesteMetadata(gesteTypesData);
       } catch (error) {
         console.error("Error loading metadata:", error);
       }
     };
-    loadMetadata();
+    loadGestesTypesMetadata();
   }, []);
 
   return (
@@ -62,7 +63,7 @@ export default function RgePageClient() {
         {/* Formulaire de recherche */}
         <div className="fr-mb-6w">
           <RgeForm
-            metadata={metadata}
+            typeGesteMetadata={typeGesteMetadata}
             onResults={handleResults}
             onLoading={handleLoading}
           />
@@ -78,7 +79,7 @@ export default function RgePageClient() {
               results={results}
               isLoading={isLoading}
               selectedGestes={selectedGestes}
-              metadata={metadata}
+              typeGestesMetadata={typeGesteMetadata}
             />
           </div>
         )}

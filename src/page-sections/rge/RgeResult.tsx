@@ -1,23 +1,24 @@
 import { DataCheckRgeResult } from "@/types/dataChecks.types";
-import { Metadata } from "@/types";
+import { CheckRGEGesteTypes } from "@/types";
 import {
+  getGesteLabel,
   getRgeErrorMessage,
   groupGestesByCategory,
   isGesteQualified,
-} from "@/utils/rge/rge.utils";
+} from "@/utils";
 
 interface RgeResultsProps {
   results: DataCheckRgeResult | null;
   isLoading: boolean;
   selectedGestes: string[];
-  metadata: Metadata;
+  typeGestesMetadata: CheckRGEGesteTypes;
 }
 
 export default function RgeResults({
   results,
   isLoading,
   selectedGestes,
-  metadata,
+  typeGestesMetadata,
 }: RgeResultsProps) {
   if (isLoading) {
     return (
@@ -61,7 +62,10 @@ export default function RgeResults({
 
   // Succès - Analyse des résultats par geste
   if (results.valid === true) {
-    const gestesByGroup = groupGestesByCategory(selectedGestes, metadata);
+    const gestesByGroup = groupGestesByCategory(
+      selectedGestes,
+      typeGestesMetadata
+    );
 
     return (
       <div className="fr-grid-row fr-grid-row--gutters">
@@ -129,7 +133,9 @@ export default function RgeResults({
 
                                 {/* Nom du geste */}
                                 <div className="fr-col fr-ml-2w">
-                                  <p className="fr-text--md fr-mb-0">{geste}</p>
+                                  <p className="fr-text--md fr-mb-0">
+                                    {getGesteLabel(geste, typeGestesMetadata)}
+                                  </p>
                                 </div>
                               </div>
 

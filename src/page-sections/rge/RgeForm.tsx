@@ -3,19 +3,19 @@
 import { useState, useEffect } from "react";
 import { checkRGE } from "@/actions/dataChecks.actions";
 import { DataCheckRgeResult } from "@/types/dataChecks.types";
-import { hasErrorDetails, isApiError, Metadata } from "@/types";
+import { hasErrorDetails, isApiError, CheckRGEGesteTypes } from "@/types";
 import { DropdownCheckboxList } from "@/components";
 
 interface RgeFormProps {
   onResults: (results: DataCheckRgeResult, selectedGestes: string[]) => void;
   onLoading: (loading: boolean) => void;
-  metadata: Metadata;
+  typeGesteMetadata: CheckRGEGesteTypes;
 }
 
 export default function RgeForm({
   onResults,
   onLoading,
-  metadata,
+  typeGesteMetadata,
 }: RgeFormProps) {
   const [siret, setSiret] = useState("");
   const [selectedGestes, setSelectedGestes] = useState<string[]>([]);
@@ -121,7 +121,7 @@ export default function RgeForm({
         </div>
 
         {/* Choix des gestes */}
-        {metadata.gestes && (
+        {typeGesteMetadata && (
           <div className="fr-fieldset__element">
             <div className="fr-input-group">
               <DropdownCheckboxList
@@ -129,13 +129,12 @@ export default function RgeForm({
                 hintLabel="Pour valider un ou plusieurs gestes"
                 multiple={true}
                 onChange={handleGestesChange}
-                optionnal={false}
-                options={metadata.gestes.flatMap((group) =>
-                  group.values.map((value) => ({
+                options={typeGesteMetadata.options.map(
+                  ({ label, value, group }) => ({
                     id: value,
-                    label: value,
-                    group: group.group,
-                  }))
+                    label,
+                    group,
+                  })
                 )}
               />
             </div>
