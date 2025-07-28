@@ -62,6 +62,11 @@ export const RGE_ERROR_MESSAGES: Record<
     message:
       "Cette entreprise n'a pas de qualification RGE active pour les critères demandés.",
   },
+  rge_hors_date: {
+    title: "Qualification RGE expirée",
+    message:
+      "Cette entreprise avait une qualification RGE mais celle-ci n'est plus valide à la date demandée. Vérifiez la date de vérification ou contactez l'entreprise pour connaître le statut actuel de sa certification.",
+  },
   invalid_parameters: {
     title: "Paramètres invalides",
     message:
