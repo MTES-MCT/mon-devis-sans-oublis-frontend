@@ -5,6 +5,7 @@ import { checkRGE } from "@/actions/dataChecks.actions";
 import { DataCheckRgeResult } from "@/types/dataChecks.types";
 import { hasErrorDetails, isApiError, CheckRGEGesteTypes } from "@/types";
 import { DropdownCheckboxList } from "@/components";
+import { formatSiretDisplay } from "@/utils";
 
 interface RgeFormProps {
   onResults: (results: DataCheckRgeResult, selectedGestes: string[]) => void;
@@ -18,6 +19,7 @@ export default function RgeForm({
   typeGesteMetadata,
 }: RgeFormProps) {
   const [siret, setSiret] = useState("");
+  const [displaySiret, setDisplaySiret] = useState("");
   const [selectedGestes, setSelectedGestes] = useState<string[]>([]);
   const [rge, setRge] = useState("");
   const [date, setDate] = useState("");
@@ -28,12 +30,28 @@ export default function RgeForm({
     setMounted(true);
   }, []);
 
+  const handleSiretChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+
+    // Extraire uniquement les chiffres pour la valeur réelle
+    const cleanValue = inputValue.replace(/\D/g, "");
+
+    // Mettre à jour les états
+    setSiret(cleanValue);
+    setDisplaySiret(formatSiretDisplay(inputValue));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     if (!siret.trim()) {
       setError("Le SIRET est obligatoire");
+      return;
+    }
+
+    if (siret.length !== 14) {
+      setError("Le SIRET doit contenir exactement 14 chiffres");
       return;
     }
 
@@ -103,17 +121,17 @@ export default function RgeForm({
           <div className="fr-input-group">
             <label className="fr-label" htmlFor="siret-input">
               SIRET de l'entreprise *
-              <span className="fr-hint-text">14 chiffres sans espaces</span>
+              <span className="fr-hint-text">14 chiffres</span>
             </label>
             <input
               className="fr-input"
               name="siret"
               id="siret-input"
               type="text"
-              value={siret}
-              onChange={(e) => setSiret(e.target.value)}
-              placeholder="12345678901234"
-              maxLength={14}
+              value={displaySiret}
+              onChange={handleSiretChange}
+              placeholder="123 456 789 01234"
+              maxLength={17} // 14 chiffres + 3 espaces
               required
               suppressHydrationWarning
             />

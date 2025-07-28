@@ -146,3 +146,27 @@ export const getRgeErrorMessage = (code: string) => {
     }
   );
 };
+
+/**
+ * Formate un SIRET pour l'affichage
+ * @param value
+ * @returns
+ */
+export const formatSiretDisplay = (value: string): string => {
+  // Supprimer tous les caractères non numériques
+  const cleanValue = value.replace(/\D/g, "");
+
+  // Limiter à 14 chiffres
+  const truncated = cleanValue.slice(0, 14);
+
+  // Appliquer le format : XXX XXX XXX XXXXX
+  if (truncated.length <= 3) {
+    return truncated;
+  } else if (truncated.length <= 6) {
+    return `${truncated.slice(0, 3)} ${truncated.slice(3)}`;
+  } else if (truncated.length <= 9) {
+    return `${truncated.slice(0, 3)} ${truncated.slice(3, 6)} ${truncated.slice(6)}`;
+  } else {
+    return `${truncated.slice(0, 3)} ${truncated.slice(3, 6)} ${truncated.slice(6, 9)} ${truncated.slice(9)}`;
+  }
+};
