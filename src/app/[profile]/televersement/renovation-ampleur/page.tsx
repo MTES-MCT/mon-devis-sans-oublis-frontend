@@ -14,6 +14,7 @@ export default function UploadRenovationAmpleurPage() {
   const [fileError, setFileError] = useState<string | null>(null);
   const [selectedAides, setSelectedAides] = useState<string[]>([]);
   const [selectedGestes, setSelectedGestes] = useState<string[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const params = useParams();
   const router = useRouter();
@@ -26,7 +27,10 @@ export default function UploadRenovationAmpleurPage() {
   }, []);
 
   const handleNext = async () => {
-    if (uploadedFiles.length === 0) return;
+    if (uploadedFiles.length === 0 || isProcessing) return;
+
+    setIsProcessing(true);
+    setFileError(null);
 
     try {
       // Création du dossier
@@ -49,10 +53,12 @@ export default function UploadRenovationAmpleurPage() {
       setFileError(
         "Une erreur est survenue lors du téléversement. Veuillez réessayer."
       );
+      setIsProcessing(false); 
     }
   };
 
   const handlePrevious = () => {
+    if (isProcessing) return;
     router.back();
   };
 
@@ -112,18 +118,23 @@ export default function UploadRenovationAmpleurPage() {
                 <button
                   className="fr-btn fr-btn--secondary"
                   onClick={handlePrevious}
+                  disabled={isProcessing}
                 >
                   Précédent
                 </button>
 
                 <button
                   className={`fr-btn ${
-                    uploadedFiles.length === 0 ? "fr-btn--secondary" : ""
+                    uploadedFiles.length === 0 || isProcessing
+                      ? "fr-btn--secondary"
+                      : ""
                   }`}
-                  disabled={uploadedFiles.length === 0}
+                  disabled={uploadedFiles.length === 0 || isProcessing}
                   onClick={handleNext}
                 >
-                  Vérifiez les devis
+                  {isProcessing
+                    ? "Traitement en cours..."
+                    : "Vérifiez les devis"}
                 </button>
               </div>
             </div>
