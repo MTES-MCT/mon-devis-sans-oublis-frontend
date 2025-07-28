@@ -19,7 +19,7 @@ export async function checkSIRET(siret: string): Promise<DataCheckResult> {
       `/api/v1/data_checks/siret?siret=${encodeURIComponent(cleanSiret)}`
     );
 
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Erreur lors de la vérification du SIRET:", error);
     throw error;
