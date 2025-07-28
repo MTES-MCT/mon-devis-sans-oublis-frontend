@@ -40,6 +40,57 @@ export default function RgeResults({
     const firstError = results.error_details[0];
     const errorInfo = getRgeErrorMessage(firstError.code);
 
+    // Cas spécial pour rge_manquant : afficher les gestes non qualifiés
+    if (firstError.code === "rge_manquant") {
+      const gestesByGroup = groupGestesByCategory(
+        selectedGestes,
+        typeGestesMetadata
+      );
+
+      return (
+        <div className="fr-alert fr-alert--error">
+          <h3 className="fr-alert__title">{errorInfo.title}</h3>
+          <p className="fr-mb-3w">{errorInfo.message}</p>
+
+          {/* Affichage des gestes non qualifiés */}
+          <div className="fr-mb-3w">
+            <h4 className="fr-text--md fr-text--bold fr-mb-2w">
+              Gestes vérifiés sans qualification RGE :
+            </h4>
+
+            {Object.entries(gestesByGroup).map(([group, gestes]) => (
+              <div key={group} className="fr-mb-3w">
+                <h5 className="fr-text--sm fr-text--bold fr-mb-1w fr-text--mention-grey">
+                  {group}
+                </h5>
+                <div className="fr-tags-group">
+                  {gestes.map((geste) => (
+                    <p key={geste} className="fr-tag fr-tag--error fr-tag--sm">
+                      {getGesteLabel(geste, typeGestesMetadata)}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="fr-mt-2w">
+            <details className="fr-details">
+              <summary className="fr-text--sm">Détails techniques</summary>
+              <div className="fr-mt-1w">
+                {results.error_details.map((error, index) => (
+                  <p key={index} className="fr-text--xs fr-mb-1v">
+                    Code d'erreur : {error.code}
+                  </p>
+                ))}
+              </div>
+            </details>
+          </div>
+        </div>
+      );
+    }
+
+    // Autres types d'erreurs
     return (
       <div className="fr-alert fr-alert--error">
         <h3 className="fr-alert__title">{errorInfo.title}</h3>

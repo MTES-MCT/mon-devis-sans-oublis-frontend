@@ -58,9 +58,9 @@ export const RGE_ERROR_MESSAGES: Record<
       "Aucune entreprise RGE n'a été trouvée avec ce numéro SIRET. Vérifiez que le SIRET est correct.",
   },
   rge_manquant: {
-    title: "Qualification RGE manquante",
+    title: "Aucune qualification RGE trouvée",
     message:
-      "Cette entreprise n'a pas de qualification RGE active pour les critères demandés.",
+      "Cette entreprise n'a pas de qualification RGE active pour les gestes sélectionnés. Vérifiez que l'entreprise est bien certifiée RGE pour ces types de travaux ou contactez-la directement.",
   },
   rge_hors_date: {
     title: "Qualification RGE expirée",
