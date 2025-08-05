@@ -35,7 +35,6 @@ const QuoteLaunchAnalysisCard: React.FC<QuoteLaunchAnalysisCardProps> = ({
             wording.components.quote_status_link.upload.button_run_analysis
           }
           icon="fr-icon-add-line"
-          legacyBehavior
           size={LinkSize.SMALL}
           variant={LinkVariant.SECONDARY}
           className="mt-auto"

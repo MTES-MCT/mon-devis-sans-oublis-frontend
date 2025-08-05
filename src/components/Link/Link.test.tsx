@@ -42,8 +42,9 @@ describe("Link", () => {
     rerender(
       <Link href="/test" label="Test Link" variant={LinkVariant.DISABLED} />
     );
-    const disabledLink = screen.getByText("Test Link").closest("a");
-    expect(disabledLink).toHaveClass(
+    // Pour disabled, on cherche le span parent au lieu du lien
+    const disabledElement = screen.getByText("Test Link").parentElement;
+    expect(disabledElement).toHaveClass(
       "bg-gray-300",
       "text-gray-500",
       "cursor-not-allowed"
@@ -84,18 +85,16 @@ describe("Link", () => {
     expect(iconElement).toHaveClass("fr-btn--icon-right", "fr-icon-test");
   });
 
-  it("handles legacy behavior", () => {
-    render(<Link href="/test" label="Test Link" legacyBehavior />);
-    const link = screen.getByText("Test Link").closest("a");
-    expect(link).toHaveAttribute("rel", "noopener noreferrer");
-    expect(link).toHaveAttribute("target", "_blank");
-  });
-
-  it("sets empty href when disabled", () => {
+  it("renders as span when disabled (no href)", () => {
     render(
       <Link href="/test" label="Test Link" variant={LinkVariant.DISABLED} />
     );
+    // Vérifie qu'il n'y a pas de lien <a> dans le DOM
     const link = screen.getByText("Test Link").closest("a");
-    expect(link).toHaveAttribute("href", "");
+    expect(link).toBeNull();
+
+    // Vérifie que c'est bien un span
+    const spanElement = screen.getByText("Test Link").parentElement;
+    expect(spanElement?.tagName).toBe("SPAN");
   });
 });

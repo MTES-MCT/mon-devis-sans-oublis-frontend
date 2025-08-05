@@ -20,7 +20,7 @@ import {
   getDeleteErrorDetailReasons,
   undoDeleteErrorDetail,
   updateErrorDetail,
-} from "@/actions/errorDetails.actions";
+} from "@/actions/quoteCheck.errorDetails.actions";
 
 // Wrapper pour maintenir la compatibilité avec l'ancien code
 export const quoteService = {

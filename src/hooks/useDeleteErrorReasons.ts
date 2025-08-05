@@ -1,17 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getDeleteErrorDetailReasons } from "@/actions/errorDetails.actions";
+import { getDeleteErrorDetailReasons as getQuoteCheckReasons } from "@/actions/quoteCheck.errorDetails.actions";
+import { getDeleteErrorDetailReasons as getQuoteCaseReasons } from "@/actions/quoteCase.errorDetails.actions";
 
-let cachedReasons: { id: string; label: string }[] | null = null;
+type EntityType = "quote_checks" | "quotes_cases";
 
-export const useDeleteErrorReasons = () => {
+// Cache séparé pour chaque type d'entité
+const reasonsCache = new Map<EntityType, { id: string; label: string }[]>();
+
+export const useDeleteErrorReasons = (entityType: EntityType) => {
   const [reasons, setReasons] = useState<{ id: string; label: string }[]>(
-    cachedReasons || []
+    reasonsCache.get(entityType) || []
   );
-  const [loading, setLoading] = useState(!cachedReasons);
+  const [loading, setLoading] = useState(!reasonsCache.has(entityType));
 
   useEffect(() => {
+    const cachedReasons = reasonsCache.get(entityType);
+
     if (cachedReasons) {
       setReasons(cachedReasons);
       setLoading(false);
@@ -20,8 +26,12 @@ export const useDeleteErrorReasons = () => {
 
     const loadReasons = async () => {
       try {
-        const data = await getDeleteErrorDetailReasons();
-        cachedReasons = data;
+        const data =
+          entityType === "quote_checks"
+            ? await getQuoteCheckReasons()
+            : await getQuoteCaseReasons();
+
+        reasonsCache.set(entityType, data);
         setReasons(data);
       } catch (error) {
         console.error("Erreur lors du chargement des raisons:", error);
@@ -31,7 +41,7 @@ export const useDeleteErrorReasons = () => {
     };
 
     loadReasons();
-  }, []);
+  }, [entityType]);
 
   return { reasons, loading };
 };
