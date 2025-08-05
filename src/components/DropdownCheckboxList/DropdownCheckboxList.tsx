@@ -17,6 +17,7 @@ export interface CustomInput {
 }
 
 export interface DropdownCheckboxListProps {
+  className?: string;
   customInput?: {
     id: string;
     value: string;
@@ -43,6 +44,7 @@ interface GroupedOptions {
 }
 
 export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
+  className = "",
   customInput,
   label,
   hintLabel,
@@ -233,7 +235,10 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
   );
 
   return (
-    <div className="fr-select-group relative fr-mb-4w" ref={containerRef}>
+    <div
+      className={`fr-select-group relative fr-mb-4w ${className || ""}`}
+      ref={containerRef}
+    >
       <label className="fr-label" htmlFor="multiselect">
         {label}
         {hintLabel && <span className="fr-hint-text">{hintLabel}</span>}
@@ -263,7 +268,7 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
         <div
           id="dropdown-content"
           ref={dropdownRef}
-          className="fr-select-checkbox border-shadow pt-5 pb-2 pl-2 h-[180px] overflow-x-hidden overflow-y-auto absolute w-full bg-white z-10"
+          className="fr-select-checkbox border-shadow pt-5 pb-2 pl-2 h-[180px] overflow-x-hidden overflow-y-auto absolute w-full bg-white z-50"
           role="listbox"
           aria-labelledby="multiselect"
         >
