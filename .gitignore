@@ -19,16 +19,13 @@
 # Production
 /build
 
-# Storybook
-*storybook.log
-storybook-static/
-
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
 
 # Debug
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
