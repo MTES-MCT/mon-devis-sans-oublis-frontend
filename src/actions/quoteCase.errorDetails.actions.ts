@@ -1,104 +1,50 @@
 "use server";
 
-import { apiClient } from "@/lib/server/apiClient";
-import { revalidatePath } from "next/cache";
+import {
+  deleteErrorDetailShared,
+  undoDeleteErrorDetailShared,
+  getDeleteErrorDetailReasonsShared,
+  updateErrorDetailShared,
+} from "@/actions/shared/errorDetails.actions";
 
-// Suppression d'un détail d'erreur
+// Suppression d'un détail d'erreur pour quotes_cases
 export async function deleteErrorDetail(
   id: string,
   errorDetailsId: string,
   reason: string
 ): Promise<boolean> {
-  try {
-    if (!id || !errorDetailsId) {
-      throw new Error("ID and error details ID are required");
-    }
-
-    await apiClient.delete(
-      `/api/v1/quote_cases/${id}/error_details/${errorDetailsId}?reason=${reason}`
-    );
-
-    // Revalider les routes possibles
-    revalidatePath(`/devis/${id}`); // Pour les devis
-    revalidatePath(`/artisan/dossier/${id}`); // Pour les dossiers
-    revalidatePath(`/conseiller/dossier/${id}`);
-    revalidatePath(`/particulier/dossier/${id}`);
-
-    return true;
-  } catch (error) {
-    console.error("Error deleting quote case error detail:", error);
-    throw error;
-  }
+  return deleteErrorDetailShared("quotes_cases", id, errorDetailsId, reason);
 }
 
-// Annulation de la suppression d'un détail d'erreur
+// Annulation de la suppression d'un détail d'erreur pour quotes_cases
 export async function undoDeleteErrorDetail(
   quoteCaseId: string,
   errorDetailsId: string
 ): Promise<boolean> {
-  try {
-    if (!quoteCaseId || !errorDetailsId) {
-      throw new Error("Quote case ID and error details ID are required");
-    }
-
-    await apiClient.post(
-      `/api/v1/quote_cases/${quoteCaseId}/error_details/${errorDetailsId}`
-    );
-
-    revalidatePath(`/result/${quoteCaseId}`);
-    return true;
-  } catch (error) {
-    console.error("Error undoing quote case delete error detail:", error);
-    throw error;
-  }
+  return undoDeleteErrorDetailShared(
+    "quotes_cases",
+    quoteCaseId,
+    errorDetailsId
+  );
 }
 
-// Récupération des raisons de suppression des détails d'erreur
+// Récupération des raisons de suppression pour quotes_cases
 export async function getDeleteErrorDetailReasons(): Promise<
   { id: string; label: string }[]
 > {
-  try {
-    const responseData = await apiClient.get(
-      "/api/v1/quote_cases/error_detail_deletion_reasons"
-    );
-
-    if (!responseData.data) {
-      throw new Error("Invalid response format: 'data' field is missing.");
-    }
-
-    return Object.entries(responseData.data).map(([key, value]) => ({
-      id: key,
-      label: value as string,
-    }));
-  } catch (error) {
-    console.error(
-      "Error fetching delete quote case error detail reasons:",
-      error
-    );
-    throw error;
-  }
+  return getDeleteErrorDetailReasonsShared("quotes_cases");
 }
 
-// Mise à jour d'un détail d'erreur
+// Mise à jour d'un détail d'erreur pour quotes_cases
 export async function updateErrorDetail(
   quoteCaseId: string,
   errorDetailsId: string,
   comment: string | null
 ): Promise<boolean> {
-  try {
-    if (!quoteCaseId || !errorDetailsId) {
-      throw new Error("Quote case ID and error details ID are required");
-    }
-
-    await apiClient.patch(
-      `/api/v1/quote_cases/${quoteCaseId}/error_details/${errorDetailsId}`,
-      { comment }
-    );
-
-    revalidatePath(`/result/${quoteCaseId}`);
-    return true;
-  } catch (error) {
-    console.error("Error updating quote case error detail:", error);
-    throw error;
-  }
+  return updateErrorDetailShared(
+    "quotes_cases",
+    quoteCaseId,
+    errorDetailsId,
+    comment
+  );
 }

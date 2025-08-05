@@ -1,4 +1,3 @@
-// QuoteCaseConsistencyErrorTable.tsx
 "use client";
 
 import Badge, { BadgeSize, BadgeVariant } from "../Badge/Badge";
@@ -21,7 +20,7 @@ interface QuoteCaseConsistencyErrorTableProps {
 const QuoteCaseConsistencyErrorTable: React.FC<
   QuoteCaseConsistencyErrorTableProps
 > = ({ errorDetails, quoteCaseId, showHeader = true }) => {
-  const { reasons: deleteErrorReasons } = useDeleteErrorReasons();
+  const { reasons: deleteErrorReasons } = useDeleteErrorReasons("quotes_cases");
 
   // Filter uniquement les erreurs de cohérence entre devis
   const consistencyErrors = errorDetails.filter(
