@@ -1,4 +1,5 @@
 import { getServerEnv, getSharedEnv } from "../config/env.config";
+import { ApiError } from "@/types";
 
 function getHeaders(): HeadersInit {
   const serverEnv = getServerEnv();
@@ -20,11 +21,24 @@ export const apiClient = {
       cache: "no-store",
     });
 
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    // Récupérer les données avant de vérifier le statut
+    let responseData = null;
+    try {
+      responseData = await response.json();
+    } catch {
+      // Si on ne peut pas parser le JSON, on continue avec null
     }
 
-    return response.json();
+    if (!response.ok) {
+      const apiError: ApiError = {
+        message: `API Error: ${response.status} ${response.statusText}`,
+        status: response.status,
+        error_details: responseData?.error_details || undefined,
+      };
+      throw apiError;
+    }
+
+    return responseData;
   },
 
   async post(endpoint: string, data?: unknown) {
@@ -39,20 +53,32 @@ export const apiClient = {
       body: data instanceof FormData ? data : JSON.stringify(data),
     });
 
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    // Récupérer les données avant de vérifier le statut
+    let responseData = null;
+    if (response.status !== 204) {
+      const contentLength = response.headers.get("content-length");
+      if (contentLength !== "0") {
+        try {
+          const text = await response.text();
+          if (text.trim()) {
+            responseData = JSON.parse(text);
+          }
+        } catch {
+          // Si on ne peut pas parser, on continue
+        }
+      }
     }
 
-    if (response.status === 204) return null;
+    if (!response.ok) {
+      const apiError: ApiError = {
+        message: `API Error: ${response.status} ${response.statusText}`,
+        status: response.status,
+        error_details: responseData?.error_details || undefined,
+      };
+      throw apiError;
+    }
 
-    // Vérifier si il y a du contenu avant de parser
-    const contentLength = response.headers.get("content-length");
-    if (contentLength === "0") return null;
-
-    const text = await response.text();
-    if (!text.trim()) return null;
-
-    return JSON.parse(text);
+    return responseData;
   },
 
   async patch(endpoint: string, data: unknown) {
@@ -65,20 +91,32 @@ export const apiClient = {
       body: JSON.stringify(data),
     });
 
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    // Récupérer les données avant de vérifier le statut
+    let responseData = null;
+    if (response.status !== 204) {
+      const contentLength = response.headers.get("content-length");
+      if (contentLength !== "0") {
+        try {
+          const text = await response.text();
+          if (text.trim()) {
+            responseData = JSON.parse(text);
+          }
+        } catch {
+          // Si on ne peut pas parser, on continue
+        }
+      }
     }
 
-    if (response.status === 204) return null;
+    if (!response.ok) {
+      const apiError: ApiError = {
+        message: `API Error: ${response.status} ${response.statusText}`,
+        status: response.status,
+        error_details: responseData?.error_details || undefined,
+      };
+      throw apiError;
+    }
 
-    // Même logique que POST - vérifier le contenu
-    const contentLength = response.headers.get("content-length");
-    if (contentLength === "0") return null;
-
-    const text = await response.text();
-    if (!text.trim()) return null;
-
-    return JSON.parse(text);
+    return responseData;
   },
 
   async delete(endpoint: string) {
@@ -88,7 +126,11 @@ export const apiClient = {
     });
 
     if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+      const apiError: ApiError = {
+        message: `API Error: ${response.status} ${response.statusText}`,
+        status: response.status,
+      };
+      throw apiError;
     }
 
     return response;

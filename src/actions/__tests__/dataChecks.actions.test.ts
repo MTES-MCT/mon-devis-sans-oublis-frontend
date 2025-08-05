@@ -18,10 +18,8 @@ describe("DataChecks Server Actions", () => {
   describe("checkSIRET", () => {
     it("doit vérifier un SIRET valide", async () => {
       const mockResponse = {
-        data: {
-          valid: true,
-          error_details: null,
-        },
+        valid: true,
+        error_details: null,
       };
 
       mockApiClient.get.mockResolvedValue(mockResponse);
@@ -31,15 +29,13 @@ describe("DataChecks Server Actions", () => {
       expect(mockApiClient.get).toHaveBeenCalledWith(
         "/api/v1/data_checks/siret?siret=12345678901234"
       );
-      expect(result).toEqual(mockResponse.data);
+      expect(result).toEqual(mockResponse);
     });
 
     it("doit retourner une erreur pour un SIRET invalide", async () => {
       const mockResponse = {
-        data: {
-          valid: false,
-          error_details: [{ code: "SIRET_INVALID" }],
-        },
+        valid: false,
+        error_details: [{ code: "SIRET_INVALID" }],
       };
 
       mockApiClient.get.mockResolvedValue(mockResponse);
@@ -70,7 +66,8 @@ describe("DataChecks Server Actions", () => {
 
     it("doit trimmer les espaces du SIRET", async () => {
       const mockResponse = {
-        data: { valid: true, error_details: null },
+        valid: true,
+        error_details: null,
       };
 
       mockApiClient.get.mockResolvedValue(mockResponse);
@@ -89,31 +86,29 @@ describe("DataChecks Server Actions", () => {
 
     it("doit vérifier un RGE avec SIRET et gestes", async () => {
       const mockResponse = {
-        data: {
-          valid: true,
-          error_details: null,
-          results: [
-            {
-              siret: validSiret,
-              nom_entreprise: "Test Entreprise",
-              adresse: "123 rue Test",
-              code_postal: "75001",
-              commune: "Paris",
-              telephone: "0123456789",
-              email: "test@test.fr",
-              site_internet: "www.test.fr",
-              code_qualification: "RGE001",
-              nom_qualification: "Qualification Test",
-              nom_certificat: "QUALIBAT-RGE",
-              domaine: "Isolation par l'extérieur",
-              meta_domaine: "Travaux d'efficacité énergétique",
-              organisme: "qualibat",
-              particulier: true,
-              lien_date_debut: "2024-01-01",
-              lien_date_fin: "2025-12-31",
-            },
-          ],
-        },
+        valid: true,
+        error_details: null,
+        results: [
+          {
+            siret: validSiret,
+            nom_entreprise: "Test Entreprise",
+            adresse: "123 rue Test",
+            code_postal: "75001",
+            commune: "Paris",
+            telephone: "0123456789",
+            email: "test@test.fr",
+            site_internet: "www.test.fr",
+            code_qualification: "RGE001",
+            nom_qualification: "Qualification Test",
+            nom_certificat: "QUALIBAT-RGE",
+            domaine: "Isolation par l'extérieur",
+            meta_domaine: "Travaux d'efficacité énergétique",
+            organisme: "qualibat",
+            particulier: true,
+            lien_date_debut: "2024-01-01",
+            lien_date_fin: "2025-12-31",
+          },
+        ],
       };
 
       mockApiClient.get.mockResolvedValue(mockResponse);
@@ -130,11 +125,9 @@ describe("DataChecks Server Actions", () => {
     it("doit vérifier un RGE avec SIRET, gestes et numéro RGE", async () => {
       const rgeNumber = "RGE123456";
       const mockResponse = {
-        data: {
-          valid: true,
-          error_details: null,
-          results: [],
-        },
+        valid: true,
+        error_details: null,
+        results: [],
       };
 
       mockApiClient.get.mockResolvedValue(mockResponse);
@@ -154,11 +147,9 @@ describe("DataChecks Server Actions", () => {
       const rgeNumber = "RGE123456";
       const date = "2024-06-15";
       const mockResponse = {
-        data: {
-          valid: true,
-          error_details: null,
-          results: [],
-        },
+        valid: true,
+        error_details: null,
+        results: [],
       };
 
       mockApiClient.get.mockResolvedValue(mockResponse);
@@ -199,7 +190,9 @@ describe("DataChecks Server Actions", () => {
 
     it("doit ignorer les paramètres RGE et date vides", async () => {
       const mockResponse = {
-        data: { valid: true, error_details: null, results: [] },
+        valid: true,
+        error_details: null,
+        results: [],
       };
 
       mockApiClient.get.mockResolvedValue(mockResponse);
@@ -218,11 +211,9 @@ describe("DataChecks Server Actions", () => {
 
     it("doit retourner une erreur 404 si aucun RGE n'est trouvé", async () => {
       const mockResponse = {
-        data: {
-          valid: false,
-          error_details: [{ code: "RGE_NOT_FOUND" }],
-          results: null,
-        },
+        valid: false,
+        error_details: [{ code: "RGE_NOT_FOUND" }],
+        results: null,
       };
 
       mockApiClient.get.mockResolvedValue(mockResponse);
@@ -249,7 +240,9 @@ describe("DataChecks Server Actions", () => {
 
     it("doit trimmer les espaces des paramètres", async () => {
       const mockResponse = {
-        data: { valid: true, error_details: null, results: [] },
+        valid: true,
+        error_details: null,
+        results: [],
       };
 
       mockApiClient.get.mockResolvedValue(mockResponse);
@@ -268,7 +261,9 @@ describe("DataChecks Server Actions", () => {
 
     it("doit accepter un seul geste", async () => {
       const mockResponse = {
-        data: { valid: true, error_details: null, results: [] },
+        valid: true,
+        error_details: null,
+        results: [],
       };
 
       mockApiClient.get.mockResolvedValue(mockResponse);
@@ -282,7 +277,9 @@ describe("DataChecks Server Actions", () => {
 
     it("doit accepter plusieurs gestes", async () => {
       const mockResponse = {
-        data: { valid: true, error_details: null, results: [] },
+        valid: true,
+        error_details: null,
+        results: [],
       };
 
       mockApiClient.get.mockResolvedValue(mockResponse);
@@ -301,7 +298,9 @@ describe("DataChecks Server Actions", () => {
 
     it("doit gérer les gestes avec caractères spéciaux dans l'URL", async () => {
       const mockResponse = {
-        data: { valid: true, error_details: null, results: [] },
+        valid: true,
+        error_details: null,
+        results: [],
       };
 
       mockApiClient.get.mockResolvedValue(mockResponse);

@@ -58,9 +58,14 @@ export const RGE_ERROR_MESSAGES: Record<
       "Aucune entreprise RGE n'a été trouvée avec ce numéro SIRET. Vérifiez que le SIRET est correct.",
   },
   rge_manquant: {
-    title: "Qualification RGE manquante",
+    title: "Aucune qualification RGE trouvée",
     message:
-      "Cette entreprise n'a pas de qualification RGE active pour les critères demandés.",
+      "Cette entreprise n'a pas de qualification RGE active pour les gestes sélectionnés. Vérifiez que l'entreprise est bien certifiée RGE pour ces types de travaux ou contactez-la directement.",
+  },
+  rge_hors_date: {
+    title: "Qualification RGE expirée",
+    message:
+      "Cette entreprise avait une qualification RGE mais celle-ci n'est plus valide à la date demandée. Vérifiez la date de vérification ou contactez l'entreprise pour connaître le statut actuel de sa certification.",
   },
   invalid_parameters: {
     title: "Paramètres invalides",
@@ -145,4 +150,28 @@ export const getRgeErrorMessage = (code: string) => {
       message: "Une erreur inattendue s'est produite lors de la vérification.",
     }
   );
+};
+
+/**
+ * Formate un SIRET pour l'affichage
+ * @param value
+ * @returns
+ */
+export const formatSiretDisplay = (value: string): string => {
+  // Supprimer tous les caractères non numériques
+  const cleanValue = value.replace(/\D/g, "");
+
+  // Limiter à 14 chiffres
+  const truncated = cleanValue.slice(0, 14);
+
+  // Appliquer le format : XXX XXX XXX XXXXX
+  if (truncated.length <= 3) {
+    return truncated;
+  } else if (truncated.length <= 6) {
+    return `${truncated.slice(0, 3)} ${truncated.slice(3)}`;
+  } else if (truncated.length <= 9) {
+    return `${truncated.slice(0, 3)} ${truncated.slice(3, 6)} ${truncated.slice(6)}`;
+  } else {
+    return `${truncated.slice(0, 3)} ${truncated.slice(3, 6)} ${truncated.slice(6, 9)} ${truncated.slice(9)}`;
+  }
 };
