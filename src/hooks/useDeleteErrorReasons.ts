@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getDeleteErrorDetailReasons } from "@/actions/errorDetails.actions";
+import { getDeleteErrorDetailReasons } from "@/actions/quoteCheck.errorDetails.actions";
 
 let cachedReasons: { id: string; label: string }[] | null = null;
 

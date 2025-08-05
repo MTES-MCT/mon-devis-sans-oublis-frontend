@@ -15,7 +15,7 @@ export async function deleteErrorDetail(
     }
 
     await apiClient.delete(
-      `/api/v1/quote_checks/${id}/error_details/${errorDetailsId}?reason=${reason}`
+      `/api/v1/quote_cases/${id}/error_details/${errorDetailsId}?reason=${reason}`
     );
 
     // Revalider les routes possibles
@@ -26,29 +26,29 @@ export async function deleteErrorDetail(
 
     return true;
   } catch (error) {
-    console.error("Error deleting error detail:", error);
+    console.error("Error deleting quote case error detail:", error);
     throw error;
   }
 }
 
 // Annulation de la suppression d'un détail d'erreur
 export async function undoDeleteErrorDetail(
-  quoteCheckId: string,
+  quoteCaseId: string,
   errorDetailsId: string
 ): Promise<boolean> {
   try {
-    if (!quoteCheckId || !errorDetailsId) {
-      throw new Error("Quote check ID and error details ID are required");
+    if (!quoteCaseId || !errorDetailsId) {
+      throw new Error("Quote case ID and error details ID are required");
     }
 
     await apiClient.post(
-      `/api/v1/quote_checks/${quoteCheckId}/error_details/${errorDetailsId}`
+      `/api/v1/quote_cases/${quoteCaseId}/error_details/${errorDetailsId}`
     );
 
-    revalidatePath(`/result/${quoteCheckId}`);
+    revalidatePath(`/result/${quoteCaseId}`);
     return true;
   } catch (error) {
-    console.error("Error undoing delete error detail:", error);
+    console.error("Error undoing quote case delete error detail:", error);
     throw error;
   }
 }
@@ -59,7 +59,7 @@ export async function getDeleteErrorDetailReasons(): Promise<
 > {
   try {
     const responseData = await apiClient.get(
-      "/api/v1/quote_checks/error_detail_deletion_reasons"
+      "/api/v1/quote_cases/error_detail_deletion_reasons"
     );
 
     if (!responseData.data) {
@@ -71,31 +71,34 @@ export async function getDeleteErrorDetailReasons(): Promise<
       label: value as string,
     }));
   } catch (error) {
-    console.error("Error fetching delete error detail reasons:", error);
+    console.error(
+      "Error fetching delete quote case error detail reasons:",
+      error
+    );
     throw error;
   }
 }
 
 // Mise à jour d'un détail d'erreur
 export async function updateErrorDetail(
-  quoteCheckId: string,
+  quoteCaseId: string,
   errorDetailsId: string,
   comment: string | null
 ): Promise<boolean> {
   try {
-    if (!quoteCheckId || !errorDetailsId) {
-      throw new Error("Quote check ID and error details ID are required");
+    if (!quoteCaseId || !errorDetailsId) {
+      throw new Error("Quote case ID and error details ID are required");
     }
 
     await apiClient.patch(
-      `/api/v1/quote_checks/${quoteCheckId}/error_details/${errorDetailsId}`,
+      `/api/v1/quote_cases/${quoteCaseId}/error_details/${errorDetailsId}`,
       { comment }
     );
 
-    revalidatePath(`/result/${quoteCheckId}`);
+    revalidatePath(`/result/${quoteCaseId}`);
     return true;
   } catch (error) {
-    console.error("Error updating error detail:", error);
+    console.error("Error updating quote case error detail:", error);
     throw error;
   }
 }

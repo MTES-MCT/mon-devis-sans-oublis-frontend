@@ -11,7 +11,7 @@ process.env.NEXT_PUBLIC_MATOMO_URL = "https://matomo.test.example.com";
 process.env.NEXT_PUBLIC_SENTRY_DSN = "https://test@sentry.io/123";
 
 // Mock global des server actions
-jest.mock("@/actions/errorDetails.actions", () => ({
+jest.mock("@/actions/quoteCheck.errorDetails.actions", () => ({
   deleteErrorDetail: jest.fn().mockResolvedValue(true),
   updateErrorDetail: jest.fn().mockResolvedValue(true),
 }));

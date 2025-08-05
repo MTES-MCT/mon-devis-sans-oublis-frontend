@@ -8,7 +8,7 @@ import {
   deleteErrorDetail,
   updateErrorDetail,
   undoDeleteErrorDetail,
-} from "@/actions/errorDetails.actions";
+} from "@/actions/quoteCase.errorDetails.actions";
 import { ErrorDetails, Category } from "@/types";
 import wording from "@/wording";
 
