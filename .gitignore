@@ -20,10 +20,6 @@ pnpm-lock.yaml
 # Production
 /build
 
-# Storybook
-*storybook.log
-storybook-static/
-
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts

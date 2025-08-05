@@ -2,7 +2,7 @@
 
 Plateforme d'analyse de conformité de devis pour accélérer la rénovation énergétique des logements en simplifiant l'instruction des dossiers d'aide.
 
-🔗 **[Accéder à la plateforme](https://mon-devis-sans-oublis.beta.gouv.fr/)** 
+🔗 **[Accéder à la plateforme](https://mon-devis-sans-oublis.beta.gouv.fr/)**
 
 ## Prérequis
 
@@ -34,7 +34,7 @@ Configurez les variables d'environnement selon votre méthode d'exécution :
 cp .env.example .env.local
 ```
 
-2. Éditez le fichier `.env.local` avec les valeurs réelles pour votre environnement de développement. 
+2. Éditez le fichier `.env.local` avec les valeurs réelles pour votre environnement de développement.
 
 ⚠️ **Important** : Ne laissez jamais de variables d'environnement vides (ex: `VARIABLE=`). Si vous n'avez pas besoin d'une variable, commentez-la avec `#` ou supprimez la ligne complètement.
 
@@ -84,16 +84,17 @@ L'application distingue les environnements via la variable `NEXT_PUBLIC_APP_ENV`
 
 | Environnement | `NODE_ENV`    | `NEXT_PUBLIC_APP_ENV`    | URL                                              |
 | ------------- | ------------- | ------------ | ------------------------------------------------ |
-| Local         | `development` | `local`      | http://localhost:3000                            |
-| Docker        | `development` | `docker`     | http://localhost:3000                            |
-| Staging       | `production`  | `staging`    | https://staging.mon-devis-sans-oublis.beta.gouv.fr |
-| Production    | `production`  | `production` | https://mon-devis-sans-oublis.beta.gouv.fr        |
+| Local         | `development` | `local`      | <http://localhost:3000>                            |
+| Docker        | `development` | `docker`     | <http://localhost:3000>                            |
+| Staging       | `production`  | `staging`    | <https://staging.mon-devis-sans-oublis.beta.gouv.fr> |
+| Production    | `production`  | `production` | <https://mon-devis-sans-oublis.beta.gouv.fr>        |
 
 Cette approche permet de contourner la contrainte Scalingo qui impose `NODE_ENV=production` sur tous les environnements distants.
 
 ### Configuration Scalingo
 
 #### Staging
+
 ```bash
 NODE_ENV=production
 NEXT_PUBLIC_APP_ENV=staging
@@ -102,6 +103,7 @@ NEXT_PUBLIC_API_URL=https://api.staging.mon-devis-sans-oublis.beta.gouv.fr
 ```
 
 #### Production
+
 ```bash
 NODE_ENV=production
 NEXT_PUBLIC_APP_ENV=production
@@ -110,6 +112,7 @@ NEXT_PUBLIC_API_URL=https://api.mon-devis-sans-oublis.beta.gouv.fr
 ```
 
 **Variables optionnelles (staging et production) :**
+
 ```bash
 NEXT_PUBLIC_MATOMO_SITE_ID=your-matomo-id
 NEXT_PUBLIC_MATOMO_URL=https://stats.beta.gouv.fr
@@ -172,8 +175,6 @@ npm run dev
 | `npm run test`            | Lance les tests avec Jest                  |
 | `npm run test:watch`      | Lance les tests en mode watch              |
 | `npm run test:coverage`   | Lance les tests avec rapport de couverture |
-| `npm run storybook`       | Démarre Storybook                          |
-| `npm run build-storybook` | Construit Storybook pour la production     |
 | `npm run lint`            | Vérifie la qualité du code avec ESLint     |
 | `npm run format`          | Formate le code avec Prettier              |
 | `npm run format:check`    | Vérifie le formatage sans modifier         |
@@ -198,28 +199,9 @@ npm run test
 # Formatter automatiquement le code
 npm run format
 
-# Développer les composants isolément
-npm run storybook
-
 # Nettoyer le cache en cas de problème
 npm run clean
 ```
-
-## Storybook
-
-Storybook permet de visualiser et développer les composants de manière isolée :
-
-```bash
-npm run storybook
-```
-
-Storybook sera disponible à l'adresse [http://localhost:6006](http://localhost:6006).
-
-### Organisation des stories
-
-- Les stories se trouvent dans `src/components/**/*.stories.tsx`
-- Chaque composant devrait avoir sa story correspondante
-- Documentez les différents états et variantes de vos composants
 
 ## Tests
 
@@ -298,7 +280,6 @@ docker run -p 3000:3000 mon-devis-frontend
 | **[DSFR](https://www.systeme-de-design.gouv.fr/)**             | 1.x     | Design System de l'État français                      |
 | **[Jest](https://jestjs.io/)**                                 | 29.x    | Framework de tests JavaScript                         |
 | **[React Testing Library](https://testing-library.com/react)** | 16.x    | Utilitaires pour tester les composants React          |
-| **[Storybook](https://storybook.js.org/)**                     | 8.x     | Outil pour développer des composants isolés           |
 | **[ESLint](https://eslint.org/)**                              | 9.x     | Linter pour maintenir la qualité du code              |
 | **[Zod](https://zod.dev/)**                                    | 3.x     | Validation de schémas TypeScript                      |
 | **[Sentry](https://sentry.io/)**                               | 9.x     | Monitoring d'erreurs en production                    |
@@ -347,22 +328,26 @@ npm run fresh
 ### Erreurs courantes
 
 **Erreur de types TypeScript :**
+
 ```bash
 npm run typecheck
 ```
 
 **Erreurs de lint :**
+
 ```bash
 npm run lint
 npm run format
 ```
 
 **Tests qui échouent :**
+
 ```bash
 npm run test:watch
 ```
 
 **Variables d'environnement manquantes :**
+
 - Vérifiez que `.env.local` existe
 - Copiez `.env.example` si nécessaire
 - Ne laissez jamais de variables vides (`VARIABLE=`)
@@ -415,20 +400,24 @@ src/utils/mocks/
 ### Fonctionnement
 
 **En développement** (`NEXT_PUBLIC_ENABLE_MOCKS=true`) :
+
 - Tous les appels API utilisent les mocks
 - Idéal pour développer sans dépendre du backend
 
 **En production** :
+
 - Seuls les IDs de test (`test-*`) activent les mocks
 - Les vrais IDs utilisent l'API normale
 - Parfait pour les démos avec des données prévisibles
 
 **Logs en développement :**
+
 ```
 🎭 Mock utilisé: getQuoteCheck avec ID: test-devis-valide
 ```
 
 **Avantages :**
+
 - ✅ Développement sans dépendance backend
 - ✅ Tests de différents scénarios facilement  
 - ✅ URLs de démo en production
@@ -438,6 +427,7 @@ src/utils/mocks/
 ### Support
 
 Pour les problèmes techniques, vérifiez :
+
 1. Node.js version 22.x installée
 2. Variables d'environnement configurées
 3. `npm install` exécuté
