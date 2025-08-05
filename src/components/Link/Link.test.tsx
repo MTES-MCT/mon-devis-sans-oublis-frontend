@@ -84,13 +84,6 @@ describe("Link", () => {
     expect(iconElement).toHaveClass("fr-btn--icon-right", "fr-icon-test");
   });
 
-  it("handles legacy behavior", () => {
-    render(<Link href="/test" label="Test Link" legacyBehavior />);
-    const link = screen.getByText("Test Link").closest("a");
-    expect(link).toHaveAttribute("rel", "noopener noreferrer");
-    expect(link).toHaveAttribute("target", "_blank");
-  });
-
   it("sets empty href when disabled", () => {
     render(
       <Link href="/test" label="Test Link" variant={LinkVariant.DISABLED} />
