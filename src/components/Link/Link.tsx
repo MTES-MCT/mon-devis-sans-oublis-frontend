@@ -20,22 +20,22 @@ export interface LinkProps {
   href: string;
   icon?: string;
   label: string;
-  legacyBehavior?: boolean;
   onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
   onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
   size?: LinkSize;
   variant?: LinkVariant;
+  target?: "_blank" | "_self";
 }
 
 const Link: React.FC<LinkProps> = ({
   href,
   icon,
   label,
-  legacyBehavior = false,
   onClick,
   onSubmit,
   size = LinkSize.MEDIUM,
   variant = LinkVariant.PRIMARY,
+  target,
 }) => {
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (variant === LinkVariant.DISABLED) {
@@ -49,7 +49,6 @@ const Link: React.FC<LinkProps> = ({
     }
 
     if (onClick) {
-      event.preventDefault();
       onClick(event);
     }
   };
@@ -67,35 +66,25 @@ const Link: React.FC<LinkProps> = ({
     .filter(Boolean)
     .join(" ");
 
-  if (legacyBehavior) {
+  if (variant === LinkVariant.DISABLED) {
     return (
-      <NextLink
-        href={variant === LinkVariant.DISABLED ? "" : href}
-        legacyBehavior={legacyBehavior}
-      >
-        <a
-          className={classNames}
-          onClick={handleClick}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <span>{label}</span>
-          {icon && <span className={`fr-btn--icon-right ${icon}`} />}
-        </a>
-      </NextLink>
+      <span className={classNames}>
+        <span>{label}</span>
+        {icon && <span className={`fr-btn--icon-right ${icon}`} />}
+      </span>
     );
   }
 
   return (
     <NextLink
       className={classNames}
-      href={variant === LinkVariant.DISABLED ? "" : href}
+      href={href}
       onClick={handleClick}
+      target={target}
+      rel={target === "_blank" ? "noopener noreferrer" : undefined}
     >
-      <span>
-        <span>{label}</span>
-        {icon && <span className={`fr-btn--icon-right ${icon}`} />}
-      </span>
+      <span>{label}</span>
+      {icon && <span className={`fr-btn--icon-right ${icon}`} />}
     </NextLink>
   );
 };
