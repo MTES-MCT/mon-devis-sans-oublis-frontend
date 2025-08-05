@@ -2,13 +2,14 @@
   "name": "mon-devis-sans-oublis-frontend",
   "version": "1.0.3",
   "private": true,
+  "packageManager": "pnpm@10.13.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "ci": "npm run typecheck && npm run lint && npm run test",
+    "ci": "pnpm typecheck && pnpm lint && pnpm test",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "jest",
@@ -16,8 +17,8 @@
     "test:coverage": "jest --coverage",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "clean": "rm -rf .next && npm run dev",
-    "fresh": "rm -rf .next node_modules && npm install && npm run dev"
+    "clean": "rm -rf .next && pnpm dev",
+    "fresh": "rm -rf .next node_modules pnpm-lock.yaml && pnpm install && pnpm dev"
   },
   "dependencies": {
     "@gouvfr/dsfr": "^1.13.2",
