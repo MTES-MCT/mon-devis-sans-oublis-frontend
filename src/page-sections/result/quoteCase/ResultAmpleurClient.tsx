@@ -141,6 +141,7 @@ export default function ResultAmpleurClient({
       } catch (error) {
         perfLogger.end(pollLabel, { error: true });
         console.error(`[POLL-ERROR-${pollCount}]`, error);
+
         if (retryCount < MAX_RETRIES) {
           retryCount++;
           setTimeout(pollDossier, POLLING_INTERVAL);
