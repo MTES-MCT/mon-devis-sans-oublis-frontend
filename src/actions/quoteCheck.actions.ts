@@ -117,7 +117,7 @@ async function uploadQuoteCheckToCase(
       fileName: file.name,
       fileSize: file.size,
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
     });
 
     console.error(`[UPLOAD-FILE-ERROR] ${file.name}:`, error);

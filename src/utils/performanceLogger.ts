@@ -7,7 +7,7 @@ export class PerformanceLogger {
     console.log(`[PERF-START] ${label}`);
   }
 
-  end(label: string, metadata?: Record<string, any>) {
+  end(label: string, metadata?: Record<string, unknown>) {
     const startTime = this.timers.get(label);
     if (!startTime) {
       console.warn(`[PERF-WARN] Timer "${label}" not found`);

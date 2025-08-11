@@ -98,9 +98,9 @@ export default function UploadRenovationAmpleurPage() {
         temps: {
           créationDossier: `${caseTime?.toFixed(0)}ms`,
           uploadFichiers: `${uploadTime?.toFixed(0)}ms`,
-          total: `${totalTime?.toFixed(0)}ms (${(totalTime / 1000).toFixed(1)}s)`,
+          total: `${(totalTime ?? 0).toFixed(0)}ms (${((totalTime ?? 0) / 1000).toFixed(1)}s)`,
         },
-        vitesseMoyenne: `${(totalTime / uploadedFiles.length).toFixed(0)}ms/fichier`,
+        vitesseMoyenne: `${((totalTime ?? 0) / uploadedFiles.length).toFixed(0)}ms/fichier`,
       });
 
       // Afficher le résumé des performances
