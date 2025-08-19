@@ -4,6 +4,8 @@ import { useState, useRef } from "react";
 
 import wording from "@/wording";
 
+const ALLOWED_TYPES = ["application/pdf", "image/*"];
+
 export interface UploadProps {
   maxFileSize: number; // in MB
   onFileUpload: (file: File) => void;
@@ -22,8 +24,7 @@ const Upload: React.FC<UploadProps> = ({
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   // TODO: Fetch file types from API
-  const fileTypes = "PDF"; // 'image ou PDF'
-  const allowedTypes = ["application/pdf"]; // , 'image/*'];
+  const fileTypes = "PDF ou image";
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -58,7 +59,7 @@ const Upload: React.FC<UploadProps> = ({
 
     reader.onloadend = () => {
       if (
-        !allowedTypes.some((type) =>
+        !ALLOWED_TYPES.some((type) =>
           file.type.startsWith(type.replace(/\/\*$/, "/"))
         )
       ) {
@@ -138,7 +139,7 @@ const Upload: React.FC<UploadProps> = ({
         </p>
       </span>
       <input
-        accept='{allowedTypes.join(",")}'
+        accept='{ALLOWED_TYPES.join(",")}'
         data-testid="file-upload"
         id="file-upload"
         name="file-upload"
