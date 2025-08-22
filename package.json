@@ -1,6 +1,6 @@
 {
   "name": "mon-devis-sans-oublis-frontend",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "packageManager": "pnpm@10.13.1",
   "scripts": {
