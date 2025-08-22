@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 
-const ALLOWED_TYPES = ["application/pdf"];
+const ALLOWED_TYPES = ["application/pdf", "image/*"];
 const MAXIMUM_FILES_COUNT = 20;
 
 export interface UploadMultipleProps {
@@ -75,7 +75,7 @@ const UploadMultiple: React.FC<UploadMultipleProps> = ({
         isValid = false;
         error = error
           ? `${error} et format non supporté`
-          : "Format non supporté (PDF uniquement)";
+          : "Format non supporté (PDF et image uniquement)";
       }
 
       fileStatuses.push({
