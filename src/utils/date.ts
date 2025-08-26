@@ -1,5 +1,9 @@
 const formatDateToFrench = (dateString: string): string => {
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    throw new Error(`Invalid date format: '${dateString}'`);
+  }
+
   const options: Intl.DateTimeFormatOptions = {
     day: "numeric",
     month: "long",

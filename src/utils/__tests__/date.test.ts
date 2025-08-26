@@ -11,8 +11,10 @@ describe("formatDateToFrench", () => {
     expect(formatDateToFrench(isoDate)).toBe("25 décembre 2023");
   });
 
-  it('should return "Invalid Date" for an invalid date string', () => {
+  it("should throw an error for an invalid date string", () => {
     const invalidDate = "not-a-date";
-    expect(formatDateToFrench(invalidDate)).toBe("Invalid Date");
+    expect(() => formatDateToFrench(invalidDate)).toThrow(
+      "Invalid date format: 'not-a-date'"
+    );
   });
 });

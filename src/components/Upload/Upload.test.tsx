@@ -102,8 +102,8 @@ describe("Upload Component", () => {
       />
     );
 
-    const invalidFile = new File(["dummy content"], "image.png", {
-      type: "image/png",
+    const invalidFile = new File(["dummy content"], "doc.docx", {
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     });
     const fileInput = screen.getByTestId("file-upload");
 
