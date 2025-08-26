@@ -3,7 +3,14 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 
-const ALLOWED_TYPES = ["application/pdf", "image/*"];
+const ALLOWED_TYPES = ["application/pdf"];
+const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+];
 const MAXIMUM_FILES_COUNT = 20;
 
 export interface UploadMultipleProps {
@@ -71,7 +78,10 @@ const UploadMultiple: React.FC<UploadMultipleProps> = ({
       }
 
       // Vérifier le type
-      if (!ALLOWED_TYPES.includes(file.type)) {
+      if (
+        !ALLOWED_TYPES.includes(file.type) &&
+        !ALLOWED_IMAGE_TYPES.includes(file.type)
+      ) {
         isValid = false;
         error = error
           ? `${error} et format non supporté`
@@ -253,7 +263,7 @@ const UploadMultiple: React.FC<UploadMultipleProps> = ({
             className="text-[14px] text-center mb-4"
             style={{ color: "var(--text-mention-grey)" }}
           >
-            {`Taille maximale : ${maxFileSize} Mo. Formats supportés : pdf. ${MAXIMUM_FILES_COUNT} devis maximum`}
+            {`Taille maximale : ${maxFileSize} Mo. Formats supportés : pdf ou image. ${MAXIMUM_FILES_COUNT} devis maximum`}
           </div>
 
           {/* Messages de succès */}
@@ -293,7 +303,7 @@ const UploadMultiple: React.FC<UploadMultipleProps> = ({
 
         {/* Input file caché */}
         <input
-          accept={ALLOWED_TYPES.join(",")}
+          accept={[...ALLOWED_TYPES, ...ALLOWED_IMAGE_TYPES].join(",")}
           data-testid="file-upload"
           id="file-upload"
           name="file-upload"
