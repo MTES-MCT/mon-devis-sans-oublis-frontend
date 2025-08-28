@@ -6,6 +6,7 @@ import Image from "next/image";
 import Modal, { ModalPosition } from "../Modal";
 import { useIsConseiller } from "@/hooks";
 import wording from "@/wording";
+import { richTextParser } from "@/utils";
 
 export interface ErrorDetailsModalProps {
   errorDetailsId: string;
@@ -86,7 +87,7 @@ const ErrorDetailsModal: React.FC<ErrorDetailsModalProps> = ({
             <p className="fr-mb-1w fr-mt-3w fr-text--lead text-[var(--text-title-blue-france)] font-bold">
               {wording.components.error_feedbacks_modal.solution_title}
             </p>
-            <p>{solution}</p>
+            <p>{richTextParser(solution)}</p>
           </>
         )}
       </div>

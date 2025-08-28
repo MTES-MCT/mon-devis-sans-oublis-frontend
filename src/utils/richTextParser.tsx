@@ -1,63 +1,56 @@
 type RichTextParserFunction = (keyTranslation: string) => React.ReactNode;
 
 const richTextParser: RichTextParserFunction = (keyTranslation) => {
-  const regex = /<strong>(.*?)<\/strong>|<a href='(.*?)'(.*?)>(.*?)<\/a>|<br>/g;
+  // Regex améliorée pour gérer les guillemets doubles et simples
+  const regex =
+    /<strong>(.*?)<\/strong>|<a\s+href=['"]([^'"]*?)['"][^>]*?>(.*?)<\/a>|<br\s*\/?>/gi;
 
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
+  let matchIndex = 0;
 
-  keyTranslation.replace(
-    regex,
-    (match, boldText, aHref, aAttributes, aText, offset) => {
-      if (lastIndex < offset) {
-        parts.push(keyTranslation.substring(lastIndex, offset));
-      }
-
-      // <strong></strong>
-      if (boldText) {
-        parts.push(
-          <span key={offset} className="font-bold">
-            {boldText}
-          </span>
-        );
-      }
-
-      // <a href=''></a>
-      if (aHref && aText) {
-        const targetMatch = /target=['"](.*?)['"]/.exec(aAttributes);
-        const relMatch = /rel=['"](.*?)['"]/.exec(aAttributes);
-
-        const target = targetMatch ? targetMatch[1] : "_self";
-        const rel = relMatch
-          ? relMatch[1]
-          : target === "_blank"
-            ? "noopener noreferrer"
-            : undefined;
-
-        parts.push(
-          <a
-            className="[&::after]:hidden!"
-            href={aHref}
-            key={offset}
-            rel={rel}
-            target={target}
-          >
-            {aText}
-          </a>
-        );
-      }
-
-      // <br>
-      if (match === "<br>") {
-        parts.push(<br key={offset} />);
-      }
-
-      lastIndex = offset + match.length;
-
-      return match;
+  keyTranslation.replace(regex, (match, boldText, aHref, aText, offset) => {
+    // Ajouter le texte avant la balise
+    if (lastIndex < offset) {
+      parts.push(keyTranslation.substring(lastIndex, offset));
     }
-  );
 
+    // <strong></strong>
+    if (boldText) {
+      parts.push(
+        <span key={`bold-${matchIndex}`} className="font-bold">
+          {boldText}
+        </span>
+      );
+    }
+
+    // <a href="..."></a>
+    else if (aHref && aText) {
+      parts.push(
+        <a
+          className="[&::after]:hidden!"
+          href={aHref}
+          key={`link-${matchIndex}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {aText}
+        </a>
+      );
+    }
+
+    // <br> ou <br/>
+    else if (match.toLowerCase().startsWith("<br")) {
+      parts.push(<br key={`br-${matchIndex}`} />);
+    }
+
+    lastIndex = offset + match.length;
+    matchIndex++;
+
+    return match;
+  });
+
+  // Ajouter le texte restant
   if (lastIndex < keyTranslation.length) {
     parts.push(keyTranslation.substring(lastIndex));
   }
