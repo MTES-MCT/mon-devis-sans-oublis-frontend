@@ -11,7 +11,6 @@ import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Image from "next/image";
 import InvalidQuoteCase from "./InvalidQuoteCase";
 import ValidQuoteCase from "./ValidQuoteCase";
-import { perfLogger } from "@/utils/performanceLogger";
 
 const MAX_RETRIES = 20;
 const POLLING_INTERVAL = 30000;
@@ -75,87 +74,43 @@ export default function ResultAmpleurClient({
   useEffect(() => {
     let isPollingActive = true;
     let retryCount = 0;
-    let pollCount = 0;
 
     const pollDossier = async () => {
       if (!isPollingActive) return;
 
-      pollCount++;
-      const pollLabel = `polling_${pollCount}`;
-
       try {
-        perfLogger.start(pollLabel);
-        perfLogger.start("api_getQuoteCase");
-
         const dossierData = await getQuoteCase(quoteCaseId);
 
-        perfLogger.end("api_getQuoteCase", {
-          quoteCaseId,
-          quotesCount: dossierData.quote_checks?.length || 0,
-          status: dossierData.status,
-        });
-
         setCurrentDossier(dossierData);
-
-        // Log l'état des devis
-        const quoteStates = dossierData.quote_checks?.reduce(
-          (acc, q) => {
-            acc[q.status] = (acc[q.status] || 0) + 1;
-            return acc;
-          },
-          {} as Record<string, number>
-        );
-
-        console.log(`[POLL-${pollCount}] État des devis:`, quoteStates);
 
         // Vérifier si tous les devis sont traités
         const allProcessed = areAllQuotesProcessed(dossierData);
 
-        perfLogger.end(pollLabel, {
-          allProcessed,
-          retryCount,
-        });
-
         if (allProcessed) {
-          // Afficher résumé des performances
-          console.log(`[POLLING-COMPLETE] Terminé après ${pollCount} appels`);
-          perfLogger.printSummary();
-
-          // Si tous les devis sont traités, arrêter le polling
           setIsLoading(false);
           isPollingActive = false;
         } else {
           if (retryCount < MAX_RETRIES) {
             retryCount++;
-            console.log(
-              `[POLL-SCHEDULE] Prochain poll dans ${POLLING_INTERVAL}ms`
-            );
             setTimeout(pollDossier, POLLING_INTERVAL);
           } else {
-            console.error("[POLL-ERROR] Max retries atteint");
-            perfLogger.printSummary();
+            console.error("Max retries reached pour le dossier");
             setHasPollingError(true);
             setIsLoading(false);
           }
         }
       } catch (error) {
-        perfLogger.end(pollLabel, { error: true });
-        console.error(`[POLL-ERROR-${pollCount}]`, error);
-
+        console.error("Error polling dossier:", error);
         if (retryCount < MAX_RETRIES) {
           retryCount++;
           setTimeout(pollDossier, POLLING_INTERVAL);
         } else {
-          perfLogger.printSummary();
+          console.error("Max retries reached - polling failed");
           setHasPollingError(true);
           setIsLoading(false);
         }
       }
     };
-
-    // Log initial
-    console.log("[POLLING-START] Début du polling pour dossier:", quoteCaseId);
-    perfLogger.start("total_processing_time");
 
     // Démarrer le polling si nécessaire
     if (!currentDossier || !areAllQuotesProcessed(currentDossier)) {
@@ -166,12 +121,6 @@ export default function ResultAmpleurClient({
 
     return () => {
       isPollingActive = false;
-      const totalTime = perfLogger.end("total_processing_time");
-      if (totalTime) {
-        console.log(
-          `[TOTAL-TIME] Temps total de traitement: ${(totalTime / 1000).toFixed(2)}s`
-        );
-      }
     };
   }, [quoteCaseId, currentDossier]);
 

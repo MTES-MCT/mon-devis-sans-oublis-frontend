@@ -4,9 +4,9 @@
   "private": true,
   "packageManager": "pnpm@10.13.1",
   "scripts": {
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "start:dev": "next dev",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "validate": "pnpm typecheck && pnpm lint && pnpm test",
