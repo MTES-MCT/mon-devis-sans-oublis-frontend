@@ -1,6 +1,8 @@
 // src/lib/logger.ts
 import { Sentry } from "@/lib/sentry";
 
+type LogMeta = Record<string, unknown>;
+
 // Configuration des logs basée sur les variables d'environnement
 const shouldLog = () => {
   return (
@@ -12,21 +14,21 @@ const shouldLog = () => {
 // Logger intelligent avec Sentry externe
 export const log = {
   // Logs d'info seulement si activés → Scalingo uniquement
-  info: (message: string, meta?: any) => {
+  info: (message: string, meta?: LogMeta) => {
     if (shouldLog()) {
       console.log(`📝 ${message}`, meta);
     }
   },
 
   // Warnings seulement si activés → Scalingo uniquement
-  warn: (message: string, meta?: any) => {
+  warn: (message: string, meta?: LogMeta) => {
     if (shouldLog()) {
       console.warn(`⚠️ ${message}`, meta);
     }
   },
 
   // Erreurs → Scalingo + Sentry
-  error: (message: string, meta?: any) => {
+  error: (message: string, meta?: LogMeta) => {
     console.error(`❌ ${message}`, meta); // → Logs Scalingo
 
     if (process.env.NODE_ENV === "production") {
@@ -38,7 +40,7 @@ export const log = {
   },
 
   // Actions critiques avec métriques → Scalingo uniquement
-  critical: (action: string, meta?: any) => {
+  critical: (action: string, meta?: LogMeta) => {
     if (shouldLog()) {
       const metrics = {
         timestamp: new Date().toISOString(),
@@ -51,14 +53,14 @@ export const log = {
   },
 
   // Debug seulement en dev → Scalingo uniquement
-  debug: (message: string, meta?: any) => {
+  debug: (message: string, meta?: LogMeta) => {
     if (process.env.NODE_ENV === "development" || shouldLog()) {
       console.debug(`🐛 ${message}`, meta);
     }
   },
 
   // Logs critiques → Scalingo + Sentry breadcrumb
-  always: (message: string, meta?: any) => {
+  always: (message: string, meta?: LogMeta) => {
     const data = {
       timestamp: new Date().toISOString(),
       ...meta,
