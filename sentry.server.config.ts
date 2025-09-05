@@ -1,23 +1,50 @@
-// This file configures the initialization of Sentry on the server.
-// The config you add here will be used whenever the server handles a request.
-// https://docs.sentry.io/platforms/javascript/guides/nextjs/
-
 import * as Sentry from "@sentry/nextjs";
 
-const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
-const SENTRY_ENVIRONMENT =
-  process.env.SENTRY_ENVIRONMENT ||
-  process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT ||
-  process.env.APP_ENV ||
-  process.env.NEXT_PUBLIC_APP_ENV ||
-  process.env.NODE_ENV;
-
-if (process.env.NODE_ENV !== "development") {
+if (
+  process.env.NODE_ENV === "production" &&
+  process.env.NEXT_PUBLIC_SENTRY_DSN
+) {
   Sentry.init({
-    dsn: SENTRY_DSN ?? "",
-    environment: SENTRY_ENVIRONMENT,
+    dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    environment: process.env.NODE_ENV,
 
-    // Setting this option to true will print useful information to the console while you're setting up Sentry.
+    tracesSampleRate: 0.05,
     debug: false,
+
+    beforeSend(event) {
+      // Erreurs importantes + crashes système
+      const isCritical =
+        event.level === "error" ||
+        event.level === "fatal" ||
+        event.message?.toLowerCase().includes("heap") ||
+        event.message?.toLowerCase().includes("memory") ||
+        event.message?.toLowerCase().includes("crash");
+
+      if (isCritical) {
+        console.error("🚨 SENTRY CAPTURE:", {
+          message: event.message,
+          level: event.level,
+          timestamp: new Date().toISOString(),
+        });
+        return event;
+      }
+      return null;
+    },
+  });
+
+  // Ajoutez les process.on() pour capturer SIGTERM etc.
+  process.on("SIGTERM", () => {
+    const crashInfo = {
+      signal: "SIGTERM",
+      timestamp: new Date().toISOString(),
+      uptime: Math.round(process.uptime() / 60),
+      memory: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+    };
+
+    console.error("🚨 PRODUCTION CRASH - SIGTERM:", crashInfo);
+    Sentry.captureMessage("Production container received SIGTERM", {
+      level: "fatal",
+      extra: crashInfo,
+    });
   });
 }

@@ -1,5 +1,6 @@
 "use server";
 
+import { log } from "@/lib/logger";
 import { apiClient } from "@/lib/server/apiClient";
 import { Profile, QuoteCase, QuoteCaseUpdateData } from "@/types";
 import { delay, logMock, shouldUseMock } from "@/utils/mocks/mock.config";
@@ -27,6 +28,10 @@ export async function createQuoteCase(
 
     return result as QuoteCase;
   } catch (error) {
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "createQuoteCase"
+    );
     console.error("Error creating quote case:", error);
     throw error;
   }
@@ -50,6 +55,10 @@ export async function getQuoteCase(quoteCaseId: string): Promise<QuoteCase> {
     const result = await apiClient.get(`/api/v1/quotes_cases/${quoteCaseId}`);
     return result as QuoteCase;
   } catch (error) {
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "getQuoteCase"
+    );
     console.error("Error fetching quote case:", error);
     throw error;
   }
@@ -85,6 +94,10 @@ export async function updateQuoteCase(
 
     return result as QuoteCase;
   } catch (error) {
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "updateQuoteCase"
+    );
     console.error("Error updating quote case:", error);
     throw error;
   }
