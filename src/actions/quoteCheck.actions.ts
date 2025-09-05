@@ -1,5 +1,6 @@
 "use server";
 
+import { log } from "@/lib/logger";
 import { apiClient } from "@/lib/server/apiClient";
 import {
   Profile,
@@ -28,6 +29,10 @@ export async function getQuoteCheck(quoteCheckId: string) {
 
     return await apiClient.get(`/api/v1/quote_checks/${quoteCheckId}`);
   } catch (error) {
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "getQuoteCheck"
+    );
     console.error("Error fetching quote:", error);
     throw error;
   }
@@ -54,6 +59,10 @@ export async function uploadQuoteCheck(
 
     return result;
   } catch (error) {
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "uploadQuoteCheck"
+    );
     console.error("Error uploading quote:", error);
     throw error;
   }
@@ -81,6 +90,10 @@ async function uploadQuoteCheckToCase(
 
     return result;
   } catch (error) {
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "uploadQuoteCheckToCase"
+    );
     throw error;
   }
 }
@@ -124,6 +137,10 @@ export async function uploadMultipleQuotesCheckToCase(
 
     return finalResult;
   } catch (error) {
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "uploadMultipleQuotesCheckToCase"
+    );
     console.error("Error uploading multiple quotes to case:", error);
     throw error;
   }
@@ -154,6 +171,10 @@ export async function updateQuoteCheck(
     revalidatePath(`/result/${quoteCheckId}`);
     return result;
   } catch (error) {
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "updateQuoteCheck"
+    );
     console.error("Error updating quote:", error);
     throw error;
   }
@@ -187,6 +208,10 @@ export async function updateQuoteCheckComment(
 
     return result || null;
   } catch (error) {
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "updateQuoteCheckComment"
+    );
     console.error("Error updating quote comment:", error);
     throw error;
   }
@@ -215,6 +240,10 @@ export async function getQuoteCheckMetadata() {
   try {
     return await apiClient.get("/api/v1/quote_checks/metadata");
   } catch (error) {
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "getQuoteCheckMetadata"
+    );
     console.error("Error fetching metadata:", error);
     throw error;
   }

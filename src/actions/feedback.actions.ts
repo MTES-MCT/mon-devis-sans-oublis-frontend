@@ -1,5 +1,6 @@
 "use server";
 
+import { log } from "@/lib/logger";
 import { apiClient } from "@/lib/server/apiClient";
 import { FeedbackResponse, GlobalFeedbackData } from "@/types";
 
@@ -21,6 +22,10 @@ export async function sendErrorFeedback(
       { comment }
     );
   } catch (error) {
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "sendErrorFeedback"
+    );
     console.error("Error sending feedback:", error);
     throw error;
   }
@@ -41,6 +46,10 @@ export async function sendGlobalFeedback(
       { ...feedback }
     );
   } catch (error) {
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "sendGlobalFeedback"
+    );
     console.error("Error sending global feedback:", error);
     throw error;
   }

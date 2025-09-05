@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "@/lib/sentry"; // Initialise Sentry en production
 
 import { Footer, FooterProps, Header, HeaderProps, Matomo } from "@/components";
 import { initDsfr } from "@/utils";

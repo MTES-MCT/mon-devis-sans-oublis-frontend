@@ -1,5 +1,6 @@
 "use server";
 
+import { log } from "@/lib/logger";
 import { apiClient } from "@/lib/server/apiClient";
 import { hasErrorDetails, isApiError } from "@/types";
 import {
@@ -22,6 +23,11 @@ export async function checkSIRET(siret: string): Promise<DataCheckResult> {
     return response;
   } catch (error) {
     console.error("Erreur lors de la vérification du SIRET:", error);
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "checkSIRET"
+    );
+
     throw error;
   }
 }
@@ -54,6 +60,10 @@ export async function checkRGE(
 
     return response;
   } catch (error: unknown) {
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "checkRGE"
+    );
     console.error("Erreur lors de la vérification RGE:", error);
 
     if (hasErrorDetails(error)) {
@@ -91,6 +101,10 @@ export async function getDataChecksGestesTypes() {
   try {
     return await apiClient.get("/api/v1/data_checks/geste_types");
   } catch (error) {
+    log.exception(
+      error instanceof Error ? error : new Error(String(error)),
+      "checkSIRET"
+    );
     console.error(
       "Erreur lors de la récupération des types de gestes pour data check :",
       error
