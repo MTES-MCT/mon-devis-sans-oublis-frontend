@@ -1,6 +1,5 @@
 import * as Sentry from "@sentry/nextjs";
 
-// Configuration ultra-légère, juste pour l'instrumentation de base
 if (
   process.env.NODE_ENV === "production" &&
   process.env.NEXT_PUBLIC_SENTRY_DSN
@@ -9,17 +8,43 @@ if (
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
     environment: process.env.NODE_ENV,
 
-    // Configuration minimale pour éviter les fuites mémoire
-    tracesSampleRate: 0.05, // Très faible
+    tracesSampleRate: 0.05,
     debug: false,
 
-    // Filtrage strict
     beforeSend(event) {
-      // Ne garder que les erreurs critiques
-      if (event.level === "fatal") {
+      // Erreurs importantes + crashes système
+      const isCritical =
+        event.level === "error" ||
+        event.level === "fatal" ||
+        event.message?.toLowerCase().includes("heap") ||
+        event.message?.toLowerCase().includes("memory") ||
+        event.message?.toLowerCase().includes("crash");
+
+      if (isCritical) {
+        console.error("🚨 SENTRY CAPTURE:", {
+          message: event.message,
+          level: event.level,
+          timestamp: new Date().toISOString(),
+        });
         return event;
       }
       return null;
     },
+  });
+
+  // Ajoutez les process.on() pour capturer SIGTERM etc.
+  process.on("SIGTERM", () => {
+    const crashInfo = {
+      signal: "SIGTERM",
+      timestamp: new Date().toISOString(),
+      uptime: Math.round(process.uptime() / 60),
+      memory: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+    };
+
+    console.error("🚨 PRODUCTION CRASH - SIGTERM:", crashInfo);
+    Sentry.captureMessage("Production container received SIGTERM", {
+      level: "fatal",
+      extra: crashInfo,
+    });
   });
 }
