@@ -107,3 +107,20 @@ if (ENABLE_MONITORING) {
     }
   }, MONITORING_INTERVAL);
 }
+
+/*
+ * CRITICAL: npm automatic update checks correlation with crashes
+ *
+ * Analysis of production logs shows npm update notifications appear
+ * immediately before container kills:
+ * - 2025-09-07 22:48:30: "npm notice New major version available!"
+ * - 2025-09-07 22:48:30: "Killed"
+ *
+ * Root cause: npm's automatic update checker runs asynchronously and
+ * allocates memory for HTTP requests to registry.npmjs.org.
+ * When container is near memory limit, this small allocation triggers
+ * the final memory limit breach causing Scalingo to kill the process.
+ *
+ * Solution: NPM_CONFIG_UPDATE_NOTIFIER=false disables this check
+ * References: https://docs.npmjs.com/cli/v7/using-npm/config#update-notifier
+ */
