@@ -55,56 +55,37 @@ if (
   });
 }
 
-// Monitoring automatique
+// Monitoring automatique de la mémoire
 if (ENABLE_MONITORING) {
   console.log(
     `🔍 MEMORY MONITORING ENABLED: interval=${MONITORING_INTERVAL / 60000}min`
   );
 
   setInterval(() => {
-    const memUsage = process.memoryUsage();
-    const memory = Math.round(memUsage.heapUsed / 1024 / 1024);
-    const totalMemory = Math.round(memUsage.rss / 1024 / 1024);
-    const uptime = Math.round(process.uptime() / 60);
+    // Lancer de façon asynchrone
+    setImmediate(() => {
+      try {
+        const mem = process.memoryUsage();
+        const heap = Math.round(mem.heapUsed / 1024 / 1024);
+        const total = Math.round(mem.rss / 1024 / 1024);
+        const up = Math.round(process.uptime() / 60);
 
-    // Log détaillé visible dans Scalingo
-    console.log(
-      `📊 AUTO MEMORY CHECK: heap=${memory}MB total=${totalMemory}MB uptime=${uptime}min`
-    );
-
-    // Alertes progressives (seulement en production avec Sentry)
-    if (
-      process.env.NODE_ENV === "production" &&
-      process.env.NEXT_PUBLIC_SENTRY_DSN
-    ) {
-      if (memory > 150) {
-        console.warn(`⚠️ MEMORY ALERT LEVEL 1: ${memory}MB after ${uptime}min`);
-        Sentry.captureMessage(`Memory warning: ${memory}MB`, {
-          level: "warning",
-          extra: { memory, totalMemory, uptime, level: 1 },
-        });
-      }
-
-      if (memory > 250) {
-        console.error(
-          `🚨 MEMORY ALERT LEVEL 2: ${memory}MB after ${uptime}min`
+        console.log(
+          `📊 AUTO MEMORY CHECK: heap=${heap}MB total=${total}MB uptime=${up}min`
         );
-        Sentry.captureMessage(`High memory usage: ${memory}MB`, {
-          level: "error",
-          extra: { memory, totalMemory, uptime, level: 2 },
-        });
-      }
 
-      if (memory > 350) {
-        console.error(
-          `💀 MEMORY CRITICAL LEVEL 3: ${memory}MB after ${uptime}min - CRASH IMMINENT`
-        );
-        Sentry.captureMessage(`Critical memory usage: ${memory}MB`, {
-          level: "fatal",
-          extra: { memory, totalMemory, uptime, level: 3 },
-        });
+        // Alertes simples seulement si critique
+        if (heap > 200) {
+          console.warn(`⚠️ HIGH MEMORY: ${heap}MB`);
+
+          if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+            Sentry.captureMessage(`High memory usage: ${heap}MB`, "warning");
+          }
+        }
+      } catch (error) {
+        console.error("Memory check error:", error);
       }
-    }
+    });
   }, MONITORING_INTERVAL);
 }
 
