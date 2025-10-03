@@ -256,7 +256,7 @@
       "organizationName": "Mon Devis Sans Oublis"
     },
     "notice": {
-      "description": "Notre modèle est en cours de construction, vos retours sont précieux pour nous aider à le co-construire.",
+      "description": "Pour améliorer notre stabilité, nous utilisons temporairement Mistral ai pour la récupération des données privées.",
       "title": "Outil en cours de fiabilisation"
     }
   },
