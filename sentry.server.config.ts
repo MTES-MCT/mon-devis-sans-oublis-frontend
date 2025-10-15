@@ -15,6 +15,9 @@ if (
     tracesSampleRate: 0.05,
     debug: false,
 
+    // Enable automatic capture of console logs
+    integrations: [Sentry.captureConsoleIntegration()],
+
     beforeSend(event) {
       const isCritical =
         event.level === "error" ||

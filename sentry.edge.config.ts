@@ -20,5 +20,8 @@ if (process.env.NODE_ENV !== "development") {
 
     // Setting this option to true will print useful information to the console while you're setting up Sentry.
     debug: false,
+
+    // Enable automatic capture of console logs
+    integrations: [Sentry.captureConsoleIntegration()],
   });
 }
