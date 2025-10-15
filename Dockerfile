@@ -5,24 +5,54 @@
 # 3. Only copying necessary runtime files to the final image
 
 # Stage 1: Builder - Install dependencies and build the app
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 
+# Install pnpm globally
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # Copy package files
-COPY package.json ./
+COPY package.json pnpm-lock.yaml ./
 
 # Install ALL dependencies (including devDependencies needed for build)
-RUN npm install
+RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY . .
 
+# Set build-time environment variables for the build process
+ENV NEXT_PUBLIC_API_URL=http://host.docker.internal:3001
+ENV NEXT_PRIVATE_API_AUTH_TOKEN=dummy_token_for_build
+
 # Build the Next.js app with standalone output
 # Environment variables will be provided by Scalingo at build time
-RUN npm run build
+RUN pnpm run build
 
-# Stage 2: Runner - Create minimal runtime image
-FROM node:22-alpine AS runner
+# Stage 2: Development - For local development with hot reload
+FROM node:24-alpine AS development
+WORKDIR /app
+
+# Install pnpm globally
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy source code (will be overridden by volume mount)
+COPY . .
+
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+
+EXPOSE 3000
+
+CMD ["pnpm", "run", "dev"]
+
+# Stage 3: Runner - Create minimal runtime image
+FROM node:24-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
