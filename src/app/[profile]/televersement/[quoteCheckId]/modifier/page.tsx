@@ -8,9 +8,13 @@ interface PageProps {
     profile: string;
     quoteCheckId: string;
   }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function LegacyModifierRedirect({ params }: PageProps) {
+export default async function LegacyModifierRedirect({
+  params,
+  searchParams,
+}: PageProps) {
   const { profile, quoteCheckId } = await params;
 
   // Vérifier que le profil est valide
@@ -26,6 +30,13 @@ export default async function LegacyModifierRedirect({ params }: PageProps) {
     notFound();
   }
 
+  // Construire l'URL de redirection avec les paramètres de query
+  const query = await searchParams;
+  const queryString = new URLSearchParams(
+    query as Record<string, string>
+  ).toString();
+  const redirectUrl = `/${profile}/devis/${quoteCheckId}${queryString ? `?${queryString}` : ""}`;
+
   // Redirection vers la nouvelle URL
-  redirect(`/${profile}/devis/${quoteCheckId}`);
+  redirect(redirectUrl);
 }
