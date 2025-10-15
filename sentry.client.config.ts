@@ -22,5 +22,6 @@ if (process.env.NODE_ENV !== "development") {
 
     // Enable automatic capture of console logs
     enableLogs: true,
+    integrations: [Sentry.consoleLoggingIntegration()],
   });
 }

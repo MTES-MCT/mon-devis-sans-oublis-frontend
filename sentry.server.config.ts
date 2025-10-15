@@ -17,6 +17,7 @@ if (
 
     // Enable automatic capture of console logs
     enableLogs: true,
+    integrations: [Sentry.consoleLoggingIntegration()],
 
     beforeSend(event) {
       const isCritical =
