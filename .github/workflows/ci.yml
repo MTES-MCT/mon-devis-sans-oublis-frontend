@@ -9,7 +9,7 @@ on:
 jobs:
   ci:
     name: Test, Lint & Build
-    runs-on: ubuntu-latest-slim
+    runs-on: ubuntu-slim
 
     steps:
       - name: Checkout code
