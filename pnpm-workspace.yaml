@@ -1,3 +1,6 @@
 ignoredBuiltDependencies:
+  - '@sentry/cli'
+  - '@tailwindcss/oxide'
   - core-js-pure
+  - sharp
   - unrs-resolver

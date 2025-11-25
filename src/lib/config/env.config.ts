@@ -69,8 +69,7 @@ export function getClientEnv() {
     const result = clientSchema.safeParse(envObject);
     if (!result.success) {
       console.error(
-        "Invalid client environment variables:",
-        result.error.format()
+        result.error.issues.map(err => `${err.path.join(".")}: ${err.message}`).join(", ")
       );
       throw new Error("Invalid client environment variables");
     }
