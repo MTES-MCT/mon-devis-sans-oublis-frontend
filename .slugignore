@@ -1,0 +1,92 @@
+# Git files
+.git
+.gitignore
+.github
+.gitattributes
+
+# Development dependencies and build artifacts not needed in production
+__tests__
+__mocks__
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+jest.config.ts
+jest.setup.ts
+coverage
+
+# Testing libraries (not needed in production, ~10-15MB)
+node_modules/@testing-library
+node_modules/jest-*
+node_modules/@jest
+
+# Build tools (not needed at runtime)
+node_modules/pnpm
+
+# Large DSFR assets if served from CDN (80MB - uncomment if using CDN)
+# node_modules/@gouvfr/dsfr/dist
+
+# Documentation files
+README.md
+AGENTS.md
+CHANGELOG.md
+CONTRIBUTING.md
+LICENSE
+*.md
+
+# Development configuration
+.vscode
+.idea
+.editorconfig
+.prettierrc
+.prettierignore
+.eslintrc.json
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+.circleci
+
+# Docker files
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Environment files (keep .env.example if needed for reference)
+.env.local
+.env.*.local
+.env.docker
+.env.test
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Temporary files
+.DS_Store
+*.swp
+*.swo
+*~
+.cache
+.temp
+.tmp
+*.bak
+*.backup
+Thumbs.db
+
+# TypeScript build info
+tsconfig.tsbuildinfo
+
+# Claude
+.claude
+
+# Talisman
+.talismanrc
+
+# pnpm workspace (if not needed in production)
+pnpm-workspace.yaml
+pnpm-lock.yaml
