@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@gouvfr/dsfr": "^1.13.2",
-    "@sentry/nextjs": "^10.19.0",
+    "@sentry/nextjs": "^10.27.0",
     "@socialgouv/matomo-next": "^1.9.2",
     "next": "^15.4.7",
     "pnpm": "^10.23.0",
