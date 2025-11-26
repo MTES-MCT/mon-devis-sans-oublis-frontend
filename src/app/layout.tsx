@@ -11,14 +11,14 @@ import CrispWrapper from "@/components/Crisp/Crisp";
 initDsfr();
 
 export const metadata: Metadata = {
-  title: "Mon Devis Sans Oublis",
+  title: "Mon Devis Sans Oublis: vérifier un devis Ma prime renov, Eco PTZ ou Aides CEE",
   description:
-    "Plateforme publique et gratuite de pré-instruction automatique des devis de rénovation énergétique pour MaPrimeRenov' et les CEE.",
+    "Plateforme publique et gratuite de pré-instruction automatique des devis de rénovation énergétique pour MaPrimeRenov, Eco PTZ et les CEE.",
   metadataBase: new URL("https://mon-devis-sans-oublis.beta.gouv.fr"),
   openGraph: {
-    title: "Mon Devis Sans Oublis",
+    title: "on Devis Sans Oublis: vérifier un devis Ma prime renov, Eco PTZ ou Aides CEE",
     description:
-      "Plateforme publique et gratuite de pré-instruction automatique des devis de rénovation énergétique pour MaPrimeRenov' et les CEE.",
+      "Plateforme publique et gratuite de pré-instruction automatique des devis de rénovation énergétique pour MaPrimeRenov, Eco PTZ et les CEE.",
     url: "https://mon-devis-sans-oublis.beta.gouv.fr",
     siteName: "Mon Devis Sans Oublis",
     images: [
