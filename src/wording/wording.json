@@ -92,7 +92,7 @@
       "our_missions": {
         "missions": [
           {
-            "description": "Création d’un modèle d’analyse automatique qui compare les devis de rénovation énergétique avec les exigences des demandes d’aides.",
+            "description": "Création d’un modèle d’analyse automatique qui compare les devis de rénovation énergétique avec les exigences des demandes d’aides Ma prime renov', Eco PTZ ou Aides CEE.",
             "icon": "fr-icon-map-pin-2-line",
             "title": "Fluidifier l’instruction des aides"
           },
@@ -176,7 +176,7 @@
         },
         {
           "number": 2,
-          "title": "<strong>Découvrez instantanément les suggestions de corrections</strong> adaptées aux demandes d'aides de rénovation énergétique."
+          "title": "<strong>Découvrez instantanément les suggestions de corrections</strong> adaptées aux demandes d'aides de rénovation énergétique Ma prime renov', Eco PTZ et Aides CEE."
         },
         {
           "number": 3,
