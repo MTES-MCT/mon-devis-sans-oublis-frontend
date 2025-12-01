@@ -20,10 +20,10 @@
     "validate": "pnpm typecheck && pnpm lint && pnpm test"
   },
   "dependencies": {
-    "@gouvfr/dsfr": "^1.13.2",
+    "@gouvfr/dsfr": "^1.14.2",
     "@sentry/nextjs": "^10.27.0",
-    "@socialgouv/matomo-next": "^1.9.2",
-    "next": "^15.4.7",
+    "@socialgouv/matomo-next": "^1.10.0",
+    "next": "^15.5.6",
     "pnpm": "^10.23.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
