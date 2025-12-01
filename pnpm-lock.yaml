@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@gouvfr/dsfr':
-        specifier: ^1.14.2
-        version: 1.14.2
+        specifier: ~1.13.2
+        version: 1.13.2
       '@sentry/nextjs':
         specifier: ^10.27.0
         version: 10.27.0(@opentelemetry/context-async-hooks@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(next@15.5.6(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react@19.1.1)(webpack@5.101.0)
@@ -343,9 +343,9 @@ packages:
     resolution: {integrity: sha512-Ul5l+lHEcw3L5+k8POx6r74mxEYKG5kOb6Xpy2gCRW6zweT6TEhAf8vhxGgjhqrd/VO/Dirhsb+1hNpD1ue9hw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@gouvfr/dsfr@1.14.2':
-    resolution: {integrity: sha512-EJ/ZZMLmSN4KISuuXp0X0lGf+gKVqYATyqgcM5IPhMQAkJ8s5pjzvthjv+Hu6zYk4jwf2NRVt+jQz7JRpw1yiA==}
-    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+  '@gouvfr/dsfr@1.13.2':
+    resolution: {integrity: sha512-4Q9ggFFzwD/KFr37sJO1hFH9PcqlZ7F3jMiFJXnBLJfkH1+s28vnQp/oXoY8TosWsLMSjdhNCrxvrUdm5XzBlg==}
+    engines: {node: '>=18.16.1'}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -4371,7 +4371,7 @@ snapshots:
       '@eslint/core': 0.15.1
       levn: 0.4.1
 
-  '@gouvfr/dsfr@1.14.2': {}
+  '@gouvfr/dsfr@1.13.2': {}
 
   '@humanfs/core@0.19.1': {}
 
