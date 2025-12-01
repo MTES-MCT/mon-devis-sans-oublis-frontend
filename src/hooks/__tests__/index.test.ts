@@ -1,14 +1,14 @@
 import {
-  useConseillerRoutes,
-  useGoBackToUpload,
+  useIsConseiller,
+  useUserProfile,
   useIsDesktop,
   useScrollPosition,
-} from '../index';
+} from "../index";
 
-describe('hooks index', () => {
-  it('should export all hooks', () => {
-    expect(useConseillerRoutes).toBeDefined();
-    expect(useGoBackToUpload).toBeDefined();
+describe("hooks index", () => {
+  it("should export all hooks", () => {
+    expect(useUserProfile).toBeDefined();
+    expect(useIsConseiller).toBeDefined();
     expect(useIsDesktop).toBeDefined();
     expect(useScrollPosition).toBeDefined();
   });

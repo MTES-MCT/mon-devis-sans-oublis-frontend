@@ -1,39 +1,31 @@
-import { Notice } from '@/components';
-import { quoteService } from '@/lib/api';
-import { ResultClient } from '@/page-sections';
-import wording from '@/wording';
+// Page de redirection temporaire
+// TODO : A supprimer quand on la bascule sera considérée comme faite
+import { redirect, notFound } from "next/navigation";
+import { Profile } from "@/types";
 
-export default async function Result({
-  params: initialParams,
-}: {
-  params: Promise<{ profile: string; quoteCheckId: string }>;
-}) {
-  const params = await initialParams;
+interface PageProps {
+  params: Promise<{
+    profile: string;
+    quoteCheckId: string;
+  }>;
+}
 
-  if (!params.quoteCheckId) {
-    console.error('Erreur : quoteCheckId est undefined !');
+export default async function LegacyRedirect({ params }: PageProps) {
+  const { profile, quoteCheckId } = await params;
+
+  // Vérifier que le profil est valide
+  const validProfiles = Object.values(Profile);
+  if (!validProfiles.includes(profile as Profile)) {
+    notFound();
   }
 
-  let currentDevis = null;
-  try {
-    currentDevis = await quoteService.getQuote(params.quoteCheckId);
-  } catch (error) {
-    console.error('Error fetching devis:', error);
+  // Vérifier le format du quoteCheckId
+  const uuidRegex =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  if (!uuidRegex.test(quoteCheckId)) {
+    notFound();
   }
 
-  return (
-    <>
-      <Notice
-        className='fr-notice--info'
-        description={wording.layout.notice.description}
-        title={wording.layout.notice.title}
-      />
-      <ResultClient
-        currentDevis={currentDevis}
-        profile={params.profile}
-        quoteCheckId={params.quoteCheckId}
-        showDeletedErrors={false}
-      />
-    </>
-  );
+  // Redirection vers la nouvelle URL
+  redirect(`/${profile}/devis/${quoteCheckId}`);
 }

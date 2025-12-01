@@ -29,7 +29,7 @@
       "contact_title": "Pouvons-nous vous recontacter pour d’éventuelles questions ?",
       "contact_title_optional": "Champ non obligatoire",
       "description": "Notre outil est continuellement en train d’apprendre. Vos retours sont précieux pour améliorer ses réponses et vous accompagner au mieux dans la correction de vos devis.",
-      "email_placeholder": "Votre adresse email (ex : jean.dupont@mail.fr)",
+      "email_placeholder": "Votre adresse e-mail (ex : jean.dupont@mail.fr)",
       "rating_title": "Sur une échelle de 0 à 5, notez la qualité des corrections proposées",
       "submit_button": "Envoyer mes réponses",
       "title": "Que pensez-vous de ces retours ?"
@@ -67,20 +67,11 @@
         "link_label": "Partager le lien",
         "title": "Partagez le résultat avec vos corrections"
       },
-      "share": {
-        "button_copied_url": "Lien copié",
-        "button_copy_url": "Copier le lien de la page",
-        "description": "Retrouvez cette page et les corrections à apporter sur le devis.",
-        "description_conseiller": "Retrouvez cette page avec les corrections à apporter sur le devis ainsi que celles que vous avez suggérées",
-        "image_alt": "Image partagez les corrections",
-        "image_src": "/images/quotation_results/quotation_link_share.webp",
-        "title": "Partagez les corrections"
-      },
       "upload": {
         "image_alt": "Image vérifier un devis",
-        "image_src": "/images/quotation_results/quotation_link_upload.webp",
-        "title": "Vous souhaitez analyser un nouveau devis ?",
-        "link_label": "Vérifier un devis"
+        "image_src": "/images/documents/document-search.svg",
+        "title": "Lancez une nouvelle analyse",
+        "button_run_analysis": "Nouvelle analyse"
       }
     },
     "round_checkbox_group": {
@@ -101,9 +92,9 @@
       "our_missions": {
         "missions": [
           {
-            "description": "Création d’un modèle d’analyse automatique qui compare les devis de rénovation énergétique avec les exigences des demandes d’aides.",
+            "description": "Création d’un modèle d’analyse automatique qui compare les devis de rénovation énergétique avec les exigences des demandes d’aides Ma prime renov', Eco PTZ ou Aides CEE.",
             "icon": "fr-icon-map-pin-2-line",
-            "title": "Fluidifier l’instructions des aides"
+            "title": "Fluidifier l’instruction des aides"
           },
           {
             "description": "Réduction du nombre d’allers-retours avec les instructeurs d’aides avec un pré-contrôle gratuit et instantané.",
@@ -185,7 +176,7 @@
         },
         {
           "number": 2,
-          "title": "<strong>Découvrez instantanément les suggestions de corrections</strong> adaptées aux demandes d'aides de rénovation énergétique."
+          "title": "<strong>Découvrez instantanément les suggestions de corrections</strong> adaptées aux demandes d'aides de rénovation énergétique Ma prime renov', Eco PTZ et Aides CEE."
         },
         {
           "number": 3,
@@ -221,21 +212,21 @@
           "description": "Je souhaite gagner du temps en évitant les multiples changements sur mes devis",
           "image": "/images/who_are_you/card_artisan.webp",
           "title": "Je suis artisan",
-          "url": "/artisan/televersement"
+          "url": "/artisan/type-renovation"
         },
         {
           "alt": "Particulier qui souhaite gagner du temps",
           "description": "Je souhaite effectuer une demande d’aide de rénovation énergétique sans encombre",
           "image": "/images/who_are_you/card_individual.webp",
           "title": "Je suis particulier",
-          "url": "/particulier/televersement"
+          "url": "/particulier/type-renovation"
         },
         {
           "alt": "Conseiller qui souhaite accompagner ses clients",
           "description": "Je souhaite accompagner mes clients dans leurs démarches",
           "image": "/images/who_are_you/card_advisor.webp",
           "title": "J'accompagne un projet de rénovation",
-          "url": "/conseiller/televersement"
+          "url": "/conseiller/type-renovation"
         }
       ],
       "description": "L’outil s’adresse à plusieurs usagers, dites-nous en plus sur vous et vos besoins",
@@ -265,7 +256,7 @@
       "organizationName": "Mon Devis Sans Oublis"
     },
     "notice": {
-      "description": "Notre modèle est en cours de construction, vos retours sont précieux pour nous aider à le co-construire.",
+      "description": "Pour améliorer notre stabilité, nous utilisons temporairement Mistral ai pour la récupération des données privées.",
       "title": "Outil en cours de fiabilisation"
     }
   },
@@ -306,7 +297,9 @@
     "analysis_in_progress_title": "Analyse en cours",
     "badge_correction": "{number} correction",
     "badge_correction_plural": "{number} corrections",
-    "quotation_alert_ko": "Le devis n’est pas conforme aux attentes des aides énergétique, il risque d’être retoqué.",
+    "quotation_alert_ko_title": "Le devis n’est pas conforme aux attentes des aides énergétiques, il risque d’être retoqué.",
+    "quoteCheck_alert_ko_title": "Le dossier n’est pas conforme aux attentes des aides énergétiques, il risque d’être retoqué.",
+    "quotation_alert_ko_description": "Pas d’inquiétudes : suivez nos recommandations ci-dessous pour corriger les erreurs et relancez une analyse pour vérifier que tout est en ordre.",
     "quotation_alert_ok": "Bravo, votre devis est complet. Il est conforme aux aides de rénovation énergétique et pourra être instruit sans demande complémentaire.",
     "subtitle": "Pas de panique, voici les corrections à apporter ⬇️",
     "title": "Résultat de l’analyse"
@@ -346,7 +339,7 @@
       "label": "Retour"
     },
     "select_aides": "Aide(s) visée(s) avec le devis",
-    "select_gestes": "Geste(s) technique(s) concerné(s) par le devis",
+    "select_gestes": "Geste(s) technique(s) concerné(s) par le(s) devis",
     "subtitle": "Votre projet",
     "title": "Vérifier votre devis"
   },
@@ -355,19 +348,19 @@
       "cards": [
         {
           "description": "Je souhaite gagner du temps en évitant les multiples changements sur mes devis",
-          "href": "/artisan/televersement",
+          "href": "/artisan/type-renovation",
           "icon": "tools-fill",
           "title": "Je suis artisan"
         },
         {
           "description": "Je souhaite effectuer une demande d’aide de rénovation énergétique sans encombre",
-          "href": "/particulier/televersement",
+          "href": "/particulier/type-renovation",
           "icon": "home-4-fill",
           "title": "Je suis particulier"
         },
         {
           "description": "Je souhaite accompagner mes clients dans leurs démarches",
-          "href": "/conseiller/televersement",
+          "href": "/conseiller/type-renovation",
           "icon": "customer-service-fill",
           "title": "J'accompagne un projet de rénovation"
         }

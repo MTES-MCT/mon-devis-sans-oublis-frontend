@@ -19,23 +19,20 @@
 # Production
 /build
 
-# Storybook
-*storybook.log
-storybook-static/
-
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
 
 # Debug
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
 # Environment Variables
-.env.development
-.env.production
-.env.sentry-build-plugin
+.env.local
+.env.*.local
+.env.docker
 
 # Misc
 .DS_Store

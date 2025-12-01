@@ -1,7 +1,7 @@
 export enum IconBackgroundVariant {
-  BLUE = 'blue',
-  BLUE_LIGHT = 'blue-light',
-  WHITE = 'white',
+  BLUE = "blue",
+  BLUE_LIGHT = "blue-light",
+  WHITE = "white",
 }
 
 export interface IconBackgroundProps {
@@ -12,11 +12,11 @@ export interface IconBackgroundProps {
 const IconBackground: React.FC<IconBackgroundProps> = ({ icon, variant }) => {
   const variantClasses = {
     [IconBackgroundVariant.BLUE]:
-      'bg-[var(--background-action-high-blue-france)] text-white',
+      "bg-[var(--background-action-high-blue-france)] text-white",
     [IconBackgroundVariant.BLUE_LIGHT]:
-      'bg-[var(--background-contrast-info)] text-[var(--background-action-high-blue-france)]',
+      "bg-[var(--background-contrast-info)] text-[var(--background-action-high-blue-france)]",
     [IconBackgroundVariant.WHITE]:
-      'bg-white text-[var(--background-action-high-blue-france)] border-blue',
+      "bg-white text-[var(--background-action-high-blue-france)] border-blue",
   };
 
   return (

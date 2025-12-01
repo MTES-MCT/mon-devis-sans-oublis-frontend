@@ -1,30 +1,25 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useState, useTransition } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useState, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-import {
-  Alert,
-  AlertType,
-  DropdownCheckboxList,
-  Link,
-  LinkVariant,
-  Notice,
-  Upload,
-} from '@/components';
-import { quoteService } from '@/lib/api';
-import { Metadata, Profile } from '@/types';
-import wording from '@/wording';
+import { Alert, AlertType, Notice, Upload } from "@/components";
+import { Profile } from "@/types";
+import wording from "@/wording";
+import { quoteService } from "@/lib/client/apiWrapper";
+import { typeRenovationStorage } from "@/lib/utils/typeRenovationStorage.utils";
 
-export const FILE_ERROR = 'file_error';
+export const FILE_ERROR = "file_error";
+
+interface UploadClientProps {
+  profile: string;
+  onStateChange?: (canSubmit: boolean, isSubmitting: boolean) => void;
+}
 
 export default function UploadClient({
-  metadata,
   profile,
-}: {
-  metadata: Metadata;
-  profile: string;
-}) {
+  onStateChange,
+}: UploadClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -38,65 +33,77 @@ export default function UploadClient({
   const [selectedAides, setSelectedAides] = useState<string[]>([]);
   const [selectedGestes, setSelectedGestes] = useState<string[]>([]);
 
+  // Récupération des données metadata au montage
+  useEffect(() => {
+    const savedData = typeRenovationStorage.load();
+    setSelectedAides(savedData.aides);
+    setSelectedGestes(savedData.gestes);
+  }, []);
+
   const handleFileUpload = useCallback((uploadedFile: File) => {
     setFile(uploadedFile);
     setFileError(null);
   }, []);
 
-  const handleAidesChange = (values: string[]) => {
-    setSelectedAides(values);
-  };
-
-  const handleGestesChange = (values: string[]) => {
-    setSelectedGestes(values);
-  };
-
-  const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
+  const handleSubmit = useCallback(async () => {
     if (isSubmitting || isPending) return;
 
     if (!file) {
-      setFileError('Please upload a file.');
+      setFileError("Please upload a file.");
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      const data = await quoteService.uploadQuote(
+      const data = await quoteService.uploadQuoteCheck(
         file,
         { aides: selectedAides, gestes: selectedGestes },
         profile as Profile
       );
 
       startTransition(() => {
-        if (profile === Profile.CONSEILLER) {
-          router.push(`/${profile}/televersement/${data.id}/modifier`);
-        } else {
-          router.push(`/${profile}/televersement/${data.id}`);
-        }
+        router.push(`/${profile}/devis/${data.id}`);
       });
     } catch (error) {
-      console.error('Error during upload:', error);
-      setFileError('An error occurred. Please try again.');
+      console.error("Error during upload:", error);
+      setFileError("An error occurred. Please try again.");
       setIsSubmitting(false);
     }
-  };
+  }, [
+    isSubmitting,
+    isPending,
+    file,
+    selectedAides,
+    selectedGestes,
+    profile,
+    router,
+    startTransition,
+  ]);
+
+  // Exposer la fonction handleSubmit et l'état au parent
+  useEffect(() => {
+    const canSubmit = !isSubmitting && !!file && !fileError;
+    onStateChange?.(canSubmit, isSubmitting);
+    window.uploadClientSubmit = handleSubmit;
+  }, [file, fileError, isSubmitting, onStateChange, handleSubmit]);
 
   useEffect(() => {
-    const error = searchParams.get('error');
+    const error = searchParams.get("error");
+    const message = searchParams.get("message");
     if (error === FILE_ERROR) {
-      setFileUploadedError(wording.upload.error.notice.description);
-      router.replace(`/${profile}/televersement`);
+      const errorMessage = message
+        ? decodeURIComponent(message)
+        : wording.upload.error.notice.description;
+      setFileUploadedError(errorMessage);
     }
   }, [router, profile, searchParams]);
 
   useEffect(() => {
     if (fileUploadedError) {
       setTimeout(() => {
-        if (typeof window !== 'undefined') {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (typeof window !== "undefined") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }
       }, 0);
     }
@@ -105,75 +112,26 @@ export default function UploadClient({
   return (
     <>
       {fileUploadedError && (
-        <div className='absolute top-[186px] left-0 right-0 z-50'>
+        <div className="absolute top-[186px] left-0 right-0 z-50">
           <Notice
             buttonClose={true}
-            className='fr-notice--alert'
+            className="fr-notice--alert"
             description={fileUploadedError}
             title={wording.upload.error.notice.title}
           />
         </div>
       )}
-      <>
-        <Upload
-          maxFileSize={50} // TODO: get from API
-          onFileUpload={handleFileUpload}
-          setError={setFileError}
-        />
-        <Alert
-          className='fr-mb-8w fr-mt-4w'
-          description={wording.upload.alert.description}
-          moreDescription={wording.upload.alert.more_info}
-          type={AlertType.INFO}
-        />
-        <h2>{wording.upload.subtitle}</h2>
-        {metadata.gestes && (
-          <DropdownCheckboxList
-            label={wording.upload.select_gestes}
-            multiple={true}
-            onChange={handleGestesChange}
-            optionnal={true}
-            options={metadata.gestes.flatMap((group) =>
-              group.values.map((value) => ({
-                id: value,
-                label: value,
-                group: group.group,
-              }))
-            )}
-          />
-        )}
-        {metadata.aides && (
-          <DropdownCheckboxList
-            label={wording.upload.select_aides}
-            multiple={true}
-            onChange={handleAidesChange}
-            optionnal={true}
-            options={metadata.aides}
-          />
-        )}
-        <div className='fr-mt-8w flex justify-center'>
-          <ul className='fr-btns-group fr-btns-group--inline-sm'>
-            <li>
-              <Link
-                href={wording.upload.link_back.href}
-                label={wording.upload.link_back.label}
-                variant={LinkVariant.SECONDARY}
-              />
-            </li>
-            <li>
-              <button
-                className='fr-btn fr-text--lg'
-                disabled={isSubmitting || !file || fileError ? true : false}
-                onClick={handleSubmit}
-              >
-                {isSubmitting
-                  ? wording.upload.button_send_quote
-                  : wording.upload.button_check_quote}
-              </button>
-            </li>
-          </ul>
-        </div>
-      </>
+      <Upload
+        maxFileSize={50}
+        onFileUpload={handleFileUpload}
+        setError={setFileError}
+      />
+      <Alert
+        className="fr-mb-8w fr-mt-4w"
+        description={wording.upload.alert.description}
+        moreDescription={wording.upload.alert.more_info}
+        type={AlertType.INFO}
+      />
     </>
   );
 }

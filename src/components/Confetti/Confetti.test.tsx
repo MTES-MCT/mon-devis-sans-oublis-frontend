@@ -1,19 +1,19 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen } from "@testing-library/react";
 
-import Confetti from './Confetti';
+import Confetti from "./Confetti";
 
-describe('Confetti Component', () => {
-  it('renders the correct number of confetti elements', () => {
+describe("Confetti Component", () => {
+  it("renders the correct number of confetti elements", () => {
     render(<Confetti />);
 
-    const confettiElements = screen.getAllByRole('presentation');
+    const confettiElements = screen.getAllByRole("presentation");
     expect(confettiElements.length).toBe(50);
   });
 
-  it('applies random shapes and colors to confetti', () => {
+  it("applies random shapes and colors to confetti", () => {
     render(<Confetti />);
 
-    const confettiElements = screen.getAllByRole('presentation');
+    const confettiElements = screen.getAllByRole("presentation");
 
     const shapePatterns = [
       /w-2 h-4/,
@@ -42,10 +42,10 @@ describe('Confetti Component', () => {
     });
   });
 
-  it('confetti elements have random animation durations and delays', () => {
+  it("confetti elements have random animation durations and delays", () => {
     render(<Confetti />);
 
-    const confettiElements = screen.getAllByRole('presentation');
+    const confettiElements = screen.getAllByRole("presentation");
 
     confettiElements.forEach((confetti) => {
       const delay = confetti.style.animationDelay;

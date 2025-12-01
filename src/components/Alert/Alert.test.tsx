@@ -1,70 +1,70 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from "@testing-library/react";
 
-import Alert, { AlertType } from './Alert';
-import wording from '@/wording';
+import Alert, { AlertType } from "./Alert";
+import wording from "@/wording";
 
-describe('Alert Component', () => {
+describe("Alert Component", () => {
   const defaultProps = {
-    description: 'This is an alert message',
-    moreDescription: 'Here is some more information about the alert',
+    description: "This is an alert message",
+    moreDescription: "Here is some more information about the alert",
     type: AlertType.INFO,
   };
 
-  describe('Rendering', () => {
-    it('renders info alert with correct styling', () => {
+  describe("Rendering", () => {
+    it("renders info alert with correct styling", () => {
       render(<Alert {...defaultProps} />);
       const alertElement = screen
         .getByText(/this is an alert message/i)
-        .closest('div');
-      expect(alertElement).toHaveClass('fr-alert', 'fr-alert--info');
+        .closest("div");
+      expect(alertElement).toHaveClass("fr-alert", "fr-alert--info");
     });
 
-    it('renders success alert with correct styling', () => {
+    it("renders success alert with correct styling", () => {
       render(<Alert {...defaultProps} type={AlertType.SUCCESS} />);
       const alertElement = screen
         .getByText(/this is an alert message/i)
-        .closest('div');
-      expect(alertElement).toHaveClass('fr-alert', 'fr-alert--success');
+        .closest("div");
+      expect(alertElement).toHaveClass("fr-alert", "fr-alert--success");
     });
 
-    it('renders description text', () => {
+    it("renders description text", () => {
       render(<Alert {...defaultProps} />);
       expect(screen.getByText(/this is an alert message/i)).toBeInTheDocument();
     });
 
-    it('applies custom className if provided', () => {
-      const customClass = 'custom-alert-class';
+    it("applies custom className if provided", () => {
+      const customClass = "custom-alert-class";
       render(<Alert {...defaultProps} className={customClass} />);
       const alertElement = screen
         .getByText(/this is an alert message/i)
-        .closest('div');
+        .closest("div");
       expect(alertElement).toHaveClass(customClass);
     });
   });
 
-  describe('More Description Toggle', () => {
-    it('does not show more description toggle when moreDescription is not provided', () => {
+  describe("More Description Toggle", () => {
+    it("does not show more description toggle when moreDescription is not provided", () => {
       render(<Alert {...defaultProps} moreDescription={undefined} />);
       expect(
         screen.queryByText(wording.components.alert.see_more)
       ).not.toBeInTheDocument();
     });
 
-    it('shows more description toggle when moreDescription is provided', () => {
+    it("shows more description toggle when moreDescription is provided", () => {
       render(<Alert {...defaultProps} />);
       expect(
         screen.getByText(wording.components.alert.see_more)
       ).toBeInTheDocument();
     });
 
-    it('hides more description by default', () => {
+    it("hides more description by default", () => {
       render(<Alert {...defaultProps} />);
       expect(
         screen.queryByText(/here is some more information/i)
       ).not.toBeInTheDocument();
     });
 
-    it('toggles more description visibility when clicked', () => {
+    it("toggles more description visibility when clicked", () => {
       render(<Alert {...defaultProps} />);
 
       // Initial state - more description is hidden
@@ -92,13 +92,13 @@ describe('Alert Component', () => {
       ).toBeInTheDocument();
     });
 
-    it('has correct styling for toggle button', () => {
+    it("has correct styling for toggle button", () => {
       render(<Alert {...defaultProps} />);
       const toggleButton = screen.getByText(wording.components.alert.see_more);
       expect(toggleButton).toHaveClass(
-        'text-[var(--text-default-grey)]',
-        'cursor-pointer',
-        'underline'
+        "text-[var(--text-default-grey)]",
+        "cursor-pointer",
+        "underline"
       );
     });
   });

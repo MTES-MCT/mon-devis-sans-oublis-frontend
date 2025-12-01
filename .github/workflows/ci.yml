@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  ci:
+    name: Test, Lint & Build
+    runs-on: ubuntu-slim
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.23.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run TypeScript checks
+        run: pnpm typecheck
+
+      - name: Run ESLint
+        run: pnpm lint
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Build application
+        run: pnpm build
+        env:
+          # Variables d'environnement pour le build
+          NODE_ENV: production
+          NEXT_TELEMETRY_DISABLED: 1
+          # API mock pour les tests de build
+          NEXT_PUBLIC_API_URL: https://api.staging.mon-devis-sans-oublis.beta.gouv.fr
+          NEXT_PRIVATE_API_AUTH_TOKEN: ci-build-mock-token

@@ -1,26 +1,38 @@
-'use client';
+"use client";
 
-import { Suspense, useEffect, useState } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { init, push } from '@socialgouv/matomo-next';
+import { Suspense, useEffect, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { init, push } from "@socialgouv/matomo-next";
+import { getClientEnv, isProduction, isStaging } from "@/lib/config/env.config";
+import { useMatomo } from "@/hooks/useMatomo";
 
 const MatomoContent = () => {
   const [initialised, setInitialised] = useState<boolean>(false);
+  const { enableHeatmaps } = useMatomo();
 
   useEffect(() => {
+    const clientEnv = getClientEnv();
+
     if (
-      process.env.NEXT_PUBLIC_MATOMO_URL &&
-      process.env.NEXT_PUBLIC_MATOMO_SITE_ID &&
+      clientEnv.NEXT_PUBLIC_MATOMO_URL &&
+      clientEnv.NEXT_PUBLIC_MATOMO_SITE_ID &&
       !initialised
     ) {
       init({
-        siteId: process.env.NEXT_PUBLIC_MATOMO_SITE_ID,
-        url: process.env.NEXT_PUBLIC_MATOMO_URL,
+        siteId: clientEnv.NEXT_PUBLIC_MATOMO_SITE_ID,
+        url: clientEnv.NEXT_PUBLIC_MATOMO_URL,
       });
 
       setInitialised(true);
     }
   }, [initialised]);
+
+  // Activation des heatmaps quand Matomo est initialisé
+  useEffect(() => {
+    if (initialised) {
+      enableHeatmaps();
+    }
+  }, [initialised, enableHeatmaps]);
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -30,14 +42,15 @@ const MatomoContent = () => {
     if (!pathname) return;
 
     const url = decodeURIComponent(
-      pathname + (searchParamsString ? '?' + searchParamsString : '')
+      pathname + (searchParamsString ? "?" + searchParamsString : "")
     );
 
-    push(['setCustomUrl', url]);
-    push(['trackPageView']);
+    push(["setCustomUrl", url]);
+    push(["trackPageView"]);
   }, [pathname, searchParamsString]);
 
-  if (process.env.NODE_ENV !== 'production') {
+  // Matomo activé sur production & staging uniquement
+  if (!isProduction() && !isStaging()) {
     return null;
   }
 

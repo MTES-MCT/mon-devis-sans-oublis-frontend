@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect, JSX } from 'react';
+import { useState, useRef, useEffect, JSX } from "react";
 
-import CheckboxGroup from '../CheckboxGroup/CheckboxGroup';
+import CheckboxGroup from "../CheckboxGroup/CheckboxGroup";
 
 export interface Option {
   id: string;
@@ -17,12 +17,14 @@ export interface CustomInput {
 }
 
 export interface DropdownCheckboxListProps {
+  className?: string;
   customInput?: {
     id: string;
     value: string;
     onChange: (value: string) => void;
   };
   label: string;
+  hintLabel?: string;
   multiple: boolean;
   onChange: (values: string[]) => void;
   optionnal?: boolean;
@@ -42,8 +44,10 @@ interface GroupedOptions {
 }
 
 export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
+  className = "",
   customInput,
   label,
+  hintLabel,
   multiple,
   onChange,
   optionnal,
@@ -59,7 +63,7 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
     useState<string[]>(selectedValues);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -74,10 +78,10 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
       if (!isOpen) return;
 
       switch (event.key) {
-        case 'Escape':
+        case "Escape":
           setIsOpen(false);
           break;
-        case 'Tab':
+        case "Tab":
           if (!event.shiftKey && isLastItemFocused()) {
             setIsOpen(false);
           }
@@ -88,17 +92,17 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen]);
 
   const isFirstItemFocused = () => {
-    if (typeof window === 'undefined') return false;
+    if (typeof window === "undefined") return false;
     const firstCheckbox = dropdownRef.current?.querySelector(
       'input[type="checkbox"]'
     );
@@ -106,7 +110,7 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
   };
 
   const isLastItemFocused = () => {
-    if (typeof window === 'undefined') return false;
+    if (typeof window === "undefined") return false;
     const checkboxes = dropdownRef.current?.querySelectorAll(
       'input[type="checkbox"]'
     );
@@ -115,7 +119,7 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
   };
 
   const isGroupedOptions = (opt: string[] | Option[]): opt is Option[] => {
-    return opt.length > 0 && typeof opt[0] === 'object' && 'group' in opt[0];
+    return opt.length > 0 && typeof opt[0] === "object" && "group" in opt[0];
   };
 
   const handleCheckboxChange = (id: string, checked: boolean) => {
@@ -123,7 +127,7 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
     if (checked) {
       newValues = multiple ? [...localSelectedValues, id] : [id];
 
-      if (id === 'custom') {
+      if (id === "custom") {
         setTimeout(() => {
           customInputRef.current?.focus();
         }, 0);
@@ -132,8 +136,8 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
       }
     } else {
       newValues = localSelectedValues.filter((value) => value !== id);
-      if (id === 'custom' && customInput) {
-        customInput.onChange('');
+      if (id === "custom" && customInput) {
+        customInput.onChange("");
       }
     }
     setLocalSelectedValues(newValues);
@@ -142,12 +146,12 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
 
   const handleCustomInputChange = (value: string) => {
     customInput?.onChange(value);
-    if (value.trim() && !localSelectedValues.includes('custom')) {
-      const newValues = [...localSelectedValues, 'custom'];
+    if (value.trim() && !localSelectedValues.includes("custom")) {
+      const newValues = [...localSelectedValues, "custom"];
       setLocalSelectedValues(newValues);
       onChange(newValues);
-    } else if (!value.trim() && localSelectedValues.includes('custom')) {
-      const newValues = localSelectedValues.filter((v) => v !== 'custom');
+    } else if (!value.trim() && localSelectedValues.includes("custom")) {
+      const newValues = localSelectedValues.filter((v) => v !== "custom");
       setLocalSelectedValues(newValues);
       onChange(newValues);
     }
@@ -155,10 +159,10 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
 
   const handleCustomInputClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!localSelectedValues.includes('custom')) {
+    if (!localSelectedValues.includes("custom")) {
       const newValues = multiple
-        ? [...localSelectedValues, 'custom']
-        : ['custom'];
+        ? [...localSelectedValues, "custom"]
+        : ["custom"];
       setLocalSelectedValues(newValues);
       onChange(newValues);
     }
@@ -166,7 +170,7 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
 
   const normalizeOptions = (opts: string[] | Option[]): Option[] => {
     if (opts.length === 0) return [];
-    if (typeof opts[0] === 'string') {
+    if (typeof opts[0] === "string") {
       return (opts as string[]).map((opt) => ({
         id: opt,
         label: opt,
@@ -187,9 +191,9 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
 
   const displayValue = localSelectedValues.length
     ? multiple && localSelectedValues.length > 1
-      ? `${localSelectedValues.length} sélections`
+      ? `${localSelectedValues.length} éléments sélectionnés`
       : getDisplayLabel(localSelectedValues[0])
-    : 'Sélectionner une option';
+    : "Sélectionner une option";
 
   const normalizedOptions = isGroupedOptions(options)
     ? options
@@ -198,17 +202,17 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
   const checkboxOptions = normalizedOptions.map((option) => ({
     id: option.id,
     label:
-      option.id === 'custom' ? (
-        <div className='flex-grow'>
+      option.id === "custom" ? (
+        <div className="flex-grow">
           <input
-            className='fr-input w-full'
-            data-testid='custom-reason-input'
+            className="fr-input w-full"
+            data-testid="custom-reason-input"
             onClick={handleCustomInputClick}
             onChange={(e) => handleCustomInputChange(e.target.value)}
-            placeholder='Autre raison'
-            value={customInput?.value || ''}
+            placeholder="Autre raison"
+            value={customInput?.value || ""}
             ref={customInputRef}
-            type='text'
+            type="text"
           />
         </div>
       ) : (
@@ -220,7 +224,7 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
 
   const groupedOptions = checkboxOptions.reduce<GroupedOptions>(
     (acc, option) => {
-      const group = option.group || 'default';
+      const group = option.group || "default";
       if (!acc[group]) {
         acc[group] = [];
       }
@@ -231,47 +235,51 @@ export const DropdownCheckboxList: React.FC<DropdownCheckboxListProps> = ({
   );
 
   return (
-    <div className='fr-select-group relative fr-mb-4w' ref={containerRef}>
-      <label className='fr-label' htmlFor='multiselect'>
+    <div
+      className={`fr-select-group relative fr-mb-4w ${className || ""}`}
+      ref={containerRef}
+    >
+      <label className="fr-label" htmlFor="multiselect">
         {label}
-        {optionnal && <span className='fr-hint-text'>Optionnel</span>}
+        {hintLabel && <span className="fr-hint-text">{hintLabel}</span>}
+        {optionnal && <span className="fr-hint-text">Optionnel</span>}
       </label>
       <button
-        aria-controls='dropdown-content'
+        aria-controls="dropdown-content"
         aria-expanded={isOpen}
-        aria-haspopup='listbox'
-        className='fr-select text-left'
-        id='multiselect'
+        aria-haspopup="listbox"
+        className="fr-select text-left"
+        id="multiselect"
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
+          if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             setIsOpen(!isOpen);
           }
-          if (e.key === 'Escape' && isOpen) {
+          if (e.key === "Escape" && isOpen) {
             setIsOpen(false);
           }
         }}
-        type='button'
+        type="button"
       >
         {displayValue}
       </button>
       {isOpen && (
         <div
-          id='dropdown-content'
+          id="dropdown-content"
           ref={dropdownRef}
-          className='fr-select-checkbox border-shadow pt-5 pb-2 pl-2 h-[180px] overflow-x-hidden overflow-y-auto absolute w-full bg-white z-10'
-          role='listbox'
-          aria-labelledby='multiselect'
+          className="fr-select-checkbox border-shadow pt-5 pb-2 pl-2 h-[180px] overflow-x-hidden overflow-y-auto absolute w-full bg-white z-50"
+          role="listbox"
+          aria-labelledby="multiselect"
         >
           {Object.entries(groupedOptions).map(([group, groupOpts]) => (
             <div
-              aria-label={group !== 'default' ? group : undefined}
+              aria-label={group !== "default" ? group : undefined}
               key={group}
-              role='group'
+              role="group"
             >
-              {group !== 'default' && (
-                <legend className='fr-fieldset__legend'>{group}</legend>
+              {group !== "default" && (
+                <legend className="fr-fieldset__legend">{group}</legend>
               )}
               <CheckboxGroup
                 options={groupOpts}
