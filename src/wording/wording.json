@@ -121,71 +121,61 @@
       "label": "Vérifier mon devis"
     },
     "explanation_cards": {
-      "cards": [
+      "badges_1": [
         {
-          "image": "/images/examples_energy_retrofit_actions/isolation_exterieur.webp",
-          "title": "Isolation par l'extérieur"
+          "label": "Rénovation par geste"
         },
         {
-          "image": "/images/examples_energy_retrofit_actions/pompe_a_chaleur.webp",
-          "title": "Pompe à chaleur"
-        },
-        {
-          "image": "/images/examples_energy_retrofit_actions/vmc.webp",
-          "title": "VMC"
-        },
-        {
-          "image": "/images/examples_energy_retrofit_actions/isolation_interieur.webp",
-          "title": "Isolation par l'intérieur"
-        },
-        {
-          "image": "/images/examples_energy_retrofit_actions/menuiserie.webp",
-          "title": "Menuiserie"
-        },
-        {
-          "image": "/images/examples_energy_retrofit_actions/eau_chaude_sanitaire.webp",
-          "title": "Eau chaude sanitaire"
+          "label": "Rénovation d’ampleur"
         }
       ],
-      "correction": "Une fois corrigé, soumettez à nouveau votre devis jusqu'à ce qu'il soit conforme.",
+      "correction": "Soumettez votre devis corrigé jusqu'à sa conformité.",
       "image": {
         "alt": "Mon Devis Sans Oublis en 3 étages",
         "src": "/images/steps_analyze_quote/three_steps.webp"
       },
       "image_cards": [
         {
-          "description": "Identifiez les mentions manquantes aux attendus réglementaires des aides.",
+          "description": "Identifiez les mentions manquantes aux attendus réglementaires des aides (mentions administratives et gestes de travaux).",
           "image": "/images/steps_analyze_quote/quote_control.webp",
           "title": "Pré-contrôlez en un clic les devis de rénovation énergétique"
         },
         {
-          "description": "Appliquez les corrections pour un devis sans oublis, prêt pour les demandes d’aides.",
-          "image": "/images/steps_analyze_quote/change_quote.webp",
-          "title": "Recevez un pas à pas des modifications à apporter au devis"
+          "description": "Nous vérifions automatiquement les certifications RGE pour les gestes demandés à date. Notre outil est aussi disponible ici. @@@ TODO",
+          "image": "/images/steps_analyze_quote/change_quote.webp @@@ TODO",
+          "title": "Assurez-vous des qualifications des artisans"
         },
         {
-          "description": "Accélérez l’instruction des aides de rénovation énergétique en évitant les allers-retours avec les instructeurs grâce à des devis conformes.",
+          "description": "Accédez à des instructions et attendus uniformisés pour ne plus perdre de temps. Concentrez-vous sur l’essentiel !",
+          "image": "/images/steps_analyze_quote/change_quote.webp",
+          "title": "Des instructions claires et standardisées"
+        },
+        {
+          "description": "Facilitez l’instruction des aides de rénovation énergétique en évitant les allers-retours avec les instructeurs grâce à des devis conformes.",
           "image": "/images/steps_analyze_quote/get_help.webp",
-          "title": "Obtenez vos aides de rénovation plus rapidement"
+          "title": "Optimisez vos devis pour simplifier l’instruction"
+        },
+        {
+          "description": "Mon Devis Sans Oublis est un outil gratuit, sans inscription et fourni par l’État pour vous accompagner dans vos démarches.<br><br>À vous de jouer ! TODO @@@ Vérifier mes devis"
         }
       ],
       "number_blocks": [
         {
           "number": 1,
-          "title": "<strong>Déposez votre devis</strong> afin qu'il soit analysé par notre outil qui vérifie que tous les attendus réglementaires soient bien présents."
+          "title": "<strong>Déposez votre devis,</strong> notre outil vérifie que tous les attendus réglementaires soient bien présents. Vous avez l’audit ? Nous analysons aussi la cohérence avec les devis. Nous identifions d’éventuels sous-traitants ainsi que leur certification RGE."
         },
         {
           "number": 2,
-          "title": "<strong>Découvrez instantanément les suggestions de corrections</strong> adaptées aux demandes d'aides de rénovation énergétique Ma prime renov', Eco PTZ et Aides CEE."
+          "title": "<strong>Découvrez instantanément les suggestions de corrections</strong> adaptées aux demandes d’aides de rénovation énergétique."
         },
         {
           "number": 3,
           "title": "Informez les parties prenantes (par ex: artisans, particuliers) et <strong>partagez vos corrections personnalisées</strong>."
         }
       ],
+      "subtitle_1": "Mon Devis Sans Oublis est un outil gratuit qui simplifie la vérification de vos devis et documents pour les rénovations énergétiques, vous aidant ainsi à constituer un dossier conforme et complet.",
       "title_1": "À quoi sert Mon Devis Sans Oublis ?",
-      "title_2": "Exemple de gestes de rénovation énergétique",
-      "title_3": "Une démarche simplifiée en 3 étapes !"
+      "title_3": "Une démarche simplifiée en 3 étapes"
     },
     "header": {
       "buttons": [
@@ -212,7 +202,8 @@
         "alt": "Mon Devis Sans Oublis",
         "src": "/images/homepage.webp"
       },
-      "title": "Je souhaite contrôler un devis avant une demande d’aide de rénovation énergétique"
+      "subtitle": "Accédez à une analyse centralisée de vos devis de rénovation, par gestes ou d’ampleur, en cohérence avec l'audit et la certification RGE.",
+      "title": "L’outil de conformité pour vos dossiers de rénovation énergétique."
     },
     "section_who_are_you": {
       "cards": [
