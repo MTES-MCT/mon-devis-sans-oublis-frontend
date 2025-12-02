@@ -187,6 +187,15 @@
       "title_2": "Exemple de gestes de rénovation énergétique",
       "title_3": "Une démarche simplifiée en 3 étapes !"
     },
+    "header": {
+      "buttons": [
+        {
+          "href": "/bienvenue",
+          "icon": "fr-icon-arrow-right-line",
+          "label": "Vérifier mon devis"
+        }
+      ]
+    },
     "hero_section": {
       "badges": [
         {
