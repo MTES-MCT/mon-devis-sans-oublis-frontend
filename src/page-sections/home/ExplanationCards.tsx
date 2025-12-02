@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { BlockNumber, CardImage, Link } from "@/components";
+import { Badge, BadgeVariant, BlockNumber, CardImage, Link } from "@/components";
 import { richTextParser } from "@/utils";
 import wording from "@/wording";
 
@@ -9,6 +9,17 @@ export default function ExplanationCards() {
     <section className="fr-container-fluid fr-py-10w">
       <div className="fr-container">
         <h2>{wording.homepage.explanation_cards.title_1}</h2>
+        <h5 className="fr-mb-1w fr-mt-1w md:fr-mb-0 md:fr-mt-0 ">{wording.homepage.explanation_cards.subtitle_1}</h5>
+        <ul className="fr-raw-list fr-badges-group fr-mb-3w flex flex-wrap gap-4">
+          {wording.homepage.explanation_cards.badges_1.map((badge, index) => (
+            <li key={index}>
+              <Badge
+                label={badge.label}
+                variant={BadgeVariant.BLUE_DARK}
+              />
+            </li>
+          ))}
+        </ul>
         <div className="fr-grid-row fr-grid-row--gutters flex flex-col md:flex-row">
           {wording.homepage.explanation_cards.image_cards.map((card, index) => (
             <div className="fr-col-12 fr-col-md-4 flex-1" key={index}>
@@ -19,34 +30,6 @@ export default function ExplanationCards() {
               />
             </div>
           ))}
-        </div>
-        <div className="fr-grid-row fr-grid-row--center">
-          <h2 className="fr-mt-10w">
-            {wording.homepage.explanation_cards.title_2}
-          </h2>
-          <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap w-full scrollbar-none touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <div className="flex justify-center">
-              <ul className="fr-raw-list flex flex-nowrap gap-6">
-                {wording.homepage.explanation_cards.cards.map((card, index) => (
-                  <li
-                    className="flex-none w-[147px] whitespace-normal flex flex-col items-center"
-                    key={index}
-                  >
-                    <Image
-                      alt={card.title}
-                      height={132}
-                      src={card.image}
-                      width={147}
-                      className="w-[147px] h-[132px] object-cover"
-                    />
-                    <p className="fr-text--xs fr-mt-1w text-center">
-                      {card.title}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
         </div>
         <h2 className="fr-mt-8w fr-mb-5w">
           {wording.homepage.explanation_cards.title_3}
