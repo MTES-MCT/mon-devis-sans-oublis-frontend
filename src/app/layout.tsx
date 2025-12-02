@@ -48,6 +48,7 @@ export default function RootLayout({
 }>) {
   const footerData: FooterProps = wording.layout.footer;
   const headerData: HeaderProps = wording.layout.header;
+  const homeHeaderButtons = wording.homepage.header.buttons;
 
   return (
     <html
@@ -89,7 +90,7 @@ export default function RootLayout({
         <Matomo />
         <CrispWrapper />
 
-        <Header {...headerData} />
+        <Header {...headerData} homeButtons={homeHeaderButtons} />
         <main className="flex-1">{children}</main>
         <Footer {...footerData} />
       </body>
