@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 export interface CardImageProps {
-  description: string;
+  description: React.ReactNode;
   image: string;
   title: string;
 }

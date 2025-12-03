@@ -10,7 +10,7 @@ export default function HeroSection() {
         <div className="flex flex-col md:flex-row md:justify-between justify-center md:items-start items-center">
           <div className="fr-col-12 fr-col-md-5">
             <h1>{wording.homepage.hero_section.title}</h1>
-            <h5 className="fr-mb-1w fr-mt-1w md:fr-mb-0 md:fr-mt-0 ">{wording.homepage.hero_section.subtitle}</h5>
+            <h5 className="fr-mb-1w fr-mt-1w md:fr-mb-0 md:fr-mt-0">{wording.homepage.hero_section.subtitle}</h5>
             <ul className="fr-raw-list fr-badges-group fr-mb-3w flex flex-wrap gap-4">
               {wording.homepage.hero_section.badges.map((badge, index) => (
                 <li key={index}>
@@ -22,6 +22,11 @@ export default function HeroSection() {
               ))}
             </ul>
             <Link {...wording.homepage.check_quote_button} />
+            <h5 className="fr-mb-1w fr-mt-1w md:fr-mb-0 md:fr-mt-0">{wording.homepage.hero_section.or}</h5>
+            <h5 className="fr-mb-1w fr-mt-1w md:fr-mb-0 md:fr-mt-0">
+              <Link {...wording.homepage.hero_section.email_button} />
+            </h5>
+            <h5 className="fr-mb-1w fr-mt-1w md:fr-mb-0 md:fr-mt-0">{wording.homepage.hero_section.email_explanation}</h5>
           </div>
           <div className="mt-10 md:mt-0 flex justify-center relative h-[250px] md:h-[300px] lg:h-[376px] w-full max-w-[484px]">
             <Image

@@ -25,7 +25,7 @@ const BlockNumber: React.FC<BlockNumberProps> = ({
           <h1 className="fr-m-0 text-[var(--text-title-blue-france)]">
             {number}
           </h1>
-          <h5 className="fr-mb-1w fr-mt-1w md:fr-mb-0 md:fr-mt-0 ">{title}</h5>
+          <h5 className="fr-mb-1w fr-mt-1w md:fr-mb-0 md:fr-mt-0">{title}</h5>
         </div>
       ) : (
         <div className="flex flex-row gap-4 items-center fr-mb-2w">
