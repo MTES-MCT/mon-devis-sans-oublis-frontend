@@ -141,7 +141,7 @@
           "title": "Pré-contrôlez en un clic les devis de rénovation énergétique"
         },
         {
-          "description": "Nous vérifions automatiquement les certifications RGE pour les gestes demandés à date. Notre outil est aussi disponible ici. @@@ TODO",
+          "description": "Nous vérifions automatiquement les certifications RGE pour les gestes demandés à date. <a href='/rge'>Notre outil est aussi disponible ici</a>.",
           "image": "/images/steps_analyze_quote/change_quote.webp @@@ TODO",
           "title": "Assurez-vous des qualifications des artisans"
         },
@@ -156,7 +156,7 @@
           "title": "Optimisez vos devis pour simplifier l’instruction"
         },
         {
-          "description": "Mon Devis Sans Oublis est un outil gratuit, sans inscription et fourni par l’État pour vous accompagner dans vos démarches.<br><br>À vous de jouer ! TODO @@@ Vérifier mes devis"
+          "description": "Mon Devis Sans Oublis est un outil gratuit, sans inscription et fourni par l’État pour vous accompagner dans vos démarches.<br><br>À vous de jouer !<br><br><a href='/bienvenue'>Vérifier mes devis</a>"
         }
       ],
       "number_blocks": [
@@ -198,10 +198,17 @@
           "label": "Aides CEE"
         }
       ],
+      "email_button": {
+        "href": "mailto:devis@mail.mon-devis-sans-oublis.beta.gouv.fr?subject=Vérification de mon devis&body=Ci-joint mon devis pour vérification ou plusieurs pour dossier.",
+        "icon": "fr-icon-mail-line",
+        "label": "devis@mail.mon-devis-sans-oublis.beta.gouv.fr"
+      },
+      "email_explanation": "Envoyez plusieurs documents d’un même dossier et recevez une analyse directement sur votre e-mail dans les minutes qui suivent.",
       "image": {
         "alt": "Mon Devis Sans Oublis",
         "src": "/images/homepage.webp"
       },
+      "or": "ou",
       "subtitle": "Accédez à une analyse centralisée de vos devis de rénovation, par gestes ou d’ampleur, en cohérence avec l'audit et la certification RGE.",
       "title": "L’outil de conformité pour vos dossiers de rénovation énergétique."
     },

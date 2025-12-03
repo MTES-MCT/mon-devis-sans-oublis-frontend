@@ -9,7 +9,7 @@ export default function ExplanationCards() {
     <section className="fr-container-fluid fr-py-10w">
       <div className="fr-container">
         <h2>{wording.homepage.explanation_cards.title_1}</h2>
-        <h5 className="fr-mb-1w fr-mt-1w md:fr-mb-0 md:fr-mt-0 ">{wording.homepage.explanation_cards.subtitle_1}</h5>
+        <h5 className="fr-mb-1w fr-mt-1w md:fr-mb-0 md:fr-mt-0">{wording.homepage.explanation_cards.subtitle_1}</h5>
         <ul className="fr-raw-list fr-badges-group fr-mb-3w flex flex-wrap gap-4">
           {wording.homepage.explanation_cards.badges_1.map((badge, index) => (
             <li key={index}>
@@ -24,7 +24,7 @@ export default function ExplanationCards() {
           {wording.homepage.explanation_cards.image_cards.map((card, index) => (
             <div className="fr-col-12 fr-col-md-4 flex-1" key={index}>
               <CardImage
-                description={card.description}
+                description={richTextParser(card.description)}
                 image={card.image}
                 title={card.title}
               />
