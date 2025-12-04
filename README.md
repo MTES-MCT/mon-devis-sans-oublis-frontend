@@ -6,7 +6,9 @@ Plateforme d'analyse de conformité de devis pour accélérer la rénovation én
 
 ## Prérequis
 
-- **Node.js** 22.x et npm 11+
+- **Node.js** 24.x
+  - **npm 11+**
+  - ou **pnpm** package manager ⚠️ but pruning is not supported for pnpm workspaces on Scalingo
 - **Docker Desktop** (optionnel, pour l'exécution avec Docker)
 - **Git** pour cloner le repository
 
@@ -17,7 +19,7 @@ Clonez le repository et installez les dépendances :
 ```bash
 git clone https://github.com/MTES-MCT/mon-devis-sans-oublis-frontend.git
 cd mon-devis-sans-oublis-frontend
-npm install
+pnpm install
 ```
 
 ## Configuration de l'environnement
@@ -130,7 +132,7 @@ Note : Les variables `NEXT_PUBLIC_*` sont exposées publiquement dans le bundle 
 ### Option 1: Exécution avec Node.js (Recommandé pour le développement)
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 L'application sera disponible à l'adresse [http://localhost:3000](http://localhost:3000).
@@ -159,48 +161,48 @@ docker-compose down
 
 ```bash
 # Installation et démarrage
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 ### Scripts disponibles
 
 | Script                    | Description                                |
 | ------------------------- | ------------------------------------------ |
-| `npm run dev`             | Démarre le serveur de développement        |
-| `npm run build`           | Construit l'application pour la production |
-| `npm run start`           | Démarre le serveur de production           |
-| `npm run typecheck`       | Vérifie les types TypeScript               |
-| `npm run ci`              | Lance typecheck + lint + tests             |
-| `npm run test`            | Lance les tests avec Jest                  |
-| `npm run test:watch`      | Lance les tests en mode watch              |
-| `npm run test:coverage`   | Lance les tests avec rapport de couverture |
-| `npm run lint`            | Vérifie la qualité du code avec ESLint     |
-| `npm run format`          | Formate le code avec Prettier              |
-| `npm run format:check`    | Vérifie le formatage sans modifier         |
-| `npm run clean`           | Supprime le cache Next.js et relance le dev |
-| `npm run fresh`           | Reset complet (cache + node_modules)       |
+| `pnpm run build`           | Construit l'application pour la production |
+| `pnpm run ci`              | Lance typecheck + lint + tests             |
+| `pnpm run clean`           | Supprime le cache Next.js et relance le dev |
+| `pnpm run dev`             | Démarre le serveur de développement        |
+| `pnpm run format:check`    | Vérifie le formatage sans modifier         |
+| `pnpm run format`          | Formate le code avec Prettier              |
+| `pnpm run fresh`           | Reset complet (cache + node_modules)       |
+| `pnpm run lint`            | Vérifie la qualité du code avec ESLint     |
+| `pnpm run start`           | Démarre le serveur de production           |
+| `pnpm run test:coverage`   | Lance les tests avec rapport de couverture |
+| `pnpm run test:watch`      | Lance les tests en mode watch              |
+| `pnpm run test`            | Lance les tests avec Jest                  |
+| `pnpm run typecheck`       | Vérifie les types TypeScript               |
 
 ### Vérification qualité
 
 ```bash
 # Tout vérifier d'un coup
-npm run ci
+pnpm run ci
 
 # Ou étape par étape
-npm run typecheck
-npm run lint
-npm run test
+pnpm run typecheck
+pnpm run lint
+pnpm run test
 ```
 
 ### Commandes utiles
 
 ```bash
 # Formatter automatiquement le code
-npm run format
+pnpm run format
 
 # Nettoyer le cache en cas de problème
-npm run clean
+pnpm run clean
 ```
 
 ## Tests
@@ -209,16 +211,16 @@ npm run clean
 
 ```bash
 # Tests en une fois
-npm run test
+pnpm run test
 
 # Tests en mode watch (recommandé pour le développement)
-npm run test:watch
+pnpm run test:watch
 
 # Tests avec rapport de couverture
-npm run test:coverage
+pnpm run test:coverage
 
 # Test sur un fichier unique
-npm run test -- fichier.test.ts
+pnpm run test -- fichier.test.ts
 ```
 
 ### Conventions de tests
@@ -234,13 +236,13 @@ npm run test -- fichier.test.ts
 
 ```bash
 # Vérification complète (CI)
-npm run ci
+pnpm run ci
 
 # Vérifications individuelles
-npm run typecheck  # Types TypeScript
-npm run lint       # Qualité du code
-npm run test       # Tests unitaires
-npm run format     # Formatage du code
+pnpm run typecheck  # Types TypeScript
+pnpm run lint       # Qualité du code
+pnpm run test       # Tests unitaires
+pnpm run format     # Formatage du code
 ```
 
 ### Configuration
@@ -255,8 +257,8 @@ npm run format     # Formatage du code
 ### Build de production
 
 ```bash
-npm run build
-npm run start
+pnpm run build
+pnpm run start
 ```
 
 ### Déploiement avec Docker
@@ -319,10 +321,10 @@ Si vous rencontrez des problèmes étranges (variables d'environnement qui dispa
 
 ```bash
 # Nettoyer le cache Next.js et redémarrer
-npm run clean
+pnpm run clean
 
 # Si le problème persiste, reset complet
-npm run fresh
+pnpm run fresh
 ```
 
 ### Erreurs courantes
@@ -330,20 +332,20 @@ npm run fresh
 **Erreur de types TypeScript :**
 
 ```bash
-npm run typecheck
+pnpm run typecheck
 ```
 
 **Erreurs de lint :**
 
 ```bash
-npm run lint
-npm run format
+pnpm run lint
+pnpm run format
 ```
 
 **Tests qui échouent :**
 
 ```bash
-npm run test:watch
+pnpm run test:watch
 ```
 
 **Variables d'environnement manquantes :**
@@ -431,4 +433,4 @@ Pour les problèmes techniques, vérifiez :
 1. Node.js version 22.x installée
 2. Variables d'environnement configurées
 3. `npm install` exécuté
-4. Cache Next.js nettoyé (`npm run clean`)
+4. Cache Next.js nettoyé (`pnpm run clean`)

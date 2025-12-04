@@ -2,14 +2,21 @@ name: CI
 
 on:
   push:
-    branches: ["**"]
+    branches: [ main ]
   pull_request:
-    branches: [main, dev]
+    branches: [ main ]
+
+env:
+  NODE_VERSION: ${{ vars.NODE_VERSION || '22.x' }}
+  PNPM_VERSION: ${{ vars.PNPM_VERSION || '10.24.0' }}
+
+permissions:
+  contents: read
 
 jobs:
   ci:
     name: Test, Lint & Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
 
     steps:
       - name: Checkout code
@@ -18,12 +25,12 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.13.1
+          version: ${{ env.PNPM_VERSION }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
 
       - name: Install dependencies
