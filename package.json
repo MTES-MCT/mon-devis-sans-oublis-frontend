@@ -23,9 +23,9 @@
     "@gouvfr/dsfr": "^1.13.2",
     "@sentry/nextjs": "^9.2.0",
     "@socialgouv/matomo-next": "^1.9.2",
-    "next": "^15.4.7",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "next": "^15.4.8",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
     "zod": "^3.25.20"
   },
   "devDependencies": {
