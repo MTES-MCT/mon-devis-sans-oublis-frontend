@@ -119,12 +119,12 @@
       "buttons": [
         {
           "href": "https://api.mon-devis-sans-oublis.beta.gouv.fr/api-docs/index.html",
-           "icon": "fr-icon-external-link-line",
+          "icon": "fr-icon-external-link-line",
           "label": "Voir la documentation"
         },
         {
           "href": "mailto:contact@mon-devis-sans-oublis.beta.gouv.fr",
-           "icon": "fr-icon-mail-line",
+          "icon": "fr-icon-mail-line",
           "label": "Nous contacter"
         }
       ],
@@ -307,6 +307,73 @@
       ],
       "description": "L’outil s’adresse à plusieurs usagers, dites-nous en plus sur vous et vos besoins",
       "title": "Qui êtes-vous ?"
+    },
+    "last_updates": {
+      "last_update_cards": [
+        {
+          "badges": [
+            {
+              "icon": "fr-icon-mail-line",
+              "label": "Nouveau",
+              "variant": "BLUE_DARK"
+            }
+          ],
+          "buttons": [
+            {
+              "href": "mailto:devis@mail.mon-devis-sans-oublis.beta.gouv.fr",
+              "icon": "fr-icon-frame-line",
+              "label": "Copier l’adresse e-mail"
+            },
+            {
+              "href": "mailto:devis@mail.mon-devis-sans-oublis.beta.gouv.fr?subject=Vérification de mon devis&body=Ci-joint mon devis pour vérification ou plusieurs pour dossier.",
+              "icon": "fr-icon-external-link-line",
+              "label": "Ouvrir mon client e-mail"
+            }
+          ],
+          "description": "Envoyez ou transférez un ou plusieurs devis à <a href='mailto:devis@mail.mon-devis-sans-oublis.beta.gouv.fr'>devis@mail.mon-devis-sans-oublis.beta.gouv.fr</a>. Nous renvoyons l’analyse complète avec taux de conformité et corrections directement par e-mail dans les minutes qui suivent.",
+          "image": "/images/last_updates/maj-email.webp",
+          "title": "Envoyez vos documents et devis par e-mail, recevez l'analyse quelques minutes après."
+        },
+        {
+          "badges": [
+            {
+              "icon": "fr-icon-mail-line",
+              "label": "Nouveau",
+              "variant": "BLUE_DARK"
+            },
+            {
+              "label": "RGE",
+              "variant": "BLUE_DARK"
+            }
+          ],
+          "buttons": [
+            {
+              "href": "/rge",
+              "icon": "fr-icon-external-link-line",
+              "label": "Voir si mes artisans sont RGE"
+            }
+          ],
+          "description": "Assurez-vous que vos artisans possèdent les bonnes qualifications RGE pour les gestes techniques prévus. L'outil vérifie la correspondance des qualifications, leur validité et détecte les expirations prochaines. Un contrôle simple et rapide pour éviter les refus de dossiers d'aide. Et c’est toujours gratuit !",
+          "image": "/images/last_updates/maj-rge.webp",
+          "title": "Vérifiez si vos artisans sont certifiés RGE à date sur les gestes concernés."
+        }
+      ],
+      "previous": {
+        "previous_update_cards": [
+          {
+            "description": "Ajoutez plusieurs devis en même temps pour vos projets de rénovation globale. Nous analysons aussi les incohérences entre les devis.",
+            "image": "/images/who_are_you/card_individual.webp",
+            "title": "Rénovation d’ampleur"
+          },
+          {
+            "description": "Mon Devis Sans Oublis permet maintenant de pré-contrôler les devis scannés ou pris en photo. Déposez vos devis en pdf, jpg ou png.",
+            "image": "/images/who_are_you/card_individual.webp",
+            "title": "Lecture des devis scannés"
+          }
+        ],
+        "title": "Les mises à jour précédentes :"
+      },
+      "title": "Les dernières mises à jour"
     },
     "what_for": {
       "badges": [
