@@ -115,6 +115,26 @@
         "title": "Qui sommes-nous ?"
       }
     },
+    "api_block": {
+      "buttons": [
+        {
+          "href": "https://api.mon-devis-sans-oublis.beta.gouv.fr/api-docs/index.html",
+           "icon": "fr-icon-external-link-line",
+          "label": "Voir la documentation"
+        },
+        {
+          "href": "mailto:contact@mon-devis-sans-oublis.beta.gouv.fr",
+           "icon": "fr-icon-mail-line",
+          "label": "Nous contacter"
+        }
+      ],
+      "description": "Utilisez gratuitement la puissance de Mon Devis Sans Oublis dans vos process grâce à notre API. L’intégration est simplifiée et nos équipes techniques se tiennent à disposition pour vous accompagner.",
+      "image": {
+        "alt": "API Mon Devis Sans Oublis",
+        "src": "/images/api_block/api.svg"
+      },
+      "title": "Vous êtes un professionnel du secteur ?<br>Nous avons une API pour vous !"
+    },
     "check_quote_button": {
       "href": "/bienvenue",
       "icon": "fr-icon-arrow-right-line",
@@ -317,11 +337,11 @@
           "description": "Facilitez l’instruction des aides de rénovation énergétique en évitant les allers-retours avec les instructeurs grâce à des devis conformes.",
           "image": "/images/steps_analyze_quote/get_help.webp",
           "title": "Optimisez vos devis pour simplifier l’instruction"
-        },
-        {
-          "description": "Mon Devis Sans Oublis est un outil gratuit, sans inscription et fourni par l’État pour vous accompagner dans vos démarches.<br><br>À vous de jouer !<br><br><a href='/bienvenue'>Vérifier mes devis</a>"
         }
       ],
+      "text_card": {
+        "description": "Mon Devis Sans Oublis est un outil gratuit, sans inscription et fourni par l’État pour vous accompagner dans vos démarches.<br><br>À vous de jouer !<br><br><a href='/bienvenue'>Vérifier mes devis</a>"
+      },
       "title": "À quoi sert Mon Devis Sans Oublis ?",
       "subtitle": "Mon Devis Sans Oublis est un outil gratuit qui simplifie la vérification de vos devis et documents pour les rénovations énergétiques, vous aidant ainsi à constituer un dossier conforme et complet."
     }

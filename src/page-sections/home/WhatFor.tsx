@@ -4,7 +4,7 @@ import { Badge, BadgeVariant, BlockNumber, CardImage, Link } from "@/components"
 import { richTextParser } from "@/utils";
 import wording from "@/wording";
 
-export default function HowItWorks() {
+export default function WhatFor() {
   return (
     <section className="fr-container-fluid fr-py-10w">
       <div className="fr-container">
@@ -30,6 +30,9 @@ export default function HowItWorks() {
               />
             </div>
           ))}
+          <div className="fr-col-12 fr-col-md-4 flex-1" key={wording.homepage.what_for.image_cards.length}>
+            {richTextParser(wording.homepage.what_for.text_card.description)}
+          </div>
         </div>
       </div>
     </section>

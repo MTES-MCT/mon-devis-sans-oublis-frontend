@@ -1,5 +1,6 @@
 // Home
 export { default as AboutUs } from "./home/AboutUs";
+export { default as ApiBlock } from "./home/ApiBlock";
 export { default as WhatFor } from "./home/WhatFor";
 export { default as HeroSection } from "./home/HeroSection";
 export { default as HowItWorks } from "./home/HowItWorks";

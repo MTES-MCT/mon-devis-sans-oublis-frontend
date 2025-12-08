@@ -1,11 +1,12 @@
 import { Notice } from "@/components";
 import {
   AboutUs,
+  ApiBlock,
   HeroSection,
   HowItWorks,
   ProfileCards,
   WhatFor,
-  WhoAreYou,
+  // WhoAreYou,
 } from "@/page-sections";
 import wording from "@/wording";
 
@@ -22,8 +23,9 @@ export default function Home() {
         <WhatFor />
         <ProfileCards />
         <HowItWorks />
+        <ApiBlock />
         <AboutUs />
-        <WhoAreYou />
+        {/* <WhoAreYou /> */}
       </div>
     </>
   );
