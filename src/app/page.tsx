@@ -1,9 +1,12 @@
 import { Notice } from "@/components";
 import {
   AboutUs,
-  ExplanationCards,
+  ApiBlock,
   HeroSection,
-  WhoAreYou,
+  HowItWorks,
+  ProfileCards,
+  WhatFor,
+  // WhoAreYou,
 } from "@/page-sections";
 import wording from "@/wording";
 
@@ -17,9 +20,12 @@ export default function Home() {
       />
       <div className="[&_h2]:text-center">
         <HeroSection />
-        <ExplanationCards />
+        <WhatFor />
+        <ProfileCards />
+        <HowItWorks />
+        <ApiBlock />
         <AboutUs />
-        <WhoAreYou />
+        {/* <WhoAreYou /> */}
       </div>
     </>
   );
