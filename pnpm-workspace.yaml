@@ -1,6 +1,6 @@
 ignoredBuiltDependencies:
-  - '@sentry/cli'
-  - '@tailwindcss/oxide'
+  - "@sentry/cli"
+  - "@tailwindcss/oxide"
   - core-js-pure
   - sharp
   - unrs-resolver
@@ -8,5 +8,8 @@ ignoredBuiltDependencies:
 # Security: Require packages to be at least 7 days old before installation
 # This reduces the risk of supply chain attacks by delaying installation of newly published versions
 minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - next
+  - "@next/env"
 
 ignoreScripts: true
