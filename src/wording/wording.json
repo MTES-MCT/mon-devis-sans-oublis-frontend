@@ -203,7 +203,7 @@
           "badges": [
             {
               "label": "Demandeurs",
-              "variant": "BLUE_DARK"
+              "variant": "fr-badge--green-menthe"
             }
           ],
           "points": [
@@ -220,7 +220,7 @@
           "badges": [
             {
               "label": "Artisans",
-              "variant": "BLUE_DARK"
+              "variant": "fr-badge--new"
             }
           ],
           "points": [
@@ -236,19 +236,19 @@
           "badges": [
             {
               "label": "MAR",
-              "variant": "BLUE_DARK"
+              "variant": "fr-badge--pink-tuile"
             },
             {
               "label": "Auditeurs",
-              "variant": "BLUE_DARK"
+              "variant": "fr-badge--green-tilleul-verveine"
             },
             {
               "label": "Bureaux d’étude",
-              "variant": "BLUE_DARK"
+              "variant": "fr-badge--purple-glycine"
             },
             {
               "label": "ECFR",
-              "variant": "BLUE_DARK"
+              "variant": "fr-badge--new"
             }
           ],
           "points": [
@@ -265,7 +265,7 @@
           "badges": [
             {
               "label": "délégataires",
-              "variant": "BLUE_DARK"
+              "variant": "fr-badge--info"
             }
           ],
           "points": [
