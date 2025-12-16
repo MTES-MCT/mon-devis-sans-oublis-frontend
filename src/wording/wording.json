@@ -315,13 +315,13 @@
             {
               "icon": "fr-icon-mail-line",
               "label": "Nouveau",
-              "variant": "BLUE_DARK"
+              "variant": "fr-badge--info fr-badge--no-icon"
             }
           ],
           "buttons": [
             {
               "href": "mailto:devis@mail.mon-devis-sans-oublis.beta.gouv.fr",
-              "icon": "fr-icon-frame-line",
+              "icon": "fr-copy-line",
               "label": "Copier l’adresse e-mail"
             },
             {
@@ -339,11 +339,11 @@
             {
               "icon": "fr-icon-mail-line",
               "label": "Nouveau",
-              "variant": "BLUE_DARK"
+              "variant": "fr-badge--new"
             },
             {
               "label": "RGE",
-              "variant": "BLUE_DARK"
+              "variant": "fr-badge--info fr-badge--no-icon"
             }
           ],
           "buttons": [
@@ -411,7 +411,7 @@
       },
       "title": "À quoi sert Mon Devis Sans Oublis ?",
       "subtitle": "Mon Devis Sans Oublis est un outil gratuit qui simplifie la vérification de vos devis et documents pour les rénovations énergétiques, vous aidant ainsi à constituer un dossier conforme et complet."
-    } 
+    }
   },
   "layout": {
     "footer": {
