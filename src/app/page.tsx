@@ -4,6 +4,7 @@ import {
   ApiBlock,
   HeroSection,
   HowItWorks,
+  LastUpdates,
   ProfileCards,
   WhatFor,
   // WhoAreYou,
@@ -21,6 +22,7 @@ export default function Home() {
       <div className="[&_h2]:text-center">
         <HeroSection />
         <WhatFor />
+        <LastUpdates />
         <ProfileCards />
         <HowItWorks />
         <ApiBlock />
