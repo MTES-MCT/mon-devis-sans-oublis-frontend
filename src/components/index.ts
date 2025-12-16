@@ -1,3 +1,5 @@
+import ActionCard from "./ActionCard/ActionCard";
+
 // Alert
 export { default as Alert, AlertType } from "./Alert/Alert";
 export type { AlertProps } from "./Alert/Alert";
@@ -98,3 +100,4 @@ export { default as Upload } from "./Upload/Upload";
 export type { UploadProps } from "./Upload/Upload";
 // Breadcrumb
 export { default as Breadcrumb } from "./Breadcrumb/Breadcrumb";
+export { default as ActionCard } from "./ActionCard/ActionCard";

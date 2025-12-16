@@ -392,7 +392,7 @@
         },
         {
           "description": "Nous vérifions automatiquement les certifications RGE pour les gestes demandés à date. <a href='/rge'>Notre outil est aussi disponible ici</a>.",
-          "image": "/images/steps_analyze_quote/change_quote.webp @@@ TODO",
+          "image": "/images/steps_analyze_quote/check_qualif.svg",
           "title": "Assurez-vous des qualifications des artisans"
         },
         {
@@ -407,7 +407,7 @@
         }
       ],
       "text_card": {
-        "description": "Mon Devis Sans Oublis est un outil gratuit, sans inscription et fourni par l’État pour vous accompagner dans vos démarches.<br><br>À vous de jouer !<br><br><a href='/bienvenue'>Vérifier mes devis</a>"
+        "description": "Mon Devis Sans Oublis est un outil gratuit, sans inscription et fourni par l’État pour vous accompagner dans vos démarches.<br><br>À vous de jouer !"
       },
       "title": "À quoi sert Mon Devis Sans Oublis ?",
       "subtitle": "Mon Devis Sans Oublis est un outil gratuit qui simplifie la vérification de vos devis et documents pour les rénovations énergétiques, vous aidant ainsi à constituer un dossier conforme et complet."

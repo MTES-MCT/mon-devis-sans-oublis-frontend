@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { Badge, BadgeVariant, BlockNumber, CardImage, Link } from "@/components";
+import { CardImage, ActionCard } from "@/components";
 import { richTextParser } from "@/utils";
 import wording from "@/wording";
 
@@ -9,17 +9,18 @@ export default function WhatFor() {
     <section className="fr-container-fluid fr-py-10w">
       <div className="fr-container">
         <h2>{wording.homepage.what_for.title}</h2>
-        <h5 className="fr-mb-1w fr-mt-1w md:fr-mb-0 md:fr-mt-0">{wording.homepage.what_for.subtitle}</h5>
-        <ul className="fr-raw-list fr-badges-group fr-mb-3w flex flex-wrap gap-4">
+        <div className="fr-mb-2w fr-mt-1w fr-col-6 fr-col-offset-3 text-center">
+          <p>{wording.homepage.what_for.subtitle}</p>
           {wording.homepage.what_for.badges.map((badge, index) => (
-            <li key={index}>
-              <Badge
-                label={badge.label}
-                variant={BadgeVariant.BLUE_DARK}
-              />
-            </li>
+            <p
+              className="fr-badge fr-badge--info fr-badge--no-icon fr-mr-4v"
+              key={index}
+            >
+              {badge.label}
+            </p>
           ))}
-        </ul>
+        </div>
+        <ul className="fr-raw-list fr-badges-group fr-mb-3w flex flex-wrap gap-4"></ul>
         <div className="fr-grid-row fr-grid-row--gutters flex flex-col md:flex-row">
           {wording.homepage.what_for.image_cards.map((card, index) => (
             <div className="fr-col-12 fr-col-md-4 flex-1" key={index}>
@@ -30,9 +31,13 @@ export default function WhatFor() {
               />
             </div>
           ))}
-          <div className="fr-col-12 fr-col-md-4 flex-1" key={wording.homepage.what_for.image_cards.length}>
-            {richTextParser(wording.homepage.what_for.text_card.description)}
-          </div>
+          <ActionCard
+            buttonHref={wording.homepage.check_quote_button.href}
+            buttonLabel={wording.homepage.check_quote_button.label}
+            description={richTextParser(
+              wording.homepage.what_for.text_card.description
+            )}
+          />
         </div>
       </div>
     </section>

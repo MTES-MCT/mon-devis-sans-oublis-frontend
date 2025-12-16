@@ -8,7 +8,7 @@ export interface CardImageProps {
 
 const CardImage: React.FC<CardImageProps> = ({ description, image, title }) => {
   return (
-    <div className="flex flex-col h-full w-full border border-grey rounded-lg overflow-hidden">
+    <div className="flex flex-col h-full w-full border border-grey rounded-lg overflow-hidden p-4">
       <div
         className="h-[216px] bg-[#FCFCFD] border-b flex justify-center items-center"
         style={{ borderBottom: "none" }}
