@@ -11,7 +11,7 @@ export default function LastUpdates() {
         <h2>{wording.homepage.last_updates.title}</h2>
         <div className="fr-grid-row fr-grid-row--gutters flex flex-col md:flex-row">
           {wording.homepage.last_updates.last_update_cards.map((update, index) => (
-            <div className="fr-col-12 fr-col-md-4 flex-1" key={index}>
+            <div className="fr-col-12 fr-col-md-4 flex-1" key={index} id={`nouveaute-${index + 1}`}>
               <ul className="fr-raw-list fr-badges-group fr-mb-3w flex flex-wrap gap-4">
                 {update.badges.map((badge, index) => (
                   <li key={index}>

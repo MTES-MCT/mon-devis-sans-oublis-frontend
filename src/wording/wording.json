@@ -437,6 +437,10 @@
     },
     "notice": {
       "description": "Pour améliorer notre stabilité, nous utilisons temporairement Mistral ai pour la récupération des données privées.",
+      "link_more": {
+        "href": "/#nouveaute-1",
+        "label": "En savoir plus"
+      },
       "title": "Outil en cours de fiabilisation"
     }
   },
