@@ -11,12 +11,14 @@ import CrispWrapper from "@/components/Crisp/Crisp";
 initDsfr();
 
 export const metadata: Metadata = {
-  title: "Mon Devis Sans Oublis: vérifier un devis MaPrimeRénov’, Eco PTZ ou Aides CEE",
+  title:
+    "Mon Devis Sans Oublis: vérifier un devis MaPrimeRénov’, Eco PTZ ou Aides CEE",
   description:
     "Plateforme publique et gratuite de pré-instruction automatique des devis de rénovation énergétique pour MaPrimeRenov, Eco PTZ et les CEE.",
   metadataBase: new URL("https://mon-devis-sans-oublis.beta.gouv.fr"),
   openGraph: {
-    title: "Devis Sans Oublis: vérifier un devis MaPrimeRénov’, Eco PTZ ou Aides CEE",
+    title:
+      "Devis Sans Oublis: vérifier un devis MaPrimeRénov’, Eco PTZ ou Aides CEE",
     description:
       "Plateforme publique et gratuite de pré-instruction automatique des devis de rénovation énergétique pour MaPrimeRenov, Eco PTZ et les CEE.",
     url: "https://mon-devis-sans-oublis.beta.gouv.fr",
@@ -48,7 +50,6 @@ export default function RootLayout({
 }>) {
   const footerData: FooterProps = wording.layout.footer;
   const headerData: HeaderProps = wording.layout.header;
-  const homeHeaderButtons = wording.homepage.header.buttons;
 
   return (
     <html
@@ -90,7 +91,7 @@ export default function RootLayout({
         <Matomo />
         <CrispWrapper />
 
-        <Header {...headerData} homeButtons={homeHeaderButtons} />
+        <Header {...headerData} />
         <main className="flex-1">{children}</main>
         <Footer {...footerData} />
       </body>

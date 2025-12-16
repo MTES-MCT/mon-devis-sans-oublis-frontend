@@ -4,14 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import Badge, { BadgeVariant } from "../Badge/Badge";
-import { Link as CustomLink } from "@/components";
 import { richTextParser } from "@/utils";
+import wording from "@/wording";
 
 export interface HeaderProps {
   affiliatedMinistry: string;
   beta?: string;
-  buttons?: { href: string; icon: string; label: string }[];
-  homeButtons?: { href: string; icon: string; label: string }[];
   organizationDescription: string;
   organizationLink: string;
   organizationName: string;
@@ -20,15 +18,13 @@ export interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({
   affiliatedMinistry,
   beta,
-  buttons,
-  homeButtons,
   organizationDescription,
   organizationLink,
   organizationName,
 }) => {
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const displayButtons = isHome && homeButtons ? homeButtons : buttons;
+
   return (
     <header className="fr-header" role="banner">
       <div className="fr-header__body">
@@ -64,17 +60,16 @@ const Header: React.FC<HeaderProps> = ({
                 </div>
               </div>
             </div>
-            {displayButtons && (
+
+            {isHome && (
               <div className="fr-header__tools">
-                <div className="fr-header__tools-links">
-                  <ul className="fr-btns-group">
-                    {displayButtons.map((button, index) => (
-                      <li key={index}>
-                        <CustomLink {...button} />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <Link
+                  href={wording.homepage.check_quote_button.href}
+                  type="button"
+                  className="fr-btn fr-icon-arrow-right-line fr-btn--icon-right"
+                >
+                  {wording.homepage.check_quote_button.label}
+                </Link>
               </div>
             )}
           </div>

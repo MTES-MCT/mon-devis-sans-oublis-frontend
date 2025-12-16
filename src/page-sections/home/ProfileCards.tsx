@@ -11,20 +11,20 @@ export default function ProfileCards() {
           {wording.homepage.profile_cards.cards.map((card, card_index) => (
             <div className="fr-col-12 fr-col-md-6 flex-1" key={card_index}>
               <ul className="fr-raw-list fr-badges-group fr-mb-3w flex flex-wrap gap-4">
-                {card.badges.map((badge, index) => (
+                {/* {card.badges.map((badge, index) => (
                   <li key={index}>
                     <Badge
                       label={badge.label}
                       variant={BadgeVariant[badge.variant]}
                     />
                   </li>
-                ))}
+                ))} */}
               </ul>
-              <CardImage
+              {/* <CardImage
                 description={richTextParser(card.subtitle)}
                 image={card.image}
                 title={card.title}
-              />
+              /> */}
               <ul className="fr-raw-list fr-badges-group fr-mb-3w flex flex-wrap gap-4">
                 {card.points.map((point, index) => (
                   <li key={index}>{point}</li>
