@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { Badge, BadgeVariant, BlockNumber, CardImage, Link } from "@/components";
+import { BlockNumber, Link } from "@/components";
 import { richTextParser } from "@/utils";
 import wording from "@/wording";
 
@@ -21,16 +21,14 @@ export default function HowItWorks() {
             width={0}
           />
           <div className="flex flex-col">
-            {wording.homepage.how_it_works.number_blocks.map(
-              (block, index) => (
-                <BlockNumber
-                  className="fr-mb-2w"
-                  key={index}
-                  number={block.number}
-                  title={richTextParser(block.title)}
-                />
-              )
-            )}
+            {wording.homepage.how_it_works.number_blocks.map((block, index) => (
+              <BlockNumber
+                className="fr-mb-2w"
+                key={index}
+                number={block.number}
+                title={richTextParser(block.title)}
+              />
+            ))}
             <p className="bg-[var(--background-alt-blue-france)] pl-2 p-4">
               <span className="fr-icon-restart-line mr-2 ml-0 text-[var(--text-title-blue-france)]" />
               {wording.homepage.how_it_works.correction}

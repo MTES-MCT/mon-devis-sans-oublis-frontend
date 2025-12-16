@@ -1,4 +1,3 @@
-import { Badge, BadgeVariant } from "@/components";
 import { richTextParser } from "@/utils";
 import wording from "@/wording";
 

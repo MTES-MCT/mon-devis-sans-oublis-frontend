@@ -1,5 +1,3 @@
-import ActionCard from "./ActionCard/ActionCard";
-
 // Alert
 export { default as Alert, AlertType } from "./Alert/Alert";
 export type { AlertProps } from "./Alert/Alert";

@@ -1,7 +1,6 @@
 import Image from "next/image";
 import React from "react";
 
-import { Badge, BadgeVariant } from "@/components";
 import Link from "next/link";
 
 interface UpdateCardProps {

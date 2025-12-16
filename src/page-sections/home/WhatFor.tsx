@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import { CardImage, ActionCard } from "@/components";
 import { richTextParser } from "@/utils";
 import wording from "@/wording";

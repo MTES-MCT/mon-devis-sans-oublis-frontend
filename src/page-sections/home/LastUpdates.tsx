@@ -1,4 +1,4 @@
-import { CardImage, UpdateCard } from "@/components";
+import { UpdateCard } from "@/components";
 import { richTextParser } from "@/utils";
 import wording from "@/wording";
 import Image from "next/image";
