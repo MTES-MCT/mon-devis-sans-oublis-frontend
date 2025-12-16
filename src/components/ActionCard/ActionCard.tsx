@@ -13,11 +13,11 @@ const ActionCard: React.FC<ActionCardProps> = ({
   buttonHref,
 }) => {
   return (
-    <div className="rounded-lg border-2 border-[var(--border-action-high-blue-france)] bg-white p-6">
-      <p className="fr-mb-2w">{description}</p>
+    <div className="flex h-full w-full flex-col justify-center rounded-lg border-2 border-[var(--border-action-high-blue-france)] bg-[var(--background-alt-blue-france)] p-6">
+      <div className="fr-mb-6w">{description}</div>
       <Link
         href={buttonHref}
-        className="fr-btn fr-icon-arrow-right-line fr-btn--icon-right"
+        className="fr-btn fr-icon-arrow-right-line fr-btn--icon-right self-start"
       >
         {buttonLabel}
       </Link>
