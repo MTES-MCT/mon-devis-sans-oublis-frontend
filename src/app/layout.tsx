@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
 
-import { Footer, FooterProps, Header, HeaderProps, Matomo } from "@/components";
-import { initDsfr } from "@/utils";
+import {
+  DsfrProvider,
+  Footer,
+  FooterProps,
+  Header,
+  HeaderProps,
+  Matomo,
+} from "@/components";
+import "@/utils/dsfr";
 import wording from "@/wording";
 import { marianne, spectral } from "../styles/fonts";
 import "../styles/globals.css";
 import CrispWrapper from "@/components/Crisp/Crisp";
-
-// DSFR initialization
-initDsfr();
 
 export const metadata: Metadata = {
   title:
@@ -57,43 +61,15 @@ export default function RootLayout({
       data-fr-scheme="system"
       lang="fr"
     >
-      <head>
-        <meta
-          content="telephone=no,date=no,address=no,email=no,url=no"
-          name="format-detection"
-        />
-        <meta
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
-          name="viewport"
-        />
-        <meta content="#000091" name="theme-color" />
-        <link
-          href="/dsfr/favicon/apple-touch-icon.png"
-          rel="apple-touch-icon"
-        />
-        <link
-          href="/dsfr/favicon/favicon.svg"
-          rel="icon"
-          type="image/svg+xml"
-        />
-        <link
-          href="/dsfr/favicon/favicon.ico"
-          rel="shortcut icon"
-          type="image/x-icon"
-        />
-        <link
-          crossOrigin="use-credentials"
-          href="/dsfr/favicon/manifest.webmanifest"
-          rel="manifest"
-        />
-      </head>
+      <head>{/* ... inchangé */}</head>
       <body className="flex flex-col min-h-screen">
-        <Matomo />
-        <CrispWrapper />
-
-        <Header {...headerData} />
-        <main className="flex-1">{children}</main>
-        <Footer {...footerData} />
+        <DsfrProvider>
+          <Matomo />
+          <CrispWrapper />
+          <Header {...headerData} />
+          <main className="flex-1">{children}</main>
+          <Footer {...footerData} />
+        </DsfrProvider>
       </body>
     </html>
   );

@@ -2,7 +2,7 @@
   "name": "mon-devis-sans-oublis-frontend",
   "version": "1.0.6",
   "private": true,
-  "packageManager": "pnpm@10.24.0",
+  "packageManager": "pnpm@10.26.0",
   "scripts": {
     "_comment": "Do not update DSFR to 1.14.x or higher without checking icons that we added",
     "build": "next build",
@@ -21,7 +21,7 @@
     "validate": "pnpm typecheck && pnpm lint && pnpm test"
   },
   "dependencies": {
-    "@gouvfr/dsfr": "~1.13.2",
+    "@gouvfr/dsfr": "1.14.2",
     "@sentry/nextjs": "^10.27.0",
     "@socialgouv/matomo-next": "^1.10.0",
     "next": "^15.5.9",

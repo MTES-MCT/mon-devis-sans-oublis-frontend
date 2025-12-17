@@ -100,3 +100,4 @@ export type { UploadProps } from "./Upload/Upload";
 export { default as Breadcrumb } from "./Breadcrumb/Breadcrumb";
 export { default as ActionCard } from "./ActionCard/ActionCard";
 export { default as UpdateCard } from "./UpdateCard/UpdateCard";
+export { default as DsfrProvider } from "./DsfrProvider/DsfrProvider";

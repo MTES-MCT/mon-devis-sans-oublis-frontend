@@ -30,13 +30,27 @@ const Header: React.FC<HeaderProps> = ({
       <div className="fr-header__body">
         <div className="fr-container">
           <div className="fr-header__body-row">
-            <div className="fr-header__brand cursor-default">
+            <div className="fr-header__brand fr-enlarge-link">
               <div className="fr-header__brand-top">
                 <div className="fr-header__logo">
                   <p className="fr-logo">
                     {richTextParser(affiliatedMinistry)}
                   </p>
                 </div>
+                {isHome && (
+                  <div className="fr-header__navbar">
+                    <button
+                      data-fr-opened="false"
+                      aria-controls="header-menu-modal"
+                      title="Menu"
+                      type="button"
+                      id="header-menu-btn"
+                      className="fr-btn--menu fr-btn"
+                    >
+                      Menu
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="fr-header__service">
                 <div className="hover:bg-[var(--background-raised-grey-hover)] active:bg-[var(--background-raised-grey-active)]">
@@ -63,18 +77,55 @@ const Header: React.FC<HeaderProps> = ({
 
             {isHome && (
               <div className="fr-header__tools">
-                <Link
-                  href={wording.homepage.check_quote_button.href}
-                  type="button"
-                  className="fr-btn fr-icon-arrow-right-line fr-btn--icon-right"
-                >
-                  {wording.homepage.check_quote_button.label}
-                </Link>
+                <div className="fr-header__tools-links">
+                  <ul className="fr-btns-group">
+                    <li>
+                      <Link
+                        href={wording.homepage.check_quote_button.href}
+                        className="fr-btn fr-btn--account fr-icon-arrow-right-line fr-btn--icon-right"
+                      >
+                        {wording.homepage.check_quote_button.label}
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Menu mobile */}
+      {isHome && (
+        <div
+          className="fr-header__menu fr-modal"
+          id="header-menu-modal"
+          aria-labelledby="header-menu-btn"
+        >
+          <div className="fr-container">
+            <button
+              aria-controls="header-menu-modal"
+              title="Fermer"
+              type="button"
+              className="fr-btn--close fr-btn"
+            >
+              Fermer
+            </button>
+            <div className="fr-header__menu-links">
+              <ul className="fr-btns-group">
+                <li>
+                  <Link
+                    href={wording.homepage.check_quote_button.href}
+                    className="fr-btn fr-icon-arrow-right-line fr-btn--icon-right"
+                  >
+                    {wording.homepage.check_quote_button.label}
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
