@@ -17,7 +17,7 @@ const ActionCard: React.FC<ActionCardProps> = ({
       <div className="fr-mb-6w">{description}</div>
       <Link
         href={buttonHref}
-        className="fr-btn fr-icon-arrow-right-line fr-btn--icon-right self-start"
+        className="fr-btn fr-btn--lg fr-icon-arrow-right-line fr-btn--icon-right self-start"
       >
         {buttonLabel}
       </Link>

@@ -120,7 +120,8 @@
         {
           "href": "https://api.mon-devis-sans-oublis.beta.gouv.fr/api-docs/index.html",
           "icon": "fr-icon-external-link-line",
-          "label": "Voir la documentation"
+          "label": "Voir la documentation",
+          "external": true
         },
         {
           "href": "mailto:contact@mon-devis-sans-oublis.beta.gouv.fr",
@@ -315,14 +316,15 @@
             {
               "icon": "fr-icon-mail-line",
               "label": "Nouveau",
-              "variant": "fr-badge--info fr-badge--no-icon"
+              "variant": "fr-badge--new"
             }
           ],
           "buttons": [
             {
               "href": "mailto:devis@mail.mon-devis-sans-oublis.beta.gouv.fr",
-              "icon": "fr-copy-line",
-              "label": "Copier l’adresse e-mail"
+              "icon": "fr-icon-clipboard-line",
+              "label": "Copier l’adresse e-mail",
+              "copyText": "devis@mail.mon-devis-sans-oublis.beta.gouv.fr"
             },
             {
               "href": "mailto:devis@mail.mon-devis-sans-oublis.beta.gouv.fr?subject=Vérification de mon devis&body=Ci-joint mon devis pour vérification ou plusieurs pour dossier.",
@@ -330,9 +332,10 @@
               "label": "Ouvrir mon client e-mail"
             }
           ],
-          "description": "Envoyez ou transférez un ou plusieurs devis à <a href='mailto:devis@mail.mon-devis-sans-oublis.beta.gouv.fr'>devis@mail.mon-devis-sans-oublis.beta.gouv.fr</a>. Nous renvoyons l’analyse complète avec taux de conformité et corrections directement par e-mail dans les minutes qui suivent.",
+          "description": "Envoyez ou transférez un ou plusieurs devis à <a href='mailto:devis@mail.mon-devis-sans-oublis.beta.gouv.fr?subject=Vérification de mon devis&body=Ci-joint mon devis pour vérification ou plusieurs pour dossier.'>devis@mail.mon-devis-sans-oublis.beta.gouv.fr</a>. Nous renvoyons l’analyse complète avec taux de conformité et corrections directement par e-mail dans les minutes qui suivent.",
           "image": "/images/last_updates/maj-email.webp",
-          "title": "Envoyez vos documents et devis par e-mail, recevez l'analyse quelques minutes après."
+          "title": "Envoyez vos documents et devis par e-mail, recevez l'analyse quelques minutes après.",
+          "id": "nouveaute-1"
         },
         {
           "badges": [
@@ -350,12 +353,14 @@
             {
               "href": "/rge",
               "icon": "fr-icon-external-link-line",
-              "label": "Voir si mes artisans sont RGE"
+              "label": "Voir si mes artisans sont RGE",
+              "external": true
             }
           ],
           "description": "Assurez-vous que vos artisans possèdent les bonnes qualifications RGE pour les gestes techniques prévus. L'outil vérifie la correspondance des qualifications, leur validité et détecte les expirations prochaines. Un contrôle simple et rapide pour éviter les refus de dossiers d'aide. Et c’est toujours gratuit !",
           "image": "/images/last_updates/maj-rge.webp",
-          "title": "Vérifiez si vos artisans sont certifiés RGE à date sur les gestes concernés."
+          "title": "Vérifiez si vos artisans sont certifiés RGE à date sur les gestes concernés.",
+          "id": "nouveaute-2"
         }
       ],
       "previous": {

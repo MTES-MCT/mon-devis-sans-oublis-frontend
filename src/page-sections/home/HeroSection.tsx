@@ -13,7 +13,7 @@ export default function HeroSection() {
             <p className=" fr-mb-2w fr-mt-1w md:fr-mb-0 md:fr-mt-0">
               {wording.homepage.hero_section.subtitle}
             </p>
-            <ul className="fr-raw-list fr-badges-group fr-mb-3w flex flex-wrap gap-4">
+            <ul className="fr-raw-list fr-badges-group fr-mb-3w flex flex-wrap gap-1">
               {wording.homepage.hero_section.badges.map((badge, index) => (
                 <li key={index}>
                   <p className="fr-badge fr-badge--green-menthe">

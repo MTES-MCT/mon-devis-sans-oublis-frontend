@@ -34,6 +34,9 @@ export default function ApiBlock() {
                       button.icon
                     }
                     href={button.href}
+                    {...(button.external
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
                   >
                     {button.label}
                   </Link>

@@ -20,6 +20,7 @@ export default function LastUpdates() {
                 description={richTextParser(update.description)}
                 image={update.image}
                 title={update.title}
+                id={update.id}
               />
             )
           )}

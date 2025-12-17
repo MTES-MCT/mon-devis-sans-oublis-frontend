@@ -1,14 +1,22 @@
-import Image from "next/image";
-import React from "react";
+"use client";
 
+import Image from "next/image";
 import Link from "next/link";
+import React, { useState } from "react";
 
 interface UpdateCardProps {
   badges: { icon?: string; label: string; variant: string }[];
-  buttons: { href: string; icon: string; label: string }[];
+  buttons: {
+    href: string;
+    icon: string;
+    label: string;
+    copyText?: string;
+    external?: boolean;
+  }[];
   description: React.ReactNode;
   image: string;
   title: string;
+  id: string;
 }
 
 const UpdateCard: React.FC<UpdateCardProps> = ({
@@ -17,10 +25,19 @@ const UpdateCard: React.FC<UpdateCardProps> = ({
   description,
   image,
   title,
+  id,
 }) => {
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+
+  const handleCopy = async (text: string, index: number) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
   return (
     <div className="flex flex-col gap-6 rounded-lg border border-[var(--border-default-grey)] bg-white p-10 md:flex-row fr-mb-6w">
-      <div className="flex flex-1 flex-col justify-between">
+      <div className="flex flex-1 flex-col justify-between" id={id}>
         <div>
           <ul className="fr-raw-list fr-badges-group fr-mb-2w flex flex-wrap gap-2">
             {badges.map((badge, index) => (
@@ -35,15 +52,26 @@ const UpdateCard: React.FC<UpdateCardProps> = ({
         <ul className="fr-raw-list flex flex-wrap gap-4">
           {buttons.map((button, index) => (
             <li key={index}>
-              <Link
-                type="button"
-                href={button.href}
-                className={
-                  `fr-btn fr-btn--secondary fr-btn--icon-right ` + button.icon
-                }
-              >
-                {button.label}
-              </Link>
+              {button.copyText ? (
+                <button
+                  type="button"
+                  onClick={() => handleCopy(button.copyText!, index)}
+                  className={`fr-btn fr-btn--secondary fr-btn--icon-right ${button.icon}`}
+                >
+                  {copiedIndex === index ? "Copié !" : button.label}
+                </button>
+              ) : (
+                <Link
+                  href={button.href}
+                  className={`fr-btn fr-btn--secondary fr-btn--icon-right ${button.icon}`}
+                  {...(button.external && {
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                  })}
+                >
+                  {button.label}
+                </Link>
+              )}
             </li>
           ))}
         </ul>

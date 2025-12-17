@@ -13,9 +13,9 @@ export default function ProfileCards() {
             <div className="fr-col-12 fr-col-md-6" key={card_index}>
               <div
                 className="h-full rounded-lg border border-[var(--border-default-grey)] p-8"
-                style={{ backgroundColor: "#ffffff" }}
+                style={{ backgroundColor: "#FCFCFD" }}
               >
-                <ul className="fr-raw-list fr-badges-group fr-badges-group--sm fr-mb-2w flex flex-wrap gap-2">
+                <ul className="fr-raw-list fr-badges-group fr-badges-group--sm fr-mb-2w flex flex-wrap">
                   {card.badges.map((badge, index) => (
                     <li key={index}>
                       <p
