@@ -35,8 +35,38 @@ const UpdateCard: React.FC<UpdateCardProps> = ({
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
+  const renderButtons = () => (
+    <ul className="fr-raw-list flex flex-wrap gap-4">
+      {buttons.map((button, index) => (
+        <li key={index}>
+          {button.copyText ? (
+            <button
+              type="button"
+              onClick={() => handleCopy(button.copyText!, index)}
+              className={`fr-btn fr-btn--secondary fr-btn--icon-right ${button.icon}`}
+            >
+              {copiedIndex === index ? "Copié !" : button.label}
+            </button>
+          ) : (
+            <Link
+              href={button.href}
+              className={`fr-btn fr-btn--secondary fr-btn--icon-right ${button.icon}`}
+              {...(button.external && {
+                target: "_blank",
+                rel: "noopener noreferrer",
+              })}
+            >
+              {button.label}
+            </Link>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
     <div className="flex flex-col gap-6 rounded-lg border border-[var(--border-default-grey)] bg-white p-10 md:flex-row fr-mb-6w">
+      {/* Bloc gauche : texte + CTA (desktop) */}
       <div className="flex flex-1 flex-col justify-between" id={id}>
         <div>
           <ul className="fr-raw-list fr-badges-group fr-mb-2w flex flex-wrap gap-2">
@@ -49,33 +79,12 @@ const UpdateCard: React.FC<UpdateCardProps> = ({
           <h5 className="fr-mb-2w">{title}</h5>
           <div className="fr-mb-3w">{description}</div>
         </div>
-        <ul className="fr-raw-list flex flex-wrap gap-4">
-          {buttons.map((button, index) => (
-            <li key={index}>
-              {button.copyText ? (
-                <button
-                  type="button"
-                  onClick={() => handleCopy(button.copyText!, index)}
-                  className={`fr-btn fr-btn--secondary fr-btn--icon-right ${button.icon}`}
-                >
-                  {copiedIndex === index ? "Copié !" : button.label}
-                </button>
-              ) : (
-                <Link
-                  href={button.href}
-                  className={`fr-btn fr-btn--secondary fr-btn--icon-right ${button.icon}`}
-                  {...(button.external && {
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                  })}
-                >
-                  {button.label}
-                </Link>
-              )}
-            </li>
-          ))}
-        </ul>
+
+        {/* CTA visible uniquement en desktop */}
+        <div className="hidden md:block">{renderButtons()}</div>
       </div>
+
+      {/* Image */}
       <div className="flex flex-1 items-center justify-center">
         <Image
           alt={title}
@@ -85,6 +94,9 @@ const UpdateCard: React.FC<UpdateCardProps> = ({
           width={500}
         />
       </div>
+
+      {/* CTA visible uniquement en mobile (après l'image) */}
+      <div className="md:hidden">{renderButtons()}</div>
     </div>
   );
 };

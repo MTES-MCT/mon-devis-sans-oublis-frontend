@@ -7,11 +7,11 @@ export default function WhatFor() {
     <section className="fr-container-fluid fr-py-10w">
       <div className="fr-container">
         <h2>{wording.homepage.what_for.title}</h2>
-        <div className="fr-mb-2w fr-mt-1w fr-col-6 fr-col-offset-3 text-center">
+        <div className="fr-mb-2w fr-mt-1w fr-col-10 fr-col-offset-1 text-center">
           <p>{wording.homepage.what_for.subtitle}</p>
           {wording.homepage.what_for.badges.map((badge, index) => (
             <p
-              className="fr-badge fr-badge--info fr-badge--no-icon fr-mr-4v"
+              className="fr-badge fr-badge--info fr-badge--no-icon fr-mr-2v fr-mb-2v"
               key={index}
             >
               {badge.label}

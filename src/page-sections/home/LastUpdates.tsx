@@ -30,11 +30,11 @@ export default function LastUpdates() {
         <h4 className="fr-mb-6w" style={{ textAlign: "left" }}>
           {wording.homepage.last_updates.previous.title}
         </h4>
-        <div className="fr-grid-row fr-grid-row--gutters flex flex-col md:flex-row ">
+        <div className="fr-grid-row fr-grid-row--gutters flex flex-col md:flex-row">
           {wording.homepage.last_updates.previous.previous_update_cards.map(
             (update, index) => (
               <div className="fr-col-12 fr-col-md-6 flex-1" key={index}>
-                <div className="flex items-center gap-6 rounded-lg border border-[var(--border-default-grey)] bg-white p-8">
+                <div className="flex h-full items-center gap-6 rounded-lg border border-[var(--border-default-grey)] bg-white p-8">
                   <Image
                     alt={update.title}
                     height={80}
