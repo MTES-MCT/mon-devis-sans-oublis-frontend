@@ -34,11 +34,6 @@
   }
 }
 
-h1,
-h2 {
-  color: var(--artwork-major-blue-ecume) !important;
-}
-
 /* DSFR */
 .fr-accordion {
   z-index: 10;

@@ -1,2 +1,11 @@
-declare module "@gouvfr/dsfr/dist/dsfr.module.min.js";
-declare module "@gouvfr/dsfr/dist/dsfr.nomodule.min.js";
+export interface DsfrGlobal {
+  verbose: boolean;
+  mode: string;
+  start?: () => void;
+}
+
+declare global {
+  interface Window {
+    dsfr: DsfrGlobal;
+  }
+}

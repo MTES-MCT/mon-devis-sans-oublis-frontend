@@ -98,3 +98,6 @@ export { default as Upload } from "./Upload/Upload";
 export type { UploadProps } from "./Upload/Upload";
 // Breadcrumb
 export { default as Breadcrumb } from "./Breadcrumb/Breadcrumb";
+export { default as ActionCard } from "./ActionCard/ActionCard";
+export { default as UpdateCard } from "./UpdateCard/UpdateCard";
+export { default as DsfrProvider } from "./DsfrProvider/DsfrProvider";

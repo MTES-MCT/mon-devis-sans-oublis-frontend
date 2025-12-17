@@ -2,13 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 env:
   NODE_VERSION: ${{ vars.NODE_VERSION || '22.x' }}
-  PNPM_VERSION: ${{ vars.PNPM_VERSION || '10.24.0' }}
+  PNPM_VERSION: ${{ vars.PNPM_VERSION || '10.26.0' }}
 
 permissions:
   contents: read

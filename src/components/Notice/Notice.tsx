@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import wording from "@/wording";
 
@@ -40,6 +41,10 @@ export default function Notice({
             </span>
             <span className="ml-0 md:ml-2 text-sm md:text-base">
               {description}
+              &nbsp;
+              <Link href={wording.layout.notice.link_more.href}>
+                {wording.layout.notice.link_more.label}
+              </Link>
             </span>
           </span>
           {buttonClose && (
