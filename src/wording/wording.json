@@ -170,7 +170,7 @@
       "email_explanation": "Envoyez plusieurs documents d’un même dossier et recevez une analyse directement sur votre e-mail dans les minutes qui suivent.",
       "image": {
         "alt": "Mon Devis Sans Oublis",
-        "src": "/images/homepage.svg"
+        "src": "/images/homepage.webp"
       },
       "or": "ou",
       "subtitle": "Accédez à une analyse centralisée de vos devis de rénovation, par gestes ou d’ampleur, en cohérence avec l'audit et la certification RGE.",
@@ -397,7 +397,7 @@
         },
         {
           "description": "Nous vérifions automatiquement les certifications RGE pour les gestes demandés à date. <a href='/rge'>Notre outil est aussi disponible ici</a>.",
-          "image": "/images/steps_analyze_quote/check_qualif.svg",
+          "image": "/images/steps_analyze_quote/check_qualif.webp",
           "title": "Assurez-vous des qualifications des artisans"
         },
         {
