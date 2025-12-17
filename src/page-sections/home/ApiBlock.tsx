@@ -6,9 +6,9 @@ import Link from "next/link";
 
 export default function ApiBlock() {
   return (
-    <section className="fr-container-fluid fr-py-10w bg-[var(--background-alt-blue-france)]">
-      <div className="fr-container">
-        <div className="flex flex-col items-center gap-8 md:flex-row py-8 px-36">
+    <section className="fr-container-fluid bg-[var(--background-alt-blue-france)]">
+      <div className="fr-container py-8">
+        <div className="flex flex-col items-center gap-8 md:flex-row md:p-20 sm:p-10">
           <div className="flex items-center justify-center rounded-lg bg-[var(--background-default-grey)] p-12">
             <Image
               alt={wording.homepage.api_block.image.alt}
@@ -17,12 +17,12 @@ export default function ApiBlock() {
               width={160}
             />
           </div>
-          <div className="flex-1">
-            <h5 className="fr-mb-2w" style={{ textAlign: "left" }}>
+          <div className="flex-1 text-center md:text-left">
+            <h5 className="fr-mb-2w">
               {richTextParser(wording.homepage.api_block.title)}
             </h5>
             <p className="fr-mb-3w">{wording.homepage.api_block.description}</p>
-            <ul className="fr-raw-list flex flex-wrap gap-4">
+            <ul className="fr-raw-list flex flex-wrap justify-center gap-4 md:justify-start">
               {wording.homepage.api_block.buttons.map((button, index) => (
                 <li key={index}>
                   <Link
