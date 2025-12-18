@@ -37,9 +37,11 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+.local*
 
 # Deployment
 .vercel
 
 # Sentry Config File
 .env.sentry-build-plugin
+
