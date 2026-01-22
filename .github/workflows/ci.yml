@@ -8,7 +8,7 @@ on:
 
 env:
   NODE_VERSION: ${{ vars.NODE_VERSION || '22.x' }}
-  PNPM_VERSION: ${{ vars.PNPM_VERSION || '10.26.0' }}
+  PNPM_VERSION: ${{ vars.PNPM_VERSION || '10.28.1' }}
 
 permissions:
   contents: read

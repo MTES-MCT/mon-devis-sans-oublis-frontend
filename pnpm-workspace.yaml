@@ -11,5 +11,6 @@ minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
   - next
   - "@next/env"
+  - tar # Ajout temporaire pour corriger CVE-2025-55182 et CVE tar
 
 ignoreScripts: true
