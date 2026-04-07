@@ -6,7 +6,7 @@ export default function Rge() {
   return (
     <>
       <Notice
-        className="fr-notice--info"
+        className="fr-notice--warning"
         description={wording.layout.notice.description}
         title={wording.layout.notice.title}
       />
