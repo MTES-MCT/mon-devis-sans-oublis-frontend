@@ -441,12 +441,12 @@
       "organizationName": "Mon Devis Sans Oublis"
     },
     "notice": {
-      "description": "Pour améliorer notre stabilité, nous utilisons temporairement Mistral ai pour la récupération des données privées.",
+      "description": "Mon Devis Sans Oublis ferme le 01 mai car ne permet pas aujourd'hui de réduire les délais d'instruction.",
       "link_more": {
-        "href": "/#nouveaute-1",
+        "href": "https://beta.gouv.fr/startups/mon-devis-sans-oublis.html#quelques-éléments-de-contexte",
         "label": "En savoir plus"
       },
-      "title": "Outil en cours de fiabilisation"
+      "title": "Fermeture prochaine"
     }
   },
   "legal_notice": {
