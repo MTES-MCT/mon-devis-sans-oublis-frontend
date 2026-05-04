@@ -16,6 +16,7 @@
     "format:check": "prettier --check .",
     "fresh": "rm -rf .next out node_modules pnpm-lock.yaml && pnpm install",
     "lint": "next lint",
+    "start": "serve out -l ${PORT:-3000}",
     "typecheck": "tsc --noEmit",
     "validate": "pnpm typecheck && pnpm lint"
   },
@@ -24,6 +25,7 @@
     "next": "^15.5.9",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
+    "serve": "^14.2.4",
     "typescript": "^5.7.3"
   },
   "devDependencies": {
