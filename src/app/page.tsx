@@ -30,7 +30,7 @@ const resources = [
     title: "Code source OCR",
     description:
       "L'intégralité du code Mon Devis Sans Oublis est publié en open source. Backend, frontend et OCR sont disponibles librement.",
-    href: "https://github.com/betagouv/mon-devis-sans-oublis-ocr",
+    href: "https://github.com/MTES-MCT/mon-devis-sans-oublis-backend-ocr",
     tags: ["Open Source", "Github"],
     icon: "/images/ocr.png",
   },
