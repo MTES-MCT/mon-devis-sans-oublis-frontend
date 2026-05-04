@@ -1,14 +1,7 @@
 services:
-  mon-devis-sans-oublis-frontend-development:
+  mon-devis-sans-oublis-frontend:
     build:
       context: .
       dockerfile: Dockerfile
-      target: development
     ports:
-      - "3000:3000"
-    env_file:
-      - .env.docker
-    volumes:
-      - .:/app
-      - /app/.next
-      - /app/node_modules
+      - "80:80"

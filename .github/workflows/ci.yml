@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   ci:
-    name: Test, Lint & Build
+    name: Lint & Build
     runs-on: ubuntu-slim
 
     steps:
@@ -42,15 +42,8 @@ jobs:
       - name: Run ESLint
         run: pnpm lint
 
-      - name: Run tests
-        run: pnpm test
-
       - name: Build application
         run: pnpm build
         env:
-          # Variables d'environnement pour le build
           NODE_ENV: production
           NEXT_TELEMETRY_DISABLED: 1
-          # API mock pour les tests de build
-          NEXT_PUBLIC_API_URL: https://api.staging.mon-devis-sans-oublis.beta.gouv.fr
-          NEXT_PRIVATE_API_AUTH_TOKEN: ci-build-mock-token

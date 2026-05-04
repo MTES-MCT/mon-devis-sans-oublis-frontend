@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { richTextParser } from "@/utils";
-import wording from "@/wording";
 
 export interface FooterProps {
   affiliatedMinistry: string;
@@ -9,6 +8,7 @@ export interface FooterProps {
   organizationDescription: string;
   organizationLink: string;
   organizationName: string;
+  bottomCopy: string;
 }
 
 const Footer: React.FC<FooterProps> = ({
@@ -17,15 +17,16 @@ const Footer: React.FC<FooterProps> = ({
   organizationDescription,
   organizationLink,
   organizationName,
+  bottomCopy,
 }) => {
   return (
-    <footer className="fr-footer" role="contentinfo" id="footer-7361">
+    <footer className="fr-footer" role="contentinfo" id="footer">
       <div className="fr-container">
         <div className="fr-footer__body">
           <div className="fr-footer__brand fr-enlarge-link">
             <Link
               href={organizationLink}
-              title={`Accueil - ${organizationName} - ${affiliatedMinistry}`}
+              title={`Accueil - ${organizationName} - ${affiliatedMinistry.replace(/<br\s*\/?>/gi, " ")}`}
             >
               <p className="fr-logo">{richTextParser(affiliatedMinistry)}</p>
             </Link>
@@ -47,7 +48,7 @@ const Footer: React.FC<FooterProps> = ({
             ))}
           </ul>
           <div className="fr-footer__bottom-copy">
-            <p>{richTextParser(wording.components.footer.bottom_copy_line)}</p>
+            <p>{richTextParser(bottomCopy)}</p>
           </div>
         </div>
       </div>

@@ -1,62 +1,22 @@
-"use client";
-
-import Link from "next/link";
-import { useState } from "react";
-import wording from "@/wording";
-
 export interface NoticeProps {
-  buttonClose?: boolean;
   className: string;
   description: string;
   title?: string;
-  noticeKey?: string;
 }
 
-export default function Notice({
-  buttonClose = false,
-  className,
-  description,
-  title,
-  noticeKey,
-}: NoticeProps) {
-  const [isCloseButtonVisible, setIsCloseButtonVisible] =
-    useState<boolean>(true);
-
-  if (!isCloseButtonVisible) return null;
-
-  const isWarning = className.includes("fr-notice--warning");
-
+export default function Notice({ className, description, title }: NoticeProps) {
   return (
-    <div className={`fr-notice ${className}`} key={noticeKey}>
+    <div className={`fr-notice ${className}`}>
       <div className="fr-container">
         <div className="fr-notice__body">
           <span>
-            <span
-              className={`fr-notice__title ${
-                isWarning ? "fr-icon-edit-box-fill" : ""
-              }`}
-              data-testid="warning-icon"
-            >
+            <span className="fr-notice__title fr-icon-warning-fill">
               {title}
             </span>
             <span className="ml-0 md:ml-2 text-sm md:text-base">
               {description}
-              &nbsp;
-              <Link href={wording.layout.notice.link_more.href}>
-                {wording.layout.notice.link_more.label}
-              </Link>
             </span>
           </span>
-          {buttonClose && (
-            <button
-              className="fr-btn--close fr-btn"
-              onClick={() => setIsCloseButtonVisible(false)}
-              title={wording.components.notice.button_close}
-              type="button"
-            >
-              {wording.components.notice.button_close}
-            </button>
-          )}
         </div>
       </div>
     </div>

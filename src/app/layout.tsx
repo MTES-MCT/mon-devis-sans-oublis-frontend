@@ -1,50 +1,47 @@
 import type { Metadata } from "next";
 
-import {
-  DsfrProvider,
-  Footer,
-  FooterProps,
-  Header,
-  HeaderProps,
-  Matomo,
-} from "@/components";
+import { DsfrProvider, Footer, FooterProps, Header, HeaderProps } from "@/components";
 import "@/utils/dsfr";
-import wording from "@/wording";
 import { marianne, spectral } from "../styles/fonts";
 import "../styles/globals.css";
-import CrispWrapper from "@/components/Crisp/Crisp";
 
 export const metadata: Metadata = {
-  title:
-    "Mon Devis Sans Oublis: vérifier un devis MaPrimeRénov’, Eco PTZ ou Aides CEE",
+  title: "Mon Devis Sans Oublis — Service fermé",
   description:
-    "Plateforme publique et gratuite de pré-instruction automatique des devis de rénovation énergétique pour MaPrimeRenov, Eco PTZ et les CEE.",
+    "Mon Devis Sans Oublis a cessé son activité le 1er mai 2026. Retrouvez les ressources liées au projet.",
   metadataBase: new URL("https://mon-devis-sans-oublis.beta.gouv.fr"),
   openGraph: {
-    title:
-      "Devis Sans Oublis: vérifier un devis MaPrimeRénov’, Eco PTZ ou Aides CEE",
+    title: "Mon Devis Sans Oublis — Service fermé",
     description:
-      "Plateforme publique et gratuite de pré-instruction automatique des devis de rénovation énergétique pour MaPrimeRenov, Eco PTZ et les CEE.",
+      "Mon Devis Sans Oublis a cessé son activité le 1er mai 2026. Retrouvez les ressources liées au projet.",
     url: "https://mon-devis-sans-oublis.beta.gouv.fr",
     siteName: "Mon Devis Sans Oublis",
-    images: [
-      {
-        url: "/images/steps_analyze_quote/quote_control.webp",
-        width: 1200,
-        height: 630,
-        alt: "Mon Devis Sans Oublis - Plateforme de pré-instruction automatique des devis de rénovation énergétique",
-      },
-    ],
     locale: "fr_FR",
     type: "website",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Mon Devis Sans Oublis",
-    description:
-      "Plateforme publique et gratuite de pré-instruction automatique des devis de rénovation énergétique pour MaPrimeRenov' et les CEE.",
-    images: ["/images/steps_analyze_quote/quote_control.webp"],
-  },
+};
+
+const headerData: HeaderProps = {
+  affiliatedMinistry:
+    "Ministère<br>de la transition<br>écologique",
+  organizationDescription: "Vérifiez vos devis de rénovation énergétique",
+  organizationLink: "/",
+  organizationName: "Mon Devis Sans Oublis",
+};
+
+const footerData: FooterProps = {
+  affiliatedMinistry:
+    "Ministère<br>de la transition<br>écologique",
+  buttons: [
+    { href: "/accessibilite", label: "Accessibilité : partiellement conforme" },
+    { href: "/mentions-legales", label: "Mentions légales" },
+  ],
+  organizationDescription:
+    "Mon Devis Sans Oublis est un service public conçu par la <a href='https://www.ecologie.gouv.fr/direction-generale-lamenagement-du-logement-et-nature-dgaln' target='_blank' rel='noopener noreferrer'>Direction générale de l'aménagement, du logement et de la nature (DGALN)</a> en partenariat avec le programme <a href='https://beta.gouv.fr' target='_blank' rel='noopener noreferrer'>beta.gouv</a>.",
+  organizationLink: "/",
+  organizationName: "Mon Devis Sans Oublis",
+  bottomCopy:
+    "Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous <a href='https://github.com/etalab/licence-ouverte/blob/master/LO.md' rel='noopener noreferrer' target='_blank'>licence etalab-2.0</a>",
 };
 
 export default function RootLayout({
@@ -52,20 +49,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const footerData: FooterProps = wording.layout.footer;
-  const headerData: HeaderProps = wording.layout.header;
-
   return (
     <html
       className={`${marianne.variable} ${spectral.variable}`}
       data-fr-scheme="system"
       lang="fr"
     >
-      <head>{/* ... inchangé */}</head>
+      <head />
       <body className="flex flex-col min-h-screen">
         <DsfrProvider>
-          <Matomo />
-          <CrispWrapper />
           <Header {...headerData} />
           <main className="flex-1">{children}</main>
           <Footer {...footerData} />
